@@ -733,7 +733,7 @@ function lockedScene(name) {
 const esc2 = s => String(s).replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
 return { CHAINS, CHAIN_KEYS, ART_ITEMS, ART_GENS, ANIMALS, UI, iconItem, iconGen, genName, hasGenArt, iconBag, iconAnimal, cafeScene, areaScene, lockedScene, SPOT_BOX, CAFE_BOX, paintBox, spotPos, HOUSE, townLot, townFence, TOWN_BG, TOWN_BG2, WALK, ST_IMG, DEB_IMG, ST_DIM, MAP, ART_TOOLS, WHEEL, EXT_FILES, extFill };
 })();
-const VER = '2.17.2';
+const VER = '2.17.3';
 // ===================== GAME =====================
 const { CHAINS, CHAIN_KEYS, ANIMALS, UI, iconItem, iconGen, genName, hasGenArt, iconBag, iconAnimal, cafeScene, areaScene, lockedScene, SPOT_BOX, CAFE_BOX, paintBox, spotPos, HOUSE, townLot, townFence, TOWN_BG, TOWN_BG2, WALK, ST_IMG, DEB_IMG, ST_DIM, MAP, ART_TOOLS, WHEEL, EXT_FILES, extFill } = ART;
 const TAG = '[달콤 머지 카페]';
@@ -1983,9 +1983,9 @@ html,body{margin:0;height:100%;background:transparent!important;overflow:hidden}
 .mc-cafeb{position:relative;display:flex;align-items:center;gap:2px;height:40px;padding:0 9px 0 4px;background:#fff;border:2.5px solid #5b3a32;border-radius:14px;box-shadow:0 2px 0 #5b3a32;font-family:inherit;font-size:19px;color:#5b3a32;cursor:pointer;flex-shrink:0}
 .mc-cafeb .ic{width:34px;height:34px}.mc-cafeb .st{width:17px;height:17px}
 .mc-cafeb .dot{display:none;position:absolute;top:-6px;right:-6px;width:13px;height:13px;border-radius:50%;background:#ff5d73;border:2px solid #5b3a32}
-.mc-cafeb.can .dot{display:block}.mc-cafeb.can .ic{animation:cfbob 1.4s ease-in-out infinite}
+.mc-cafeb.can .dot{display:block}.mc-cafeb.can .ic{animation:cfbob 1.6s ease-in-out infinite}
 .mc-cafeb:active{transform:translateY(2px);box-shadow:none}
-@keyframes cfbob{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-2px) rotate(-6deg)}}
+@keyframes cfbob{0%,55%,100%{transform:translateY(0)}20%{transform:translateY(-3px)}40%{transform:translateY(0)}47%{transform:translateY(-1px)}}
 .mc-story{position:absolute;inset:0;z-index:70;background:rgba(60,35,30,.38);display:flex;flex-direction:column;justify-content:flex-end;padding:14px 12px calc(18px + env(safe-area-inset-bottom));animation:mcfade .2s;cursor:pointer}
 .st-skip{position:absolute;top:12px;right:12px;font-size:13px;padding:4px 10px}
 .st-chat{display:flex;flex-direction:column;gap:12px;margin-top:auto}
