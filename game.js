@@ -738,7 +738,7 @@ function lockedScene(name) {
 const esc2 = s => String(s).replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
 return { CHAINS, CHAIN_KEYS, ART_ITEMS, ART_GENS, ANIMALS, UI, iconItem, iconGen, genName, hasGenArt, iconBag, iconAnimal, cafeScene, areaScene, lockedScene, SPOT_BOX, CAFE_BOX, paintBox, spotPos, HOUSE, townLot, townFence, TOWN_BG, TOWN_BG2, WALK, ST_IMG, DEB_IMG, ST_DIM, MAP, ART_TOOLS, WHEEL, EXT_FILES, extFill };
 })();
-const VER = '2.19.2';
+const VER = '2.19.3';
 // ===================== GAME =====================
 const { CHAINS, CHAIN_KEYS, ANIMALS, UI, iconItem, iconGen, genName, hasGenArt, iconBag, iconAnimal, cafeScene, areaScene, lockedScene, SPOT_BOX, CAFE_BOX, paintBox, spotPos, HOUSE, townLot, townFence, TOWN_BG, TOWN_BG2, WALK, ST_IMG, DEB_IMG, ST_DIM, MAP, ART_TOOLS, WHEEL, EXT_FILES, extFill } = ART;
 const TAG = '[달콤 머지 카페]';
@@ -1993,6 +1993,13 @@ html,body{margin:0;height:100%;background:transparent!important;overflow:hidden}
 .mc-ord .fc{width:36px;height:36px;flex-shrink:0;background:#fff3e2;border-radius:50%;border:2px solid #f0d9c2}
 .mc-ord .rq{position:relative;width:32px;height:32px;background:#fbe9d4;border-radius:9px;flex-shrink:0}
 .mc-ord .rq.have{background:#d6f5e6}
+.mc-ord .row{min-width:0}
+.mc-ord .row>.fc,.mc-ord .row>.rq{height:auto!important;aspect-ratio:1;min-width:0}
+.mc-ord .row>.fc{flex:0 1 36px}
+.mc-ord .row>.rq{flex:0 1 32px}
+#mc.t2 .mc-ord .row>.fc{flex-basis:30px}
+#mc.t2 .mc-ord .row>.rq{flex-basis:28px}
+.mc-ord .row>.fc>*,.mc-ord .row>.rq>:not(.ok){width:100%!important;height:100%!important}
 .mc-ord .rq .ok{position:absolute;right:-3px;bottom:-3px;width:15px;height:15px;border-radius:50%;background:#43c08a;border:2px solid #5b3a32;padding:1px}
 .mc-ord .ft{display:flex;align-items:center;justify-content:center;font-size:12px;min-height:24px;gap:5px;flex-wrap:wrap}
 .mc-ord .nm{opacity:.75;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
