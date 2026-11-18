@@ -733,7 +733,7 @@ function lockedScene(name) {
 const esc2 = s => String(s).replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
 return { CHAINS, CHAIN_KEYS, ART_ITEMS, ART_GENS, ANIMALS, UI, iconItem, iconGen, genName, hasGenArt, iconBag, iconAnimal, cafeScene, areaScene, lockedScene, SPOT_BOX, CAFE_BOX, paintBox, spotPos, HOUSE, townLot, townFence, TOWN_BG, TOWN_BG2, WALK, ST_IMG, DEB_IMG, ST_DIM, MAP, ART_TOOLS, WHEEL, EXT_FILES, extFill };
 })();
-const VER = '2.17.1';
+const VER = '2.17.2';
 // ===================== GAME =====================
 const { CHAINS, CHAIN_KEYS, ANIMALS, UI, iconItem, iconGen, genName, hasGenArt, iconBag, iconAnimal, cafeScene, areaScene, lockedScene, SPOT_BOX, CAFE_BOX, paintBox, spotPos, HOUSE, townLot, townFence, TOWN_BG, TOWN_BG2, WALK, ST_IMG, DEB_IMG, ST_DIM, MAP, ART_TOOLS, WHEEL, EXT_FILES, extFill } = ART;
 const TAG = '[달콤 머지 카페]';
@@ -2211,12 +2211,23 @@ function renderMode() {
   $('.mc-board')?.classList.toggle('sup', superOn);
 }
 function layout() {
-  const wrap = $('.mc-wrap'), mc = $('#mc');
-  mc.style.setProperty('--cell', '8px');
+  const wrap = $('.mc-wrap'), mc = $('#mc'), bd = $('.mc-board');
+  if (!wrap) return;
   const W = wrap.clientWidth - 16, H = wrap.clientHeight - 4;
   const byW = (W - 18 - 6 * 3) / COLS, byH = (H - 18 - 7 * 3) / ROWS;
-  const cell = Math.floor(Math.max(30, Math.min(byW, byH, 74)));
+  let cell = Math.floor(Math.max(24, Math.min(byW, byH, 74)));
   mc.style.setProperty('--cell', cell + 'px');
+  // 판 테두리·자물쇠 줄 등 실제 크기를 재서, 판이 다른 버튼을 덮지 않을 때까지 줄임
+  for (let k = 0; bd && k < 30 && cell > 24 && (bd.offsetHeight > wrap.clientHeight - 4 || bd.offsetWidth > wrap.clientWidth - 16); k++) {
+    cell--; mc.style.setProperty('--cell', cell + 'px');
+  }
+}
+let layoutRO = null;
+function watchLayout() {
+  if (layoutRO || typeof ResizeObserver === 'undefined') return;
+  let raf = 0;
+  layoutRO = new ResizeObserver(() => { cancelAnimationFrame(raf); raf = requestAnimationFrame(() => { if (visible) layout(); }); });
+  const w = $('.mc-wrap'); if (w) layoutRO.observe(w);
 }
 
 // ---------- render ----------
@@ -3757,7 +3768,7 @@ async function openGame() {
     visible = true;
     if (!extReady) loadExt();
     requestAnimationFrame(() => {
-      layout(); renderAll();
+      renderAll(); layout(); watchLayout();
       if (S.chatBonus > 0) { toast(`채팅하는 동안 에너지가 찼어요 <span class="mc-mini">${UI.bolt}+${S.chatBonus}</span>`); S.chatBonus = 0; save(); }
       if (done('post') && S.giftDay !== today()) { S.giftDay = today(); addEnergy(30, true); renderTop(); toast(`우체국에 소포가 왔어요! <span class="mc-mini">${UI.bolt}+30</span>`); save(); }
       const evr = checkEvent();
