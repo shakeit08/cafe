@@ -2671,12 +2671,12 @@ function openNotes(since) {
   modal(`<h3>${since ? '업데이트 소식' : '업데이트 내역'}</h3><div class="mc-notes">${list.map(([v, items]) => `<div class="nt"><b>v${v}</b><ul>${items.map(t => `<li>${esc(t)}</li>`).join('')}</ul></div>`).join('')}</div>
     <div class="acts"><button class="mc-btn pk" data-x>확인</button></div>`);
 }
-function modal(html, onMount) {
+function modal(html, onMount, sticky) {
   $('.mc-modal')?.remove();
   const m = document.createElement('div');
   m.className = 'mc-modal';
   m.innerHTML = `<div class="mc-card">${html}</div>`;
-  m.addEventListener('click', ev => { if (ev.target === m || ev.target.closest('[data-x]')) m.remove(); });
+  m.addEventListener('click', ev => { if ((!sticky && ev.target === m) || ev.target.closest('[data-x]')) m.remove(); });
   $('.mc-panel').appendChild(m);
   onMount?.(m);
   return m;
@@ -2976,7 +2976,7 @@ function loadExt() {
 }
 async function openTownSafe() {
   if (extReady) return openTown();
-  const m = modal(`<h3>마을 그림 불러오는 중</h3><p>잠시만 기다려 주세요 <span class="mc-sub mc-extp">${extDone}/${extNames.length}</span></p>`);
+  const m = modal(`<h3>마을 그림 불러오는 중</h3><p>잠시만 기다려 주세요 <span class="mc-sub mc-extp">${extDone}/${extNames.length}</span></p>`, null, true);
   const ok = await loadExt();
   if (!m.isConnected) return;
   m.remove();
@@ -3003,16 +3003,17 @@ function openTown() {
     if (sc.scrollWidth > sc.clientWidth + 2 && Math.abs(ev.deltaY) > Math.abs(ev.deltaX)) { sc.scrollLeft += ev.deltaY; ev.preventDefault(); }
   }, { passive: false });
   sc.addEventListener('pointerdown', ev => {
+    moved = false;
     if (ev.pointerType !== 'mouse' || ev.button !== 0) return;
-    dragX = { x: ev.clientX, s: sc.scrollLeft }; moved = false;
+    dragX = { x: ev.clientX, s: sc.scrollLeft };
   });
   window.addEventListener('pointermove', ev => {
     if (!dragX) return;
     const dx = ev.clientX - dragX.x;
-    if (Math.abs(dx) > 5) { moved = true; sc.classList.add('drag'); }
+    if (Math.abs(dx) > 8) { moved = true; sc.classList.add('drag'); }
     if (moved) sc.scrollLeft = dragX.s - dx;
   });
-  window.addEventListener('pointerup', () => { dragX = null; sc.classList.remove('drag'); });
+  window.addEventListener('pointerup', () => { if (dragX) setTimeout(() => { moved = false; }, 0); dragX = null; sc.classList.remove('drag'); });
   v.addEventListener('click', ev => {
     if (moved && ev.target.closest('.tw-scroll')) { moved = false; ev.stopPropagation(); return; }
     const b = ev.target.closest('[data-tw]');
