@@ -18,6 +18,7 @@ html,body{margin:0;height:100%;background:#fff7ec;overscroll-behavior:none;-webk
 <div id="boot"><img src="icon-192.png" alt=""><div>달콤 머지 카페 불러오는 중…</div></div>
 <script>
 window.__MC_APP = true;
+window.__MC_EXT_BASE = 'img/';
 window.__mcBlob = d => {
   const i = d.indexOf(','), mime = d.slice(5, d.indexOf(';')), b = atob(d.slice(i + 1)), u = new Uint8Array(b.length);
   for (let k = 0; k < b.length; k++) u[k] = b.charCodeAt(k);
@@ -41,6 +42,6 @@ window.Risuai = {
 try { navigator.storage && navigator.storage.persist && navigator.storage.persist(); } catch (e) {}
 if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
 </script>
-<script src="game.js?v=2.21.20"></script>
+<script src="game.js?v=2.21.22"></script>
 </body>
 </html>
