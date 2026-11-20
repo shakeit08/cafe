@@ -9,7 +9,7 @@
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
 <style>
-html,body{margin:0;height:100%;background:#fff7ec;overscroll-behavior:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation;-webkit-text-size-adjust:100%}
+html,body{margin:0;height:100%;background:#fff7ec;overscroll-behavior:none;-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}
 #boot{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;font-family:sans-serif;color:#5b3a32;font-size:16px}
 #boot img{width:96px;height:96px;border-radius:24px}
 </style>
@@ -18,9 +18,10 @@ html,body{margin:0;height:100%;background:#fff7ec;overscroll-behavior:none;-webk
 <div id="boot"><img src="icon-192.png" alt=""><div>달콤 머지 카페 불러오는 중…</div></div>
 <script>
 window.__MC_APP = true;
-// iOS는 확대 금지 설정을 무시해서, 두 번 누르기·두 손가락 확대를 직접 막음
-document.addEventListener('gesturestart', e => e.preventDefault(), { passive: false });
-document.addEventListener('dblclick', e => e.preventDefault(), { passive: false });
+// iOS는 확대 금지 설정을 무시해서, 두 번 누르기·두 손가락 확대를 직접 막음 (마을 화면은 확대 가능)
+const inTown = e => e.target && e.target.closest && e.target.closest('.mc-town');
+document.addEventListener('gesturestart', e => { if (!inTown(e)) e.preventDefault(); }, { passive: false });
+document.addEventListener('dblclick', e => { if (!inTown(e)) e.preventDefault(); }, { passive: false });
 window.__MC_EXT_BASE = 'img/';
 window.__mcBlob = d => {
   const i = d.indexOf(','), mime = d.slice(5, d.indexOf(';')), b = atob(d.slice(i + 1)), u = new Uint8Array(b.length);
@@ -45,6 +46,6 @@ window.Risuai = {
 try { navigator.storage && navigator.storage.persist && navigator.storage.persist(); } catch (e) {}
 if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
 </script>
-<script src="game.js?v=2.21.42"></script>
+<script src="game.js?v=2.21.43"></script>
 </body>
 </html>
