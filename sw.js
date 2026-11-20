@@ -1,5 +1,5 @@
-const V = 'mc-2.21.34';
-const FILES = ['./', './index.html', './game.js?v=2.21.34', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png'];
+const V = 'mc-2.21.39';
+const FILES = ['./', './index.html', './game.js?v=2.21.39', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(V).then(c => Promise.all(FILES.map(u => fetch(new Request(u, { cache: 'reload' })).then(r => c.put(u, r))))).then(() => self.skipWaiting()));
 });
