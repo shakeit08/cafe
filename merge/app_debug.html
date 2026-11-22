@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>달콤 머지 카페 디버그</title>
+<style>
+html,body{margin:0;height:100%;background:#fff7ec;overscroll-behavior:none;-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}
+#boot{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;font-family:sans-serif;color:#5b3a32;font-size:16px}
+#boot small{opacity:.7}
+#dbg{position:fixed;left:2px;top:50%;transform:translateY(-50%);opacity:.75;z-index:2147483647;font:12px sans-serif;color:#fff;background:rgba(91,58,50,.72);border:0;border-radius:99px;padding:3px 10px;cursor:pointer}
+</style>
+</head>
+<body>
+<div id="boot"><div>디버그용 달콤 머지 카페 불러오는 중…</div><small id="bp"></small></div>
+<button id="dbg">DBG 초기화</button>
+<script>
+const MAXED = __MAXED__;
+const P = 'mcdbg_', K = 'sweet_merge_cafe_save';
+const mem = {};
+const ls = {
+  get(k) { try { return localStorage.getItem(k); } catch (e) { return mem[k] ?? null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (e) { mem[k] = v; } },
+  del(k) { try { localStorage.removeItem(k); } catch (e) {} delete mem[k]; },
+};
+const seed = () => { const s = JSON.parse(JSON.stringify(MAXED)); s.savedAt = Date.now(); s.eTs = Date.now(); ls.set(P + K, JSON.stringify(s)); ls.del('mcdbgl_' + K); };
+if (!ls.get(P + K)) seed();
+const b = document.getElementById('dbg'); let arm = 0;
+b.onclick = () => { if (!arm) { arm = 1; b.textContent = '한 번 더!'; setTimeout(() => { arm = 0; b.textContent = 'DBG 초기화'; }, 2500); return; } seed(); location.reload(); };
+window.__MC_APP = true;
+// iOS는 확대 금지 설정을 무시해서, 두 번 누르기·두 손가락 확대를 직접 막음 (마을 화면은 확대 가능)
+const inTown = e => e.target && e.target.closest && e.target.closest('.mc-town');
+document.addEventListener('gesturestart', e => { if (!inTown(e)) e.preventDefault(); }, { passive: false });
+document.addEventListener('dblclick', e => { if (!inTown(e)) e.preventDefault(); }, { passive: false });
+window.__MC_EXT_BASE = 'img/';
+window.__mcBlob = d => {
+  const i = d.indexOf(','), mime = d.slice(5, d.indexOf(';')), bb = atob(d.slice(i + 1)), u = new Uint8Array(bb.length);
+  for (let k = 0; k < bb.length; k++) u[k] = bb.charCodeAt(k);
+  return URL.createObjectURL(new Blob([u], { type: mime }));
+};
+const store = p => ({ getItem: async k => ls.get(p + k), setItem: async (k, v) => ls.set(p + k, typeof v === 'string' ? v : JSON.stringify(v)) });
+let opened = false;
+window.Risuai = {
+  pluginStorage: store(P),
+  getLocalPluginStorage: async () => store('mcdbgl_'),
+  registerButton: async (o, cb) => { if (!opened) { opened = true; setTimeout(async () => { await cb(); document.getElementById('boot')?.remove(); }, 0); } return { id: 'b' }; },
+  registerSetting: async () => ({ id: 's' }), addRisuScriptHandler: async () => {}, onUnload: async () => {}, showContainer: async () => {}, hideContainer: async () => {},
+};
+// game.js는 크기가 커서 여러 조각으로 나눠 두고, 받아서 이어 붙인 뒤 실행
+(async () => {
+  const parts = __PARTS__, txt = [];
+  for (let n = 0; n < parts.length; n++) { document.getElementById('bp').textContent = `${n + 1}/${parts.length}`; txt.push(await (await fetch(parts[n])).text()); }
+  const sc = document.createElement('script'); sc.textContent = txt.join(''); document.body.appendChild(sc);
+})();
+</script>
+</body>
+</html>

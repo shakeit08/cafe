@@ -1,0 +1,6 @@
+ext/
+merge/ext/
+merge/sweet_merge_cafe.js
+merge/*_c.json
+merge/.cache_c.json
+__pycache__/

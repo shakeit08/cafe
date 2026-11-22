@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#fff7ec">
+<title>달콤 머지 카페</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+html,body{margin:0;height:100%;background:#fff7ec;overscroll-behavior:none;-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}
+#boot{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;font-family:sans-serif;color:#5b3a32;font-size:16px}
+#boot img{width:96px;height:96px;border-radius:24px}
+</style>
+</head>
+<body>
+<div id="boot"><img src="icon-192.png" alt=""><div>달콤 머지 카페 불러오는 중…</div></div>
+<script>
+window.__MC_APP = true;
+// iOS는 확대 금지 설정을 무시해서, 두 번 누르기·두 손가락 확대를 직접 막음 (마을 화면은 확대 가능)
+const inTown = e => e.target && e.target.closest && e.target.closest('.mc-town');
+document.addEventListener('gesturestart', e => { if (!inTown(e)) e.preventDefault(); }, { passive: false });
+document.addEventListener('dblclick', e => { if (!inTown(e)) e.preventDefault(); }, { passive: false });
+window.__MC_EXT_BASE = 'img/';
+window.__mcBlob = d => {
+  const i = d.indexOf(','), mime = d.slice(5, d.indexOf(';')), b = atob(d.slice(i + 1)), u = new Uint8Array(b.length);
+  for (let k = 0; k < b.length; k++) u[k] = b.charCodeAt(k);
+  return URL.createObjectURL(new Blob([u], { type: mime }));
+};
+const store = p => ({
+  getItem: async k => localStorage.getItem(p + k),
+  setItem: async (k, v) => { try { localStorage.setItem(p + k, typeof v === 'string' ? v : JSON.stringify(v)); } catch (e) { console.log('save fail', e); } },
+});
+let opened = false;
+window.Risuai = {
+  pluginStorage: store('mc_'),
+  getLocalPluginStorage: async () => store('mcl_'),
+  registerButton: async (o, cb) => { if (!opened) { opened = true; setTimeout(async () => { await cb(); document.getElementById('boot')?.remove(); }, 0); } return { id: 'b' }; },
+  registerSetting: async () => ({ id: 's' }),
+  addRisuScriptHandler: async () => {},
+  onUnload: async () => {},
+  showContainer: async () => {},
+  hideContainer: async () => {},
+};
+try { navigator.storage && navigator.storage.persist && navigator.storage.persist(); } catch (e) {}
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+</script>
+<script src="game.js?v=__VER__"></script>
+</body>
+</html>

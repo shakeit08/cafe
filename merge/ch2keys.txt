@@ -1,0 +1,1 @@
+pwall pwin psign pcam pboard plamp gwall gwin gsign gbarrel gcart gcrate hwall hwin hsign hbucket hfridge hbamboo twall twin tsign ttable tpond tcart kwall kwin ksign kbarrel kcrate knet dwall dwin dsign dring dboat dlamp
