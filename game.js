@@ -755,7 +755,7 @@ function lockedScene(name) {
 const esc2 = s => String(s).replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
 return { CHAINS, CHAIN_KEYS, ART_ITEMS, ART_GENS, ANIMALS, UI, iconItem, iconGen, genName, hasGenArt, iconBag, iconAnimal, cafeScene, areaScene, lockedScene, SPOT_BOX, CAFE_BOX, paintBox, spotPos, HOUSE, townLot, townFence, TOWN_BG, TOWN_BG2, WALK, ST_IMG, DEB_IMG, ST_DIM, MAP, ART_TOOLS, WHEEL, EXT_FILES, extFill, STORY_IMG, iconRes, iconChest };
 })();
-const VER = '2.21.48';
+const VER = '2.21.49';
 // ===================== GAME =====================
 const { CHAINS, CHAIN_KEYS, ANIMALS, UI, iconItem, iconGen, genName, hasGenArt, iconBag, iconAnimal, cafeScene, areaScene, lockedScene, SPOT_BOX, CAFE_BOX, paintBox, spotPos, HOUSE, townLot, townFence, TOWN_BG, TOWN_BG2, WALK, ST_IMG, DEB_IMG, ST_DIM, MAP, ART_TOOLS, WHEEL, EXT_FILES, extFill, STORY_IMG, iconRes, iconChest } = ART;
 const TAG = '[달콤 머지 카페]';
@@ -1651,18 +1651,35 @@ async function loadState() {
 }
 
 let saveTimer = null;
-let lastRaw = '';
+let saveInFlight = null;
+let lastSaved = null;
 function save() { if (!saveTimer) saveTimer = setTimeout(flush, 8000); }
 async function flush() {
   clearTimeout(saveTimer); saveTimer = null;
-  if (!S) return;
+  while (saveInFlight) await saveInFlight;
+  if (!S) return false;
   const st = normState(), cmp = JSON.stringify(Object.assign({}, st, { savedAt: 0 }));
-  if (cmp === lastRaw) return;
-  lastRaw = cmp;
-  S.savedAt = Date.now();
-  const raw = JSON.stringify(Object.assign(st, { savedAt: S.savedAt }));
-  try { await Risuai.pluginStorage.setItem(SAVE_KEY, raw); } catch (err) { console.log(TAG, 'save fail', err?.message); }
-  try { if (localStore) await localStore.setItem(SAVE_KEY, JSON.parse(raw)); } catch (err) { /* ignore */ }
+  if (cmp === lastSaved?.cmp) return true;
+  const state = S;
+  const savedAt = Math.max(Date.now(), state.savedAt + 1, (lastSaved?.savedAt || 0) + 1);
+  const raw = JSON.stringify({ ...st, savedAt });
+  saveInFlight = writeSave(raw);
+  try {
+    const saved = await saveInFlight;
+    if (saved) {
+      lastSaved = { cmp, savedAt };
+      state.savedAt = savedAt;
+    }
+    return saved;
+  } finally {
+    saveInFlight = null;
+  }
+}
+async function writeSave(raw) {
+  let saved = false;
+  try { await Risuai.pluginStorage.setItem(SAVE_KEY, raw); saved = true; } catch (err) { console.log(TAG, 'save fail', err?.message); }
+  try { if (localStore) { await localStore.setItem(SAVE_KEY, JSON.parse(raw)); saved = true; } } catch (err) { console.log(TAG, 'local save fail', err?.message); }
+  return saved;
 }
 
 // ---------- energy ----------
@@ -1917,6 +1934,7 @@ function dropAny(from, to) {
     setIt(to, A); setIt(from, B); sfx('drop');
     if (!toSt) fx.push({ t: 'land', i: to });
   }
+  if (fromSt && !toSt && !getIt(from)) packStore();
   sel = toSt ? -1 : to;
   if (toSt) setTimeout(() => jelly(cellEl(to)?.querySelector('.it'), .35, 340), 20);
   placePending();
@@ -1952,9 +1970,20 @@ function renderBoxBtn() {
   const n = S.store.filter(Boolean).length;
   b.textContent = n || ''; b.style.display = n ? '' : 'none';
 }
+function packStore(items = S.store.filter(Boolean)) {
+  S.store = Array.from({ length: S.storeN }, (_, i) => items[i] ?? null);
+}
+function storeSortKey(it) {
+  if (it.c) return [0, CHAIN_KEYS.indexOf(it.c), -it.l];
+  if (it.g) return [1, CHAIN_KEYS.indexOf(it.g), -glOf(it)];
+  if (it.r) return [2, it.r === 'en' ? 0 : 1, -it.l];
+  if (it.x) return [3, 0, -it.x];
+  if (it.b) return [4, 0, -it.b];
+  return [5, TK.indexOf(it.tool), 0];
+}
 function openBox() {
   if (toolMode) setToolMode(null);
-  const m = modal(`<h3>보관함</h3><div class="mc-boxbody"></div><div class="acts"><button class="mc-btn wh" data-x>닫기</button></div>`);
+  const m = modal(`<h3>보관함</h3><div class="mc-boxbody"></div><div class="acts"><button class="mc-btn wh" data-sort>자동정렬</button><button class="mc-btn wh" data-x>닫기</button></div>`);
   const body = m.querySelector('.mc-boxbody');
   const draw = () => {
     const used = S.store.filter(Boolean).length;
@@ -1962,13 +1991,20 @@ function openBox() {
       <div class="mc-sub" style="margin-top:8px">판 위 재료·생산기·보따리·가위·스프링클을 위쪽 보관함 버튼으로 끌어다 놓으면 넣을 수 있어요. 가위·스프링클은 판으로 꺼낸 뒤 재료에 끌어다 놓으면 써져요.</div></div>`;
   };
   draw();
+  m.querySelector('[data-sort]').onclick = () => {
+    const items = S.store.filter(Boolean).map(item => ({ item, key: storeSortKey(item) }));
+    items.sort(({ key: a }, { key: b }) => a[0] - b[0] || a[1] - b[1] || a[2] - b[2]);
+    packStore(items.map(({ item }) => item));
+    sfx('ui'); draw(); renderStore(); save();
+  };
   body.addEventListener('click', async ev => {
-    const u = ev.target.closest('[data-use]'), o = ev.target.closest('[data-out]');
+    const o = ev.target.closest('[data-out]');
     if (o) {
       const k = +o.dataset.out, it = S.store[k], t = firstEmpty();
       if (!it) return;
       if (t < 0) { sfx('error'); toast('판이 꽉 찼어요! 자리를 만들어 주세요.'); return; }
-      S.store[k] = null; S.board[t] = it; sel = t; fx.push({ t: 'pop', i: t });
+      S.store[k] = null; packStore();
+      S.board[t] = it; sel = t; fx.push({ t: 'pop', i: t });
       sfx('drop'); draw(); renderAll(); save();
       return;
     }
@@ -2884,8 +2920,18 @@ function buildUI() {
   board.addEventListener('pointerdown', onDown);
   board.addEventListener('pointermove', onMove);
   board.addEventListener('pointerup', onUp);
-  board.addEventListener('pointercancel', cancelDrag);
-  document.addEventListener('keydown', ev => { if (ev.key === 'Escape') { const m = $('.mc-modal'); if (m) m.remove(); else if ($('.mc-cafe')) closeCafe(); else closeGame(); } });
+  const cancelPointerDrag = ev => { if (drag?.pointerId === ev.pointerId) cancelDrag(); };
+  board.addEventListener('pointercancel', cancelPointerDrag);
+  board.addEventListener('lostpointercapture', cancelPointerDrag);
+  document.addEventListener('keydown', ev => {
+    if (ev.key !== 'Escape') return;
+    const m = $('.mc-modal');
+    const cancel = m?.querySelector('[data-no]');
+    if (cancel) cancel.click();
+    else if (m) m.remove();
+    else if ($('.mc-cafe')) closeCafe();
+    else if (!APP) closeGame();
+  });
   window.addEventListener('resize', () => { if (visible) layout(); });
   setInterval(() => { if (visible && S) { const e0 = S.energy; tickEnergy(); renderTop(); renderMode(); if (e0 !== S.energy) renderBoard(); } }, 1000);
   uiBuilt = true;
@@ -3365,7 +3411,7 @@ function flyCoins(from, n, target = '#mc-co', icon = UI.coin) {
 // ---------- drag ----------
 let drag = null;
 function onDown(ev) {
-  if (ev.button > 0) return;
+  if (drag || ev.button > 0) return;
   const cell = ev.target.closest('.c');
   if (!cell) return;
   const i = +cell.dataset.i;
@@ -3376,7 +3422,7 @@ function onDown(ev) {
   }
   const it = cell.querySelector('.it');
   const press = it && it.animate([{ transform: 'scale(1,1)' }, { transform: 'scale(1.04,.95)' }], { duration: 100, fill: 'forwards', easing: 'ease-out' });
-  drag = { i, x0: ev.clientX, y0: ev.clientY, moved: false, ghost: null, tgt: -1, cell, press, px: ev.clientX, py: ev.clientY, lx: ev.clientX, tilt: 0, tTilt: 0, raf: 0 };
+  drag = { i, pointerId: ev.pointerId, x0: ev.clientX, y0: ev.clientY, moved: false, ghost: null, tgt: -1, cell, press, px: ev.clientX, py: ev.clientY, lx: ev.clientX, tilt: 0, tTilt: 0, raf: 0 };
   try { ev.currentTarget.setPointerCapture(ev.pointerId); } catch (_) { }
   applyPull();
 }
@@ -3389,7 +3435,7 @@ function ghostLoop() {
   drag.raf = requestAnimationFrame(ghostLoop);
 }
 function onMove(ev) {
-  if (!drag) return;
+  if (!drag || drag.pointerId !== ev.pointerId) return;
   const dx = ev.clientX - drag.x0, dy = ev.clientY - drag.y0;
   if (!drag.moved) {
     if (dx * dx + dy * dy < 64) return;
@@ -3430,7 +3476,7 @@ function onMove(ev) {
   }
 }
 function onUp(ev) {
-  if (!drag) return;
+  if (!drag || drag.pointerId !== ev.pointerId) return;
   const d = drag;
   cleanupDrag();
   if (d.moved) {
@@ -3483,6 +3529,10 @@ function toast(html, opt = {}) {
   setTimeout(() => { t.animate([{ opacity: 1 }, { opacity: 0, transform: 'translateY(-8px)' }], { duration: 250 }).onfinish = () => t.remove(); }, opt.ms || 2600);
 }
 const NOTES = [
+  ['2.21.49', [
+    '저장이 겹쳐도 이전 진행 상황이 덮어쓰지 않도록 고쳤어요. 저장에 실패하면 다음 저장 요청에서 다시 시도해요.',
+    '보관함에서 물건을 꺼내면 빈칸이 채워져요. 자동정렬을 누르면 같은 종류끼리 모아 정리할 수 있어요.',
+  ]],
   // 리스 플러그인에만 보이는 소식
   ...(APP ? [] : [['2.21.45', [
     '마을·이야기 그림을 열 때마다 다시 받느라 오래 걸리거나, 그림 불러오는 중 1/21에서 멈추던 문제를 고쳤어요. 이제 마을이 바로 열리고, 한 번 본 그림은 다음부터 빨리 떠요.',
@@ -3783,7 +3833,7 @@ function openDex() {
     }).join('')}</div>`, m => m.querySelector('.mc-card').classList.add('mc-dexcard'));
 }
 function openSettings() {
-  const dump = JSON.stringify(S);
+  const dump = JSON.stringify(normState());
   const m = modal(`<h3>설정</h3>
     ${APP ? '' : `<div class="mc-sec"><h4>채팅 보너스 에너지</h4><div class="mc-sub" style="margin-bottom:6px">리스에서 메시지를 보낼 때마다 충전되는 양</div>
       <div class="mc-seg">${CHAT_E_OPTIONS.map(v => `<button class="mc-btn wh ${S.settings.chatE === v ? 'on' : ''}" data-ce="${v}">${v ? '+' + v : '끄기'}</button>`).join('')}</div></div>`}
@@ -3863,7 +3913,9 @@ function openSettings() {
     try { o = sanitize(JSON.parse(txt)); } catch (_) { }
     if (!o) { toast('백업 내용을 읽을 수 없어요.'); return; }
     if (!(await confirmBox('지금 진행 상황을 백업 내용으로 덮어쓸까요?', '덮어쓰기'))) return;
-    S = o; sel = -1; tickEnergy(); await flush(); renderAll(); toast('불러오기 완료!');
+    S = o; sel = -1; tickEnergy();
+    const saved = await flush();
+    renderAll(); toast(saved ? '불러오기 완료!' : '불러온 내용을 저장하지 못했어요. 다음 저장 요청에서 다시 시도해요.');
   };
   m.querySelector('[data-imp]').onclick = () => doImport(m.querySelector('#mc-imp').value.trim());
   m.querySelector('[data-file]').onclick = () => m.querySelector('#mc-file').click();
@@ -3871,7 +3923,9 @@ function openSettings() {
   m.querySelector('[data-reset]').onclick = async () => {
     if (!(await confirmBox('정말 처음부터 다시 시작할까요?<br><span class="mc-sub">레벨, 코인, 보드, 도감이 모두 사라져요.</span>', '초기화'))) return;
     if (!(await confirmBox('되돌릴 수 없어요. 진짜로 초기화할까요?', '진짜 초기화'))) return;
-    S = newState(); sel = -1; await flush(); renderAll(); toast('새 카페를 열었어요!');
+    S = newState(); sel = -1;
+    const saved = await flush();
+    renderAll(); toast(saved ? '새 카페를 열었어요!' : '초기화한 상태를 저장하지 못했어요. 다음 저장 요청에서 다시 시도해요.');
   };
 }
 
@@ -5318,8 +5372,7 @@ async function closeGame() {
   cleanupDrag();
   $('.mc-modal')?.remove();
   $('.mc-cafe')?.remove();
-  await Risuai.hideContainer();
-  flush();
+  try { await Risuai.hideContainer(); } finally { await flush(); }
 }
 
 // ---------- boot ----------
