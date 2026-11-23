@@ -28,6 +28,8 @@ const DECOR_TOTAL = DECOR.length * 2;
 const LOOK = [['낡은', '예쁜', '반짝이는'], ['낡은', '줄무늬', '전구 달린'], ['먼지 낀', '디저트', '커튼 단'], ['낡은', '민트색', '화환 단'], ['시든', '꽃이 핀', '풍성한'], ['꺼진', '불 켜진', '꽃바구니'], ['텅 빈', '아담한', '파라솔'], ['금 간', '크림색', '벽돌 장식']];
 DECOR.forEach((d, i) => { d.look = LOOK[i]; });
 const sp = (k, name, costs, look, desc) => ({ k, name, costs, look, desc });
+const CH5_COMPLETION_ENERGY = 80;
+const CH5_ENERGY_MAIL = 'd-ch5-completion-energy-v1';
 const AREAS = [
   { k: 'cafe', name: '달콤 카페', spots: DECOR, reward: { coins: 300, e: 50 }, perk: null, doneText: '낡은 가게가 동네에서 제일 예쁜 카페가 됐어요.' },
   { k: 'flower', name: '꽃집 봄날', reward: { coins: 400, e: 60 }, perk: '최대 에너지 +20', gen: 'tea', doneText: '거리에 꽃향기가 가득해졌어요.', spots: [
@@ -243,7 +245,7 @@ const AREAS = [
     sp('cbtrunk', '썰매 가방', [13, 22], ['없는', '가방 실은', '선물 쌓인'], ['썰매 위 여행 가방', '리본과 선물 상자']),
     sp('cblamp', '역 가로등', [13, 22], ['없는', '꺼진', '화환 단'], ['역 가로등', '반짝 불빛과 눈꽃 화환']),
   ] },
-  { k: 'parasol', ch: 5, name: '집게 파라솔 대여소', reward: { coins: 4800, e: 0 }, once: ['e', 50], perk: null, doneText: '알록달록 파라솔이 모래사장에 활짝 폈어요.', spots: [
+  { k: 'parasol', ch: 5, name: '집게 파라솔 대여소', reward: { coins: 4800, e: CH5_COMPLETION_ENERGY }, once: ['e', 50], perk: null, doneText: '알록달록 파라솔이 모래사장에 활짝 폈어요.', spots: [
     sp('pawall', '대여소', [18, 28], ['낡은', '새 나무', '산호 줄무늬'], ['새 나무로 고친 대여소', '산호색 줄무늬와 구명 튜브 장식']),
     sp('pawin', '대여 창구', [15, 25], ['판자 댄', '파라솔 접힌', '튜브 가득'], ['접힌 파라솔과 튜브', '줄무늬 파라솔과 오리 튜브']),
     sp('pasign', '간판', [14, 24], ['없는', '나무', '조개 장식'], ['파라솔 간판이 걸려요', '작은 파라솔과 조개 장식']),
@@ -251,7 +253,7 @@ const AREAS = [
     sp('paring', '튜브', [14, 23], ['없는', '하얀', '오리 얹은'], ['하얀 튜브 두 개', '알록달록 튜브와 오리']),
     sp('pachair', '접이식 의자', [14, 23], ['없는', '나무', '수건 걸친'], ['나무 접이식 의자', '줄무늬 수건과 선글라스']),
   ] },
-  { k: 'melon', ch: 5, name: '꿀꺽 수박 주스바', reward: { coins: 5000, e: 0 }, once: ['cut', 1], perk: null, doneText: '시원한 수박 주스 한 잔에 더위가 싹 가셔요.', spots: [
+  { k: 'melon', ch: 5, name: '꿀꺽 수박 주스바', reward: { coins: 5000, e: CH5_COMPLETION_ENERGY }, once: ['cut', 1], perk: null, doneText: '시원한 수박 주스 한 잔에 더위가 싹 가셔요.', spots: [
     sp('wmwall', '주스바', [18, 28], ['찢어진', '새 초가', '수박 무늬'], ['새 초가지붕과 대나무 벽', '수박 줄무늬 벽과 수박 장식']),
     sp('wmwin', '판매대', [15, 25], ['판자 댄', '믹서 놓인', '수박 가득'], ['믹서와 주스 컵', '수박과 우산 꽂은 주스']),
     sp('wmsign', '간판', [14, 24], ['없는', '나무', '수박 모양'], ['주스 간판이 걸려요', '수박 조각 모양 간판']),
@@ -259,7 +261,7 @@ const AREAS = [
     sp('wmstool', '바 의자', [14, 23], ['없는', '대나무', '방석 깐'], ['대나무 바 의자', '분홍 방석과 코코넛 주스']),
     sp('wmplant', '야자 화분', [14, 23], ['없는', '새싹', '전구 감은'], ['작은 야자 새싹', '줄무늬 화분과 꼬마 전구']),
   ] },
-  { k: 'shell', ch: 5, name: '또르 조개 기념품점', reward: { coins: 5200, e: 0 }, once: ['up', 1], perk: null, doneText: '반짝이는 조개 기념품이 창가에 가득해요.', spots: [
+  { k: 'shell', ch: 5, name: '또르 조개 기념품점', reward: { coins: 5200, e: CH5_COMPLETION_ENERGY }, once: ['up', 1], perk: null, doneText: '반짝이는 조개 기념품이 창가에 가득해요.', spots: [
     sp('slwall', '기념품점', [18, 28], ['따개비 붙은', '하얀', '라벤더색'], ['하얀 벽과 조개 지붕', '라벤더 벽과 민트 테두리']),
     sp('slwin', '동그란 창', [15, 25], ['깨진', '조개 놓인', '진주 장식'], ['조개 세 개 놓인 창', '진주 목걸이와 병 속 배']),
     sp('slsign', '간판', [14, 24], ['없는', '조개 모양', '진주 테두리'], ['조개 간판이 걸려요', '분홍 조개와 불가사리']),
@@ -267,7 +269,7 @@ const AREAS = [
     sp('sltable', '진열 탁자', [14, 23], ['없는', '나무', '풍경 단'], ['작은 나무 탁자', '민트 식탁보와 조개 풍경']),
     sp('slrack', '엽서 꽂이', [14, 23], ['없는', '빈', '엽서 가득'], ['철사 엽서 꽂이', '바다 그림 엽서 가득']),
   ] },
-  { k: 'surf', ch: 5, name: '느릿 서핑 숍', reward: { coins: 5400, e: 0 }, once: ['bag', 2], perk: null, doneText: '파도 무늬 서핑보드가 줄지어 손님을 기다려요.', spots: [
+  { k: 'surf', ch: 5, name: '느릿 서핑 숍', reward: { coins: 5400, e: CH5_COMPLETION_ENERGY }, once: ['bag', 2], perk: null, doneText: '파도 무늬 서핑보드가 줄지어 손님을 기다려요.', spots: [
     sp('sfwall', '서핑 숍', [18, 28], ['부서진', '나무', '청록색'], ['나무 벽과 하얀 서핑보드', '청록 벽과 노란 서핑보드']),
     sp('sfwin', '진열창', [15, 25], ['깨진', '보드 두 개', '보드 가득'], ['하얀 보드 두 개', '파도 무늬 보드와 잠수복']),
     sp('sfsign', '간판', [14, 24], ['없는', '나무 보드', '히비스커스'], ['서핑보드 간판이 서요', '노란 보드와 히비스커스']),
@@ -275,7 +277,7 @@ const AREAS = [
     sp('sfshower', '샤워대', [14, 23], ['없는', '나무', '수건 건'], ['나무 샤워대', '줄무늬 수건과 꽃']),
     sp('sfbench', '벤치', [14, 23], ['없는', '나무', '꽃목걸이 건'], ['나무 벤치', '꽃목걸이와 조리']),
   ] },
-  { k: 'castle', ch: 5, name: '끼룩 모래성 공방', reward: { coins: 5600, e: 0 }, once: ['e', 50], perk: null, doneText: '깃발 꽂은 모래성 공방에 아이들 웃음소리가 들려요.', spots: [
+  { k: 'castle', ch: 5, name: '끼룩 모래성 공방', reward: { coins: 5600, e: CH5_COMPLETION_ENERGY }, once: ['e', 50], perk: null, doneText: '깃발 꽂은 모래성 공방에 아이들 웃음소리가 들려요.', spots: [
     sp('scwall', '모래성 공방', [18, 28], ['무너진', '매끈한', '조개 박힌'], ['매끈한 모래성 벽', '조개 장식과 파란 깃발']),
     sp('scwin', '아치 창', [15, 25], ['깨진', '모래성 두 개', '모래성 가득'], ['작은 모래성 모형', '깃발 단 모래성과 양동이']),
     sp('scsign', '깃발 간판', [14, 24], ['없는', '하얀 천', '파란 천'], ['천 간판이 걸려요', '파란 천과 불가사리']),
@@ -283,7 +285,7 @@ const AREAS = [
     sp('scsand', '모래성', [14, 23], ['없는', '작은', '탑 높은'], ['작은 모래성', '탑과 깃발 단 큰 모래성']),
     sp('sccart', '외바퀴 수레', [14, 23], ['없는', '모래 실은', '꽃 실은'], ['모래 실은 수레', '불가사리와 꽃, 깃발']),
   ] },
-  { k: 'yacht', ch: 5, name: '흰 돛 요트 선착장', reward: { coins: 6000, e: 0 }, perk: '주문 코인 +5%', doneText: '흰 돛 요트가 출항 준비를 마쳤어요. 햇살 모래사장 완성! 5장 완성!', spots: [
+  { k: 'yacht', ch: 5, name: '흰 돛 요트 선착장', reward: { coins: 6000, e: CH5_COMPLETION_ENERGY }, perk: '주문 코인 +5%', doneText: '흰 돛 요트가 출항 준비를 마쳤어요. 햇살 모래사장 완성! 5장 완성!', spots: [
     sp('ytwall', '항구 사무소', [19, 29], ['낡은', '하얀', '남색 지붕'], ['하얀 벽과 망루', '남색 지붕과 금빛 닻']),
     sp('ytwin', '매표 창구', [15, 25], ['판자 댄', '종 놓인', '바다 지도'], ['작은 종이 놓인 창구', '바다 지도와 구명 튜브']),
     sp('ytsign', '간판', [14, 24], ['없는', '밧줄 테', '남색'], ['밧줄 테 간판이 걸려요', '남색 간판과 금빛 별']),
@@ -315,7 +317,7 @@ STREET[5] = [['palm', '야자수 화단', .4], ['ball', '비치볼', .22], ['sta
   ['trap', '통발', .24], ['shellmail', '조개 우체통', .33], ['rose', '해당화 덤불', .24], ['tidepool', '갯바위 웅덩이', .22], ['scope', '망원경', .3], ['lamp', '바닷가 가로등', .42]];
 const STEP_NAMES = ['치우기', '놓기', '꾸미기'];
 const stKey = (ch, j) => `c${ch}_${STREET[ch][j][0]}`;
-const stCost = (ch, j, lv) => (ch === 1 ? [2, 4, 6] : ch === 2 ? [4, 7, 10] : ch === 3 ? [5, 8, 12] : ch === 4 ? [6, 9, 13] : [7, 10, 14])[lv] + Math.floor(j / (ch === 1 ? 4 : 6));
+const stCost = (ch, j, lv) => (ch === 1 ? [2, 4, 6] : ch === 2 ? [4, 7, 10] : ch === 3 ? [5, 8, 12] : ch === 4 ? [6, 9, 13] : ch === 5 ? [7, 10, 14] : [8, 11, 15])[lv] + Math.floor(j / (ch === 1 ? 4 : 6));
 const CH_GATE = { 2: 'station', 3: 'dock', 4: 'maple', 5: 'cablecar' }, CH_NAME = { 1: '구름언덕', 2: '강가 거리', 3: '가을 숲', 4: '눈꽃 언덕', 5: '햇살 모래사장' }, CHS = [1, 2, 3, 4, 5];
 // 마을(여러 장 묶음): 사계절 마을 1~4장, 반짝 바닷가 마을 5장~
 const VILLAGES = [{ name: '사계절 마을', sn: '사계절', chs: [1, 2, 3, 4] }, { name: '반짝 바닷가 마을', sn: '바닷가', chs: [5] }];
@@ -381,6 +383,79 @@ STREET_TALK[5] = [
   [[29, '해먹에서 낮잠 자다가… 파도 소리를 들었어~'], [31, '느릿은 낮잠이 하루의 절반이잖아.']],
   [[30, '햇살 모래사장이 이렇게 반짝일 줄이야!'], [26, '여름 손님이 다시 올 거야. 집게 걸고!']],
 ];
+// ── 6장 하얀 항구 (그림이 다 들어오기 전까지 CH6_ON = false: 게임에 안 보임) ──
+// 이웃 키: seaotter puffin hseal octopus albatross sealion
+// 이웃 번호: 32 몽돌(수달) 33 또박(퍼핀) 34 뽀글(바다표범) 35 문문(문어) 36 훨훨(알바트로스) 37 첨벙(물개) — art.js ANIMALS에 추가할 것
+const CH6_ON = true;
+const AREAS6 = [
+  { k: 'gelato', ch: 6, name: '몽돌 젤라또 가게', reward: { coins: 6200, e: 0 }, once: ['e', 50], perk: null, doneText: '알록달록 젤라또가 유리 진열대에 가득해요.', spots: [
+    sp('glwall', '젤라또 가게', [19, 29], ['낡은', '하얀', '민트 테두리'], ['새하얀 벽과 둥근 지붕', '민트 테두리와 분홍 줄무늬 차양']),
+    sp('glwin', '진열대', [16, 26], ['깨진', '통 세 개', '젤라또 가득'], ['젤라또 통과 콘', '과일 얹은 알록달록 젤라또']),
+    sp('glsign', '간판', [15, 25], ['없는', '나무', '레몬 장식'], ['젤라또 간판이 걸려요', '민트 간판과 레몬 두 알']),
+    sp('glcart', '젤라또 수레', [15, 24], ['없는', '하얀', '파라솔 단'], ['하얀 손수레', '줄무늬 파라솔과 젤라또']),
+    sp('gltable', '노천 탁자', [15, 24], ['없는', '하얀', '젤라또 놓인'], ['작은 탁자와 의자', '민트 식탁보와 젤라또 컵']),
+    sp('gllemon', '레몬나무', [15, 24], ['없는', '어린', '레몬 가득'], ['어린 레몬나무 화분', '레몬 주렁주렁 파란 화분']),
+  ] },
+  { k: 'hpost', ch: 6, name: '파랑 지붕 우체국', reward: { coins: 6400, e: 0 }, once: ['cut', 1], perk: null, doneText: '파랑 지붕 우체국의 시계가 다시 째깍째깍 가요.', spots: [
+    sp('pswall', '우체국', [19, 29], ['멈춘 시계', '하얀', '파랑 지붕'], ['하얀 벽과 시계', '파랑 지붕과 금빛 나팔']),
+    sp('pswin', '아치 창', [16, 26], ['깨진', '편지 몇 통', '편지 가득'], ['편지 몇 통과 소포', '분홍 조개로 봉한 편지들']),
+    sp('pssign', '간판', [15, 25], ['없는', '크림색', '남색'], ['우체국 간판이 걸려요', '남색 간판과 금빛 나팔']),
+    sp('psbox', '우체통', [15, 24], ['없는', '하얀', '편지 꽂힌'], ['동그란 우체통', '하늘색 우체통과 편지']),
+    sp('pscart', '소포 수레', [15, 24], ['없는', '상자 하나', '소포 가득'], ['상자 실은 손수레', '리본 묶은 소포 더미']),
+    sp('psbike', '자전거', [15, 24], ['없는', '하얀', '편지 바구니'], ['하얀 자전거', '파란 자전거와 편지 바구니']),
+  ] },
+  { k: 'market', ch: 6, name: '뱃고동 수산시장', reward: { coins: 6600, e: 0 }, once: ['up', 1], perk: null, doneText: '뱃고동 소리와 함께 수산시장이 북적여요.', spots: [
+    sp('mkwall', '수산시장', [19, 29], ['무너진', '나무', '빨간 줄무늬'], ['나무 벽과 아치 지붕', '빨간 지붕과 줄무늬 차양']),
+    sp('mkwin', '얼음 진열대', [16, 26], ['빈', '생선 세 마리', '해산물 가득'], ['얼음 위 생선', '조개와 레몬, 등불']),
+    sp('mksign', '간판', [15, 25], ['없는', '나무', '빨간 테두리'], ['시장 간판이 걸려요', '빨간 테두리와 작은 닻']),
+    sp('mkcrate', '생선 상자', [15, 24], ['없는', '얼음 든', '생선 가득'], ['얼음 든 나무 상자', '생선과 레몬 쌓인 상자']),
+    sp('mkscale', '저울', [15, 24], ['없는', '놋쇠', '조개 담은'], ['놋쇠 저울', '조개 바구니와 빨간 리본']),
+    sp('mkbarrel', '그물 통', [15, 24], ['없는', '빈', '그물 덮은'], ['나무 통', '그물과 부표, 불가사리']),
+  ] },
+  { k: 'sail', ch: 6, name: '돛천 수선소', reward: { coins: 6800, e: 0 }, once: ['bag', 2], perk: null, doneText: '새 돛이 바람을 가득 머금고 펄럭여요.', spots: [
+    sp('sawall', '수선소', [19, 29], ['찢어진 돛', '나무', '청록 지붕'], ['나무 벽과 도르래', '청록 지붕과 하얀 돛']),
+    sp('sawin', '작업창', [16, 26], ['깨진', '천 한 롤', '천 가득'], ['돛천과 실패', '줄무늬 천과 섬 지도 수틀']),
+    sp('sasign', '간판', [15, 25], ['없는', '돛 모양', '바늘 리본'], ['돛 모양 간판이 걸려요', '산호 줄무늬와 바늘']),
+    sp('saspool', '실패 더미', [15, 24], ['없는', '하나', '알록달록'], ['커다란 실패', '세 가지 색 실패']),
+    sp('saroll', '돛 꾸러미', [15, 24], ['없는', '하얀', '줄무늬'], ['밧줄로 묶은 돛', '파란 줄무늬 돛과 깃발']),
+    sp('sabask', '바느질 바구니', [15, 24], ['없는', '빈', '천 조각 가득'], ['작은 바구니', '천 조각과 바늘꽂이']),
+  ] },
+  { k: 'museum', ch: 6, name: '옛 등대 전시관', reward: { coins: 7000, e: 0 }, once: ['e', 50], perk: null, doneText: '옛 등대 이야기가 전시관에 다시 불을 밝혀요.', spots: [
+    sp('mswall', '전시관', [19, 29], ['허물어진', '돌벽', '빨간 줄 탑'], ['깨끗한 돌벽과 탑', '빨강 하양 등대 탑']),
+    sp('mswin', '전시창', [16, 26], ['깨진', '등불 하나', '옛 사진'], ['놋쇠 등불', '등대섬 사진과 병 속 배']),
+    sp('mssign', '간판', [15, 25], ['없는', '나무', '금빛 등대'], ['전시관 간판이 걸려요', '남색 간판과 금빛 등대']),
+    sp('mslamp', '등대 등', [15, 24], ['없는', '꺼진', '반짝이는'], ['돌 받침 위 등', '금빛으로 빛나는 등']),
+    sp('mswheel', '배 키', [15, 24], ['없는', '나무', '꽃 감은'], ['나무 배 키', '놋쇠 장식과 꽃 화환']),
+    sp('mslog', '항해 일지', [15, 24], ['없는', '한 권', '일지 쌓인'], ['상자 위 낡은 책', '일지와 바다 지도']),
+  ] },
+  { k: 'ferry', ch: 6, name: '하얀 여객선 부두', reward: { coins: 7400, e: 0 }, perk: '주문 경험치 +5%', doneText: '하얀 여객선이 남쪽 바다로 떠날 준비를 마쳤어요. 하얀 항구 완성! 6장 완성!', spots: [
+    sp('frwall', '여객선 터미널', [20, 30], ['낡은', '하얀', '하늘색 테두리'], ['하얀 벽과 시계탑', '하늘색 테두리와 빨간 굴뚝']),
+    sp('frwin', '매표 창구', [16, 26], ['판자 댄', '종 놓인', '표 가득'], ['작은 종이 놓인 창구', '바다 지도와 승선표']),
+    sp('frsign', '간판', [15, 25], ['없는', '밧줄 테', '하늘색'], ['밧줄 테 간판이 걸려요', '하늘색 간판과 금빛 키']),
+    sp('frpost', '계류 기둥', [15, 24], ['없는', '쇠', '밧줄 감은'], ['쇠 계류 기둥', '남색 기둥과 밧줄, 깃발']),
+    sp('frcart', '짐 수레', [15, 24], ['없는', '빈', '가방 실은'], ['짐 수레', '여행 가방과 꽃목걸이']),
+    sp('frboard', '시간표 판', [15, 24], ['없는', '빈', '배 그림'], ['나무 판', '배와 야자수 그림']),
+  ] },
+];
+const STREET6 = [['lemon', '레몬나무 화분', .27], ['olive', '올리브나무 화분', .3], ['bougain', '부겐빌레아 아치', .4], ['hydrangea', '수국 화분', .22], ['cafetable', '노천 카페 테이블', .27], ['stonebench', '하얀 돌 벤치', .22],
+  ['bollard', '밧줄 계류 기둥', .2], ['crates', '생선 상자 더미', .22], ['netrack', '그물 걸이', .3], ['barrels', '오크통', .24], ['handcart', '짐 손수레', .27], ['rowboat', '쪽배 화단', .3],
+  ['harborlamp', '항구 가로등', .42], ['clockpost', '항구 시계 기둥', .4], ['bunting', '깃발 줄 기둥', .36], ['signpost', '항구 이정표', .33], ['bicycle', '자전거', .27], ['sherbet', '레몬 셔벗 수레', .3],
+  ['fountain', '돌고래 분수', .3], ['vane', '갈매기 풍향계', .4], ['bell', '항구 종', .33], ['steps', '파란 계단 화분', .27], ['crane', '작은 짐 기중기', .4], ['lhmodel', '작은 등대 모형', .36]];
+const STREET_TALK6 = [
+  [[32, '돌길에 쌓인 모래부터 쓸어 내자!'], [33, '또박또박 하나씩 하면 금방이야.']],
+  [[34, '생선 상자 냄새… 좋다! 뽀글!'], [32, '난 레몬 냄새가 더 좋은데.', 0]],
+  [[35, '그물 걸이에 걸린 그물, 내가 다 기워 줄게~'], [36, '허허, 손이 여덟 개라 빠르구먼.']],
+  [[37, '항구 종이 울리면 배가 들어온다는 뜻이야!'], [33, '그럼 편지도 같이 오겠네!']],
+  [[36, '작은 등대 모형… 옛날 생각이 나는구먼.'], [32, '훨훨 할아버지, 진짜 등대 본 적 있어요?', 0]],
+  [[33, '시계 기둥이 다시 가니까 배달 시간도 딱딱 맞아!'], [34, '뽀글! 시장 여는 시간도!']],
+  [[35, '깃발 줄에 내가 만든 깃발 걸어도 돼?'], [37, '좋지! 출항 날엔 다 같이 흔들자!']],
+  [[32, '하얀 항구가 이렇게 반짝일 줄이야!'], [36, '이제 배들이 다시 들를 게야.']],
+];
+if (CH6_ON) {
+  AREAS.splice(AREAS.findIndex(a => a.k === 'plaza'), 0, ...AREAS6);
+  STREET[6] = STREET6; STREET_TALK[6] = STREET_TALK6;
+  CH_GATE[6] = 'yacht'; CH_NAME[6] = '하얀 항구'; CHS.push(6); VILLAGES[1].chs.push(6);
+}
 const STORY = {
   chestnut: [
     [12, '안녕! 알밤이야. 숲 입구에서 군밤 굽는 게 내 꿈이었어!'],
@@ -701,7 +776,7 @@ function newState() {
     v: 1, savedAt: 0, level: 1, xp: 0, coins: 30, energy: MAX_E, eTs: Date.now(),
     board, rows: START_ROWS, chains: ['bakery', 'coffee'], orders: [],
     disc: Object.fromEntries(CHAIN_KEYS.map(c => [c, c === 'bakery' || c === 'coffee' ? [1] : []])),
-    settings: { chatE: 3, sfx: 2, story: true, mhint: true, bgm: true, bgmV: .5 }, story: { intro: false, seen: {} }, giftDay: '', shop: { day: '', buys: 0 }, mail: { list: [], got: {}, am: '', pm: '' }, tut: { k: 0, t: 0 },
+    settings: { chatE: 3, sfx: 2, haptic: true, story: true, mhint: true, bgm: true, bgmV: .5 }, story: { intro: false, seen: {} }, giftDay: '', shop: { day: '', buys: 0 }, mail: { list: [], got: { [CH5_ENERGY_MAIL]: 1 }, am: '', pm: '' }, tut: { k: 0, t: 0 },
     stats: { merges: 0, orders: 0, made: 0 }, pendingGens: [], pendingItems: [], gdisc: {}, chatBonus: 0, snow: 0, ev: null, onEv: false, evTab: false, coll: {}, pokes: { d: '', l: [] }, seenVer: '', street: {}, stBeat: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }, spin: { d: '' }, tools: { cut: 0, up: 0 }, tbuy: { d: '', cut: 0, up: 0 }, store: [], storeN: STORE_START, nextId: 1,
     stars: 0, decor: Object.fromEntries(ALL_SPOTS.map(d => [d.k, 0])), areaDone: {},
   };
@@ -758,6 +833,7 @@ function sanitize(o) {
   if (o.cafeDone) s.areaDone.cafe = true;
   if (o.settings && CHAT_E_OPTIONS.includes(o.settings.chatE)) s.settings.chatE = o.settings.chatE;
   if (o.settings && [0, 1, 2, 3].includes(o.settings.sfx)) s.settings.sfx = o.settings.sfx;
+  if (o.settings && typeof o.settings.haptic === 'boolean') s.settings.haptic = o.settings.haptic;
   if (o.settings && typeof o.settings.story === 'boolean') s.settings.story = o.settings.story;
   if (o.settings && typeof o.settings.mhint === 'boolean') s.settings.mhint = o.settings.mhint;
   if (o.settings && typeof o.settings.bgm === 'boolean') s.settings.bgm = o.settings.bgm;
@@ -781,7 +857,7 @@ function sanitize(o) {
   if (o.shop && typeof o.shop.day === 'string') s.shop = { day: o.shop.day, buys: +o.shop.buys || 0 };
   if (o.tools && typeof o.tools === 'object') for (const k of ['cut', 'up']) s.tools[k] = Math.max(0, Math.min(999, Math.floor(+o.tools[k] || 0)));
   if (Number.isInteger(o.storeN)) s.storeN = Math.max(STORE_START, Math.min(STORE_MAX, o.storeN));
-  if (Array.isArray(o.store)) s.store = Array.from({ length: s.storeN }, (_, k) => { const v = validItem(o.store[k]); return v || null; });
+  if (Array.isArray(o.store)) { const a = Array.from({ length: s.storeN }, (_, k) => validItem(o.store[k]) || null).filter(Boolean); s.store = Array.from({ length: s.storeN }, (_, k) => a[k] || null); }
   for (const k of ['cut', 'up']) if (s.tools[k] > 0) { const n = s.tools[k]; s.tools[k] = 0; const h = s.store.find(x => x && x.tool === k); if (h) h.n = (h.n || 1) + n; else { const e = s.store.findIndex(x => !x), it = n > 1 ? { tool: k, n } : { tool: k }; if (e >= 0) s.store[e] = it; else s.pendingItems.push(it); } }
   if (o.spin && typeof o.spin.d === 'string') s.spin = { d: o.spin.d };
   if (o.tbuy && typeof o.tbuy.d === 'string') s.tbuy = { d: o.tbuy.d, cut: +o.tbuy.cut || 0, up: +o.tbuy.up || 0 };
@@ -800,6 +876,16 @@ function sanitize(o) {
     s.ev = ev;
   }
   autoClear(s);
+  if (!o.mail?.got?.[CH5_ENERGY_MAIL] && !s.mail.list.some(letter => letter.id === CH5_ENERGY_MAIL)) {
+    const completed = AREAS.filter(area => area.ch === 5 && s.areaDone[area.k]).length;
+    if (completed) {
+      mailPush({
+        id: CH5_ENERGY_MAIL, k: 'd', a: -1, from: '제작자', ti: '햇살 모래사장 보상',
+        t: `햇살 모래사장 가게 완성 보상을 조정했어요. 먼저 완성해 주신 가게 ${completed}곳에 대해 한 곳당 에너지 ${CH5_COMPLETION_ENERGY}을 보내드려요. 함께 꾸며 주셔서 고마워요!`,
+        rw: mailRw({ e: completed * CH5_COMPLETION_ENERGY }),
+      }, s);
+    }
+  }
   return s;
 }
 
@@ -825,15 +911,15 @@ function swapEv() {
 }
 // 생산품 설명 (정보칸에 나옴)
 const ITEM_DESC = {
-  bakery: ["구름언덕 들판에서 막 거둔 밀 이삭이에요.", "보리가 맷돌로 곱게 빻은 밀가루예요.", "쿠키가 볼에 꼭꼭 눌러 본 말랑 반죽이에요.", "콩떡이 아침마다 찾는 동글동글 모닝빵이에요.", "솜이가 제일 좋아하는 폭신한 식빵이에요.", "치즈가 결을 하나씩 떼어 먹는 크루아상이에요.", "소풍 갈 때 챙기는 갓 구운 빵 한 바구니예요.", "퐁당이 강가 소풍에 꼭 싸 가는 샌드위치예요.", "뚝딱이 탑처럼 쌓아 올린 든든한 샌드위치예요.", "마을 잔치에 빠지지 않는 샌드위치 케이크예요."],
-  coffee: ["반질반질 윤이 나는 커피 원두 한 알이에요.", "향긋한 원두를 한 줌 모았어요.", "도토리가 장 보러 갈 때마다 사 가는 원두예요.", "소곤이 밤샘 독서 전에 마시는 에스프레소예요.", "펭구가 얼음을 동동 띄워 마시는 아메리카노예요.", "몽실이 거품 수염을 만들며 마시는 라떼예요.", "쌩쌩이 썰매 끌고 와서 단숨에 비우는 프라페예요.", "포근이 크림부터 핥아 먹는 아인슈페너예요.", "단풍이 몰래 한 입 더 먹는 티라미수예요.", "꿀떡이 탱글탱글 떠먹는 커피 젤리 파르페예요."],
-  berry: ["봄바람에 하얗게 핀 딸기 꽃이에요.", "솜이가 밭에서 제일 먼저 따는 빨간 딸기예요.", "사이좋게 붙어 자란 딸기 두 알이에요.", "새콤이 등에 콕콕 꽂아 나르는 딸기 바구니예요.", "보글보글 졸여 빵에 듬뿍 바르는 딸기잼이에요.", "살랑이 꽃처럼 예쁘다고 아끼는 딸기 타르트예요.", "생일마다 촛불을 꽂는 딸기 케이크예요.", "산들이 분홍빛이 닮았다고 좋아하는 파르페예요.", "알밤이 돌돌 말아 들고 다니는 딸기 크레페예요.", "마을 축제를 빛내는 딸기 2단 케이크예요."],
-  choco: ["숲속 나무에서 막 딴 카카오 열매예요.", "열매 속에서 꺼낸 쌉쌀한 카카오 빈이에요.", "입에 넣으면 살살 녹는 초콜릿 조각이에요.", "꼼지가 땅굴 간식으로 챙기는 판 초콜릿이에요.", "쿠키가 볼 가득 넣고 다니는 초코칩 쿠키예요.", "반짝이 밤 산책 전에 먹는 초코 컵케이크예요.", "수줍은 마음을 전할 때 건네는 하트 봉봉이에요.", "타닥이 화롯가에서 즐기는 초코 퐁당 케이크예요.", "뚝딱이 집 짓듯 쌓아 올린 브라우니 탑이에요.", "아이들이 꿈에 그리는 초콜릿 하우스예요."],
-  tea: ["창가 화분에 파릇파릇 돋은 허브 새싹이에요.", "살랑이 낮잠 전에 우려 마시는 캐모마일이에요.", "말린 꽃잎을 차곡차곡 모은 봉투예요.", "소곤이 책장 위에 모아 두는 꽃무늬 찻잎 통이에요.", "몽글이 꽃잎을 띄워 호호 마시는 허브티예요.", "손님을 맞을 때 꺼내는 찻주전자 세트예요.", "오후 세 시, 다 함께 모이는 티타임이에요.", "솜이가 색깔별로 하나씩 고르는 마카롱 탑이에요.", "꽃잎을 얹어 구운 향긋한 티케이크예요.", "귀한 손님께만 내는 꽃 화과자 세트예요."],
-  icecream: ["아침마다 문 앞에 배달되는 신선한 우유예요.", "몽실의 털처럼 폭신하게 휘핑한 생크림이에요.", "분홍빛 딸기 아이스크림 한 스쿱이에요.", "집게가 집게발로 꼭 쥐고 먹는 콘 아이스크림이에요.", "끼룩이 호시탐탐 노리는 세 단 콘 아이스크림이에요.", "꿀꺽이 한입에 넣으려다 꾹 참는 선데예요.", "도레가 얼음 위에서 나눠 먹는 아이스크림 케이크예요.", "찰랑이 반쪽씩 나눠 먹는 바나나 스플릿이에요.", "여름 바닷가에서 사르르 녹는 과일 빙수예요.", "모두가 숟가락을 들고 모이는 파르페 타워예요."],
-  candy: ["반짝반짝 네모난 각설탕이에요.", "주머니에 넣어 다니는 동그란 알사탕이에요.", "퐁당이 물놀이 끝나고 받는 막대사탕이에요.", "탱글탱글 흔들리는 말랑 젤리 컵이에요.", "몽실이 자기 털이랑 헷갈리는 솜사탕이에요.", "알록달록 사탕을 병에 가득 담았어요.", "고마운 이웃에게 건네는 사탕 꽃다발이에요.", "반짝이 보석 같다고 좋아하는 젤리 케이크예요.", "또르가 바다를 닮았다며 들여다보는 젤리 어항이에요.", "축제 날 산들이 머리에 쓰는 사탕 화관이에요."],
-  fish: ["주르륵 부어 쓸 붕어빵 반죽이에요.", "꿀단 할머니 수첩에 적힌 비법 팥앙금이에요.", "찰랑이 꼬리부터 먹는다고 우기는 붕어빵이에요.", "따끈한 붕어빵을 종이봉투에 담았어요.", "사뿐이 썰매 타기 전에 먹는 붕어빵 한 접시예요.", "눈 오는 날 다 함께 나눠 먹는 붕어빵 바구니예요.", "따끈이 이웃집마다 돌리는 붕어빵 선물 상자예요.", "솜이가 분홍색이라 고르는 딸기 슈크림 붕어빵이에요.", "도토리가 군고구마보다 좋다는 자색 고구마 붕어빵이에요.", "느릿이 천천히 음미하는 말차 팥 붕어빵이에요."],
-  pie: ["가을 숲에서 빨갛게 익은 사과예요.", "알밤이 겨울 내내 아껴 먹는 사과잼이에요.", "김이 모락모락 나는 사과파이 한 조각이에요.", "단풍이 꼬리를 흔들며 기다리는 애플파이예요.", "따끈한 파이 위에 아이스크림을 올렸어요.", "숲속 소풍에 챙겨 가는 파이 바구니예요.", "타닥이 고마운 이웃에게 보내는 파이 선물 상자예요.", "캐러멜이 반짝이는 뒤집어 구운 타르트 타탱이에요.", "새콤이 바삭바삭 소리에 반한 사과 크럼블이에요.", "사과를 장미처럼 돌돌 말아 구운 타르트예요."],
+  bakery: ["구름언덕 들판에서 막 거둔 밀 이삭이에요.", "보리가 맷돌로 곱게 빻은 밀가루예요.", "쿠키가 볼에 꼭꼭 눌러 본 말랑 반죽이에요.", "콩떡이 아침마다 찾는 동글동글 모닝빵이에요.", "솜이가 제일 좋아하는 폭신한 식빵이에요.", "치즈가 결을 하나씩 떼어 먹는 크루아상이에요.", "소풍 갈 때 챙기는 갓 구운 빵 한 바구니예요.", "퐁당이 강가 소풍에 꼭 싸 가는 샌드위치예요.", "뚝딱이 탑처럼 쌓아 올린 든든한 샌드위치예요.", "마을 잔치에 빠지지 않는 샌드위치 케이크예요.", "몽돌이 바닷가 아침마다 탑처럼 쌓아 먹는 프렌치토스트예요.", "하얀 항구 빵집 할아버지가 리본으로 묶은 크루아상 탑이에요.", "첨벙 선장이 출항 전에 든든히 먹는 브런치 보드예요."],
+  coffee: ["반질반질 윤이 나는 커피 원두 한 알이에요.", "향긋한 원두를 한 줌 모았어요.", "도토리가 장 보러 갈 때마다 사 가는 원두예요.", "소곤이 밤샘 독서 전에 마시는 에스프레소예요.", "펭구가 얼음을 동동 띄워 마시는 아메리카노예요.", "몽실이 거품 수염을 만들며 마시는 라떼예요.", "쌩쌩이 썰매 끌고 와서 단숨에 비우는 프라페예요.", "포근이 크림부터 핥아 먹는 아인슈페너예요.", "단풍이 몰래 한 입 더 먹는 티라미수예요.", "꿀떡이 탱글탱글 떠먹는 커피 젤리 파르페예요.", "몽돌 젤라또 가게 옆 테이블에서 즐기는 아포가토예요.", "훨훨 할아버지가 일지를 쓰며 먹는 모카 롤케이크예요.", "또박이 배달을 마치고 고르는 커피 디저트 트레이예요."],
+  berry: ["봄바람에 하얗게 핀 딸기 꽃이에요.", "솜이가 밭에서 제일 먼저 따는 빨간 딸기예요.", "사이좋게 붙어 자란 딸기 두 알이에요.", "새콤이 등에 콕콕 꽂아 나르는 딸기 바구니예요.", "보글보글 졸여 빵에 듬뿍 바르는 딸기잼이에요.", "살랑이 꽃처럼 예쁘다고 아끼는 딸기 타르트예요.", "생일마다 촛불을 꽂는 딸기 케이크예요.", "산들이 분홍빛이 닮았다고 좋아하는 파르페예요.", "알밤이 돌돌 말아 들고 다니는 딸기 크레페예요.", "마을 축제를 빛내는 딸기 2단 케이크예요.", "뽀글이 시장 구경 길에 들고 다니는 딸기 탕후루 다발이에요.", "문문이 여덟 손으로 한 겹씩 쌓은 딸기 밀푀유예요.", "항구 축제 날 다 함께 나누는 딸기 3단 케이크예요."],
+  choco: ["숲속 나무에서 막 딴 카카오 열매예요.", "열매 속에서 꺼낸 쌉쌀한 카카오 빈이에요.", "입에 넣으면 살살 녹는 초콜릿 조각이에요.", "꼼지가 땅굴 간식으로 챙기는 판 초콜릿이에요.", "쿠키가 볼 가득 넣고 다니는 초코칩 쿠키예요.", "반짝이 밤 산책 전에 먹는 초코 컵케이크예요.", "수줍은 마음을 전할 때 건네는 하트 봉봉이에요.", "타닥이 화롯가에서 즐기는 초코 퐁당 케이크예요.", "뚝딱이 집 짓듯 쌓아 올린 브라우니 탑이에요.", "아이들이 꿈에 그리는 초콜릿 하우스예요.", "또박이 편지 정리 뒤에 하나씩 꺼내 먹는 초코 에클레어 탑이에요.", "첨벙 선장 생일에 올리는 초코 3단 케이크예요.", "초콜릿 꽃과 버섯이 자라는 달콤한 초콜릿 정원이에요."],
+  tea: ["창가 화분에 파릇파릇 돋은 허브 새싹이에요.", "살랑이 낮잠 전에 우려 마시는 캐모마일이에요.", "말린 꽃잎을 차곡차곡 모은 봉투예요.", "소곤이 책장 위에 모아 두는 꽃무늬 찻잎 통이에요.", "몽글이 꽃잎을 띄워 호호 마시는 허브티예요.", "손님을 맞을 때 꺼내는 찻주전자 세트예요.", "오후 세 시, 다 함께 모이는 티타임이에요.", "솜이가 색깔별로 하나씩 고르는 마카롱 탑이에요.", "꽃잎을 얹어 구운 향긋한 티케이크예요.", "귀한 손님께만 내는 꽃 화과자 세트예요.", "꽃잎이 동동 비치는 꽃 젤리 케이크예요.", "항구 언덕 정원에서 여는 티파티 세트예요.", "문문이 꽃무늬 천을 떠올리며 고른 꽃 롤케이크예요."],
+  icecream: ["아침마다 문 앞에 배달되는 신선한 우유예요.", "몽실의 털처럼 폭신하게 휘핑한 생크림이에요.", "분홍빛 딸기 아이스크림 한 스쿱이에요.", "집게가 집게발로 꼭 쥐고 먹는 콘 아이스크림이에요.", "끼룩이 호시탐탐 노리는 세 단 콘 아이스크림이에요.", "꿀꺽이 한입에 넣으려다 꾹 참는 선데예요.", "도레가 얼음 위에서 나눠 먹는 아이스크림 케이크예요.", "찰랑이 반쪽씩 나눠 먹는 바나나 스플릿이에요.", "여름 바닷가에서 사르르 녹는 과일 빙수예요.", "모두가 숟가락을 들고 모이는 파르페 타워예요.", "몽돌 젤라또 가게의 대표 메뉴 아이스크림 와플이에요.", "알록달록 스쿱을 쌓아 올린 아이스크림 3단 케이크예요.", "고마운 이웃에게 건네는 무지개 콘 꽃다발이에요."],
+  candy: ["반짝반짝 네모난 각설탕이에요.", "주머니에 넣어 다니는 동그란 알사탕이에요.", "퐁당이 물놀이 끝나고 받는 막대사탕이에요.", "탱글탱글 흔들리는 말랑 젤리 컵이에요.", "몽실이 자기 털이랑 헷갈리는 솜사탕이에요.", "알록달록 사탕을 병에 가득 담았어요.", "고마운 이웃에게 건네는 사탕 꽃다발이에요.", "반짝이 보석 같다고 좋아하는 젤리 케이크예요.", "또르가 바다를 닮았다며 들여다보는 젤리 어항이에요.", "축제 날 산들이 머리에 쓰는 사탕 화관이에요.", "바닷바람을 타고 날아갈 것 같은 사탕 열기구예요.", "항구 광장에서 빙글빙글 도는 사탕 회전목마예요.", "젤리를 싣고 칙칙폭폭 달리는 사탕 기차예요."],
+  fish: ["주르륵 부어 쓸 붕어빵 반죽이에요.", "꿀단 할머니 수첩에 적힌 비법 팥앙금이에요.", "찰랑이 꼬리부터 먹는다고 우기는 붕어빵이에요.", "따끈한 붕어빵을 종이봉투에 담았어요.", "사뿐이 썰매 타기 전에 먹는 붕어빵 한 접시예요.", "눈 오는 날 다 함께 나눠 먹는 붕어빵 바구니예요.", "따끈이 이웃집마다 돌리는 붕어빵 선물 상자예요.", "솜이가 분홍색이라 고르는 딸기 슈크림 붕어빵이에요.", "도토리가 군고구마보다 좋다는 자색 고구마 붕어빵이에요.", "느릿이 천천히 음미하는 말차 팥 붕어빵이에요.", "바나나와 초코가 듬뿍 든 붕어빵이에요.", "뽀글이 시장에서 꼬치에 꽂아 파는 미니 붕어빵이에요.", "붕어빵을 퐁당 얹은 달콤한 파르페예요."],
+  pie: ["가을 숲에서 빨갛게 익은 사과예요.", "알밤이 겨울 내내 아껴 먹는 사과잼이에요.", "단풍이 꼬리를 흔들며 기다리는 애플파이예요.", "김이 모락모락 나는 사과파이 한 조각이에요.", "따끈한 파이 위에 아이스크림을 올렸어요.", "숲속 소풍에 챙겨 가는 파이 바구니예요.", "타닥이 고마운 이웃에게 보내는 파이 선물 상자예요.", "캐러멜이 반짝이는 뒤집어 구운 타르트 타탱이에요.", "새콤이 바삭바삭 소리에 반한 사과 크럼블이에요.", "사과를 장미처럼 돌돌 말아 구운 타르트예요.", "반질반질 캐러멜을 입힌 사과 꼬치예요.", "사과 조각을 듬뿍 올린 사과 롤케이크예요.", "파이 세 판을 탑처럼 쌓은 3단 파이 탑이에요."],
   xmas: ["생강 향이 솔솔 나는 쿠키 반죽이에요.", "방긋 웃는 진저브레드맨이에요.", "사뿐이 아이싱으로 옷을 입혀 준 진저맨이에요.", "트리에 매달아 두는 크리스마스 쿠키예요.", "포근이 마시멜로를 세 개 띄우는 핫초코예요.", "광장에서 다 함께 지은 달콤한 과자 집이에요.", "크리스마스 밤을 밝히는 눈꽃 케이크예요."],
 };
 // 생산기 설명 (레벨별)
@@ -893,18 +979,35 @@ async function loadState() {
 }
 
 let saveTimer = null;
-let lastRaw = '';
+let saveInFlight = null;
+let lastSaved = null;
 function save() { if (!saveTimer) saveTimer = setTimeout(flush, 8000); }
 async function flush() {
   clearTimeout(saveTimer); saveTimer = null;
-  if (!S) return;
+  while (saveInFlight) await saveInFlight;
+  if (!S) return false;
   const st = normState(), cmp = JSON.stringify(Object.assign({}, st, { savedAt: 0 }));
-  if (cmp === lastRaw) return;
-  lastRaw = cmp;
-  S.savedAt = Date.now();
-  const raw = JSON.stringify(Object.assign(st, { savedAt: S.savedAt }));
-  try { await Risuai.pluginStorage.setItem(SAVE_KEY, raw); } catch (err) { console.log(TAG, 'save fail', err?.message); }
-  try { if (localStore) await localStore.setItem(SAVE_KEY, JSON.parse(raw)); } catch (err) { /* ignore */ }
+  if (cmp === lastSaved?.cmp) return true;
+  const state = S;
+  const savedAt = Math.max(Date.now(), state.savedAt + 1, (lastSaved?.savedAt || 0) + 1);
+  const raw = JSON.stringify({ ...st, savedAt });
+  saveInFlight = writeSave(raw);
+  try {
+    const saved = await saveInFlight;
+    if (saved) {
+      lastSaved = { cmp, savedAt };
+      state.savedAt = savedAt;
+    }
+    return saved;
+  } finally {
+    saveInFlight = null;
+  }
+}
+async function writeSave(raw) {
+  let saved = false;
+  try { await Risuai.pluginStorage.setItem(SAVE_KEY, raw); saved = true; } catch (err) { console.log(TAG, 'save fail', err?.message); }
+  try { if (localStore) { await localStore.setItem(SAVE_KEY, JSON.parse(raw)); saved = true; } } catch (err) { console.log(TAG, 'local save fail', err?.message); }
+  return saved;
 }
 
 // ---------- energy ----------
@@ -939,7 +1042,7 @@ function addEnergy(n, overflow) {
 // ---------- orders ----------
 function genOrder(st) {
   const lv = st.level, chains = st.chains;
-  const maxL = Math.min(hiOpen() ? 10 : 7, 2 + Math.ceil(lv / 2));
+  const maxL = Math.min(menuCap(), 2 + Math.ceil(lv / 2));
   const minL = lv >= 7 ? 3 : 2;
   const n = lv >= 4 ? 3 : Math.random() < 0.5 ? 2 : 1;
   const req = [], used = new Set();
@@ -1094,7 +1197,9 @@ const TOOL_SVG = {
 const toolSell = k => Math.round(TOOLS[k].price / 4);
 const toolIcon = k => (ART_TOOLS && ART_TOOLS[k]) ? `<img src="${ART_TOOLS[k]}" alt="" draggable="false">` : TOOL_SVG[k];
 const hiOpen = () => !!(S && S.areaDone && S.areaDone.maple);
-const maxLvOf = c => CHAINS[c] ? Math.min(CHAINS[c].items.length, hiOpen() ? 10 : 7) : 7;
+// 6장부터 장이 하나 열릴 때마다 메뉴 한 단계씩 (6장 Lv.11, 7장 Lv.12, 8장 Lv.13)
+const menuCap = () => !hiOpen() ? 7 : 10 + [6, 7, 8].filter(ch => CHS.includes(ch) && chOpen(ch)).length;
+const maxLvOf = c => CHAINS[c] ? Math.min(CHAINS[c].items.length, menuCap()) : 7;
 const tN = it => (it && it.n) || 1;
 const tBadge = it => tN(it) > 1 ? `<span class="tn">${tN(it)}</span>` : '';
 const takeTool = from => { const t = S.board[from]; if (tN(t) > 1) t.n--; else S.board[from] = null; };
@@ -1159,6 +1264,7 @@ function dropAny(from, to) {
     setIt(to, A); setIt(from, B); sfx('drop');
     if (!toSt) fx.push({ t: 'land', i: to });
   }
+  if (fromSt && !toSt && !getIt(from)) packStore();
   sel = toSt ? -1 : to;
   if (toSt) setTimeout(() => jelly(cellEl(to)?.querySelector('.it'), .35, 340), 20);
   placePending();
@@ -1194,9 +1300,20 @@ function renderBoxBtn() {
   const n = S.store.filter(Boolean).length;
   b.textContent = n || ''; b.style.display = n ? '' : 'none';
 }
+function packStore(items = S.store.filter(Boolean)) {
+  S.store = Array.from({ length: S.storeN }, (_, i) => items[i] ?? null);
+}
+function storeSortKey(it) {
+  if (it.c) return [0, CHAIN_KEYS.indexOf(it.c), -it.l];
+  if (it.g) return [1, CHAIN_KEYS.indexOf(it.g), -glOf(it)];
+  if (it.r) return [2, it.r === 'en' ? 0 : 1, -it.l];
+  if (it.x) return [3, 0, -it.x];
+  if (it.b) return [4, 0, -it.b];
+  return [5, TK.indexOf(it.tool), 0];
+}
 function openBox() {
   if (toolMode) setToolMode(null);
-  const m = modal(`<h3>보관함</h3><div class="mc-boxbody"></div><div class="acts"><button class="mc-btn wh" data-x>닫기</button></div>`);
+  const m = modal(`<h3>보관함</h3><div class="mc-boxbody"></div><div class="acts"><button class="mc-btn wh" data-sort>자동정렬</button><button class="mc-btn wh" data-x>닫기</button></div>`);
   const body = m.querySelector('.mc-boxbody');
   const draw = () => {
     const used = S.store.filter(Boolean).length;
@@ -1204,13 +1321,20 @@ function openBox() {
       <div class="mc-sub" style="margin-top:8px">판 위 재료·생산기·보따리·가위·스프링클을 위쪽 보관함 버튼으로 끌어다 놓으면 넣을 수 있어요. 가위·스프링클은 판으로 꺼낸 뒤 재료에 끌어다 놓으면 써져요.</div></div>`;
   };
   draw();
+  m.querySelector('[data-sort]').onclick = () => {
+    const items = S.store.filter(Boolean).map(item => ({ item, key: storeSortKey(item) }));
+    items.sort(({ key: a }, { key: b }) => a[0] - b[0] || a[1] - b[1] || a[2] - b[2]);
+    packStore(items.map(({ item }) => item));
+    sfx('ui'); draw(); renderStore(); save();
+  };
   body.addEventListener('click', async ev => {
-    const u = ev.target.closest('[data-use]'), o = ev.target.closest('[data-out]');
+    const o = ev.target.closest('[data-out]');
     if (o) {
       const k = +o.dataset.out, it = S.store[k], t = firstEmpty();
       if (!it) return;
       if (t < 0) { sfx('error'); toast('판이 꽉 찼어요! 자리를 만들어 주세요.'); return; }
-      S.store[k] = null; S.board[t] = it; sel = t; fx.push({ t: 'pop', i: t });
+      S.store[k] = null; packStore();
+      S.board[t] = it; sel = t; fx.push({ t: 'pop', i: t });
       sfx('drop'); draw(); renderAll(); save();
       return;
     }
@@ -1471,6 +1595,101 @@ const ICO = {
   plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="M12 6v12M6 12h12"/></svg>',
 };
 
+/* Embedded Jua font license
+Copyright 2018 The Jua Project Authors
+
+This Font Software is licensed under the SIL Open Font License, Version 1.1.
+This license is copied below, and is also available with a FAQ at:
+http://scripts.sil.org/OFL
+
+
+-----------------------------------------------------------
+SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
+-----------------------------------------------------------
+
+PREAMBLE
+The goals of the Open Font License (OFL) are to stimulate worldwide
+development of collaborative font projects, to support the font creation
+efforts of academic and linguistic communities, and to provide a free and
+open framework in which fonts may be shared and improved in partnership
+with others.
+
+The OFL allows the licensed fonts to be used, studied, modified and
+redistributed freely as long as they are not sold by themselves. The
+fonts, including any derivative works, can be bundled, embedded,
+redistributed and/or sold with any software provided that any reserved
+names are not used by derivative works. The fonts and derivatives,
+however, cannot be released under any other type of license. The
+requirement for fonts to remain under this license does not apply
+to any document created using the fonts or their derivatives.
+
+DEFINITIONS
+"Font Software" refers to the set of files released by the Copyright
+Holder(s) under this license and clearly marked as such. This may
+include source files, build scripts and documentation.
+
+"Reserved Font Name" refers to any names specified as such after the
+copyright statement(s).
+
+"Original Version" refers to the collection of Font Software components as
+distributed by the Copyright Holder(s).
+
+"Modified Version" refers to any derivative made by adding to, deleting,
+or substituting -- in part or in whole -- any of the components of the
+Original Version, by changing formats or by porting the Font Software to a
+new environment.
+
+"Author" refers to any designer, engineer, programmer, technical
+writer or other person who contributed to the Font Software.
+
+PERMISSION & CONDITIONS
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of the Font Software, to use, study, copy, merge, embed, modify,
+redistribute, and sell modified and unmodified copies of the Font
+Software, subject to the following conditions:
+
+1) Neither the Font Software nor any of its individual components,
+in Original or Modified Versions, may be sold by itself.
+
+2) Original or Modified Versions of the Font Software may be bundled,
+redistributed and/or sold with any software, provided that each copy
+contains the above copyright notice and this license. These can be
+included either as stand-alone text files, human-readable headers or
+in the appropriate machine-readable metadata fields within text or
+binary files as long as those fields can be easily viewed by the user.
+
+3) No Modified Version of the Font Software may use the Reserved Font
+Name(s) unless explicit written permission is granted by the corresponding
+Copyright Holder. This restriction only applies to the primary font name as
+presented to the users.
+
+4) The name(s) of the Copyright Holder(s) or the Author(s) of the Font
+Software shall not be used to promote, endorse or advertise any
+Modified Version, except to acknowledge the contribution(s) of the
+Copyright Holder(s) and the Author(s) or with their explicit written
+permission.
+
+5) The Font Software, modified or unmodified, in part or in whole,
+must be distributed entirely under this license, and must not be
+distributed under any other license. The requirement for fonts to
+remain under this license does not apply to any document created
+using the Font Software.
+
+TERMINATION
+This license becomes null and void if any of the above conditions are
+not met.
+
+DISCLAIMER
+THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
+OF COPYRIGHT, PATENT, TRADEMARK, OR OTHER RIGHT. IN NO EVENT SHALL THE
+COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+INCLUDING ANY GENERAL, SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL
+DAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM
+OTHER DEALINGS IN THE FONT SOFTWARE.
+*/
 const CSS = `
 @font-face{font-family:'MCJua';src:url(data:font/woff2;base64,__FONT__) format('woff2');font-display:block}
 @import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
@@ -1502,7 +1721,8 @@ html,body{margin:0;height:100%;background:transparent!important;overflow:hidden}
 .mc-ord.ready{background:#eafff3}
 .mc-ord .row{display:flex;align-items:center;gap:3px}
 .mc-ord .fc{width:36px;height:36px;flex-shrink:0;background:#fff3e2;border-radius:50%;border:2px solid #f0d9c2}
-.mc-ord .rq{position:relative;width:32px;height:32px;background:#fbe9d4;border-radius:9px;flex-shrink:0}
+.mc-ord .rq{position:relative;width:32px;height:32px;background:#fbe9d4;border-radius:9px;flex-shrink:0;border:0;padding:0;cursor:pointer}
+.mc-ord .rq:focus-visible{outline:2px solid #5b3a32;outline-offset:1px}
 .mc-ord .rq.have{background:#d6f5e6}
 .mc-ord .row{min-width:0}
 .mc-ord .row>.fc,.mc-ord .row>.rq{height:auto!important;aspect-ratio:1;min-width:0}
@@ -1947,7 +2167,7 @@ html,body{margin:0;height:100%;background:transparent!important;overflow:hidden}
 /* ===== 2.20 order cards ===== */
 .mc-orders{gap:6px;padding:2px 8px 8px}
 .mc-ord{padding:6px 6px 7px;gap:5px;align-items:stretch}
-.mc-ord .hd{display:flex;align-items:center;gap:6px;min-width:0}
+.mc-ord .hd{position:relative;display:flex;align-items:center;gap:6px;min-width:0}
 .mc-ord .hd .fc{flex:0 0 auto;width:54px;height:54px;background:#fff3e2;border-radius:50%;border:2px solid #f0d9c2}
 .mc-ord .hd .fc>*{width:100%!important;height:100%!important}
 .mc-ord .rws{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;font-size:14px;line-height:1}
@@ -2106,6 +2326,7 @@ function buildUI() {
     else if (act === 'cafe') openTownSafe();
     else if (act === 'set') openSettings();
     else if (act === 'order') completeOrder(+a.dataset.id);
+    else if (act === 'order-evo') openEvoIt({ c: a.dataset.chain, l: +a.dataset.level });
     else if (act === 'sell') sellSelected();
     else if (act === 'use') useRes(sel);
     else if (act === 'box') openBox();
@@ -2126,8 +2347,18 @@ function buildUI() {
   board.addEventListener('pointerdown', onDown);
   board.addEventListener('pointermove', onMove);
   board.addEventListener('pointerup', onUp);
-  board.addEventListener('pointercancel', cancelDrag);
-  document.addEventListener('keydown', ev => { if (ev.key === 'Escape') { const m = $('.mc-modal'); if (m) m.remove(); else if ($('.mc-cafe')) closeCafe(); else closeGame(); } });
+  const cancelPointerDrag = ev => { if (drag?.pointerId === ev.pointerId) cancelDrag(); };
+  board.addEventListener('pointercancel', cancelPointerDrag);
+  board.addEventListener('lostpointercapture', cancelPointerDrag);
+  document.addEventListener('keydown', ev => {
+    if (ev.key !== 'Escape') return;
+    const m = $('.mc-modal');
+    const cancel = m?.querySelector('[data-no]');
+    if (cancel) cancel.click();
+    else if (m) m.remove();
+    else if ($('.mc-cafe')) closeCafe();
+    else if (!APP) closeGame();
+  });
   window.addEventListener('resize', () => { if (visible) layout(); });
   setInterval(() => { if (visible && S) { const e0 = S.energy; tickEnergy(); renderTop(); renderMode(); if (e0 !== S.energy) renderBoard(); } }, 1000);
   uiBuilt = true;
@@ -2237,11 +2468,12 @@ function renderOrders() {
       const k = r.c + ':' + r.l;
       used[k] = (used[k] || 0) + 1;
       const have = (counts[k] || 0) >= used[k];
-      return `<div class="rq ${have ? 'have' : ''}" title="${esc(CHAINS[r.c].items[r.l - 1])}">${iconItem(r.c, r.l)}${have ? `<span class="ok">${ICO.check}</span>` : ''}</div>`;
+      const name = esc(CHAINS[r.c].items[r.l - 1]);
+      return `<button type="button" class="rq ${have ? 'have' : ''}" data-act="order-evo" data-chain="${r.c}" data-level="${r.l}" title="${name} 머지 단계 보기" aria-label="${name} 머지 단계 보기">${iconItem(r.c, r.l)}${have ? `<span class="ok">${ICO.check}</span>` : ''}</button>`;
     }).join('');
     const rw = `<span class="mc-rw"><i>${UI.coin}</i>${coinsOf(od)}</span><span class="mc-rw"><i>${S.onEv ? SNOW : UI.star}</i>${starsOf(od)}</span>${od.en ? `<span class="mc-rw"><i>${UI.bolt}</i>${od.en}</span>` : ''}`;
     const go = ready ? `<span class="stamp">전달하기</span>` : '';
-    return `<div class="mc-ord ${ready ? 'ready' : ''}" data-id="${od.id}" ${ready ? `data-act="order"` : ''} title="${esc(ANIMALS[od.a].name)} 손님"><div class="hd"><div class="fc">${iconAnimal(od.a, ready)}</div><div class="rws">${rw}</div></div><div class="row">${reqs}</div>${go}</div>`;
+    return `<div class="mc-ord ${ready ? 'ready' : ''}" data-id="${od.id}" ${ready ? `data-act="order"` : ''} title="${esc(ANIMALS[od.a].name)} 손님"><div class="hd"><div class="fc">${iconAnimal(od.a, ready)}</div><div class="rws">${rw}</div>${go}</div><div class="row">${reqs}</div></div>`;
   }).join('');
   // 주문표가 그대로면 다시 그리지 않음
   { const O = $('.mc-orders'); if (O.__h !== oh || !O.firstChild === !!oh) { O.innerHTML = oh; O.__h = oh; } }
@@ -2399,8 +2631,8 @@ function ac() {
 }
 // ---------- 배경 음악: 주방 2곡을 번갈아, 마을 1곡. 곡이 끝날 때 부드럽게 이어 붙임 ----------
 const BGM_BASE = APP ? 'bgm/' : 'https://raw.githubusercontent.com/shakeit08/risu-plugins/main/sweet_merge_cafe_bgm/';
-const BGM_LIST = { cafe: ['cafe1.0c711031.mp3', 'cafe2.e5b77f07.mp3'], town: ['town1.ee1e87ef.mp3'] };
-const bgm = { cur: null, old: [], scene: '', idx: { cafe: 0, town: 0 }, timer: 0 };
+const BGM_LIST = { cafe: ['cafe1.0c711031.mp3', 'cafe2.e5b77f07.mp3'], town: ['town1.ee1e87ef.mp3'], sea: ['seaa.78071e25.mp3', 'seab.b4242fc2.mp3'] };  // sea: 반짝 바닷가 마을
+const bgm = { cur: null, old: [], scene: '', idx: { cafe: 0, town: 0, sea: 0 }, timer: 0 };
 const bgmVol = () => (S && S.settings && S.settings.bgm !== false) ? (S.settings.bgmV ?? .5) * .8 : 0;
 function bgmSet(t) {
   const v = Math.max(0, Math.min(1, t.f * bgmVol()));
@@ -2424,7 +2656,7 @@ function bgmNext() {
   bgm.cur = bgm.scene ? bgmStart(bgm.scene) : null;
 }
 function bgmTick(now) {
-  const want = (visible && !document.hidden && bgmVol() > 0) ? ($('.mc-town') ? 'town' : 'cafe') : '';
+  const want = (visible && !document.hidden && bgmVol() > 0) ? ($('.mc-town') ? (villageOf(townCh) >= 1 ? 'sea' : 'town') : 'cafe') : '';
   if (want !== bgm.scene) { bgm.scene = want; bgmNext(); }
   const c = bgm.cur;
   if (c && c.a.duration && c.a.duration - c.a.currentTime < 3.5 && !c.a.paused) bgmNext();
@@ -2474,7 +2706,10 @@ const JELLY = (k = 1) => [
   { transform: `scale(${1 - .03 * k},${1 + .03 * k})`, offset: .65 },
   { transform: 'scale(1,1)' }];
 const jelly = (el, k = 1, dur = 380) => el && el.animate(JELLY(k), { duration: dur, easing: 'cubic-bezier(.3,.6,.4,1)' });
-const haptic = ms => { try { navigator.vibrate && navigator.vibrate(ms); } catch (_) { } };
+const haptic = ms => {
+  if (S?.settings.haptic === false) return;
+  try { navigator.vibrate?.(ms); } catch (_) { }
+};
 function ring(r, color = '#ffd75a') {
   const d = document.createElement('div');
   d.className = 'mc-pt';
@@ -2607,7 +2842,7 @@ function flyCoins(from, n, target = '#mc-co', icon = UI.coin) {
 // ---------- drag ----------
 let drag = null;
 function onDown(ev) {
-  if (ev.button > 0) return;
+  if (drag || ev.button > 0) return;
   const cell = ev.target.closest('.c');
   if (!cell) return;
   const i = +cell.dataset.i;
@@ -2618,7 +2853,7 @@ function onDown(ev) {
   }
   const it = cell.querySelector('.it');
   const press = it && it.animate([{ transform: 'scale(1,1)' }, { transform: 'scale(1.04,.95)' }], { duration: 100, fill: 'forwards', easing: 'ease-out' });
-  drag = { i, x0: ev.clientX, y0: ev.clientY, moved: false, ghost: null, tgt: -1, cell, press, px: ev.clientX, py: ev.clientY, lx: ev.clientX, tilt: 0, tTilt: 0, raf: 0 };
+  drag = { i, pointerId: ev.pointerId, x0: ev.clientX, y0: ev.clientY, moved: false, ghost: null, tgt: -1, cell, press, px: ev.clientX, py: ev.clientY, lx: ev.clientX, tilt: 0, tTilt: 0, raf: 0 };
   try { ev.currentTarget.setPointerCapture(ev.pointerId); } catch (_) { }
   applyPull();
 }
@@ -2631,7 +2866,7 @@ function ghostLoop() {
   drag.raf = requestAnimationFrame(ghostLoop);
 }
 function onMove(ev) {
-  if (!drag) return;
+  if (!drag || drag.pointerId !== ev.pointerId) return;
   const dx = ev.clientX - drag.x0, dy = ev.clientY - drag.y0;
   if (!drag.moved) {
     if (dx * dx + dy * dy < 64) return;
@@ -2672,7 +2907,7 @@ function onMove(ev) {
   }
 }
 function onUp(ev) {
-  if (!drag) return;
+  if (!drag || drag.pointerId !== ev.pointerId) return;
   const d = drag;
   cleanupDrag();
   if (d.moved) {
@@ -2725,6 +2960,15 @@ function toast(html, opt = {}) {
   setTimeout(() => { t.animate([{ opacity: 1 }, { opacity: 0, transform: 'translateY(-8px)' }], { duration: 250 }).onfinish = () => t.remove(); }, opt.ms || 2600);
 }
 const NOTES = [
+  ['2.21.54', [
+    '햇살 모래사장 가게를 완성하면 가게마다 에너지를 80 더 받아요.',
+    '이미 완성한 햇살 모래사장 가게의 추가 에너지 보상은 제작자 우편으로 한 번 보내드려요.',
+  ]],
+  ['2.21.50', ['포근 호떡 노점의 판매대가 가게 창문 위치에 맞도록 고쳤어요.']],
+  ['2.21.49', [
+    '저장이 겹쳐도 이전 진행 상황이 덮어쓰지 않도록 고쳤어요. 저장에 실패하면 다음 저장 요청에서 다시 시도해요.',
+    '보관함에서 물건을 꺼내면 빈칸이 채워져요. 자동정렬을 누르면 같은 종류끼리 모아 정리할 수 있어요.',
+  ]],
   // 리스 플러그인에만 보이는 소식
   ...(APP ? [] : [['2.21.45', [
     '마을·이야기 그림을 열 때마다 다시 받느라 오래 걸리거나, 그림 불러오는 중 1/21에서 멈추던 문제를 고쳤어요. 이제 마을이 바로 열리고, 한 번 본 그림은 다음부터 빨리 떠요.',
@@ -3025,12 +3269,14 @@ function openDex() {
     }).join('')}</div>`, m => m.querySelector('.mc-card').classList.add('mc-dexcard'));
 }
 function openSettings() {
-  const dump = JSON.stringify(S);
+  const dump = JSON.stringify(normState());
   const m = modal(`<h3>설정</h3>
     ${APP ? '' : `<div class="mc-sec"><h4>채팅 보너스 에너지</h4><div class="mc-sub" style="margin-bottom:6px">리스에서 메시지를 보낼 때마다 충전되는 양</div>
       <div class="mc-seg">${CHAT_E_OPTIONS.map(v => `<button class="mc-btn wh ${S.settings.chatE === v ? 'on' : ''}" data-ce="${v}">${v ? '+' + v : '끄기'}</button>`).join('')}</div></div>`}
     <div class="mc-sec"><h4>효과음</h4>
       <div class="mc-seg">${['끄기', '작게', '보통', '크게'].map((t, v) => `<button class="mc-btn wh ${S.settings.sfx === v ? 'on' : ''}" data-sfx="${v}">${t}</button>`).join('')}</div></div>
+    ${APP ? `<div class="mc-sec"><h4>진동</h4>
+      <div class="mc-seg" role="group" aria-label="진동"><button class="mc-btn wh ${S.settings.haptic ? 'on' : ''}" data-haptic="1" aria-pressed="${S.settings.haptic}">켜기</button><button class="mc-btn wh ${S.settings.haptic ? '' : 'on'}" data-haptic="0" aria-pressed="${!S.settings.haptic}">끄기</button></div></div>` : ''}
     <div class="mc-sec"><h4>배경 음악</h4>
       <div class="mc-seg"><button class="mc-btn wh ${S.settings.bgm !== false ? 'on' : ''}" data-bgm="1">켜기</button><button class="mc-btn wh ${S.settings.bgm !== false ? '' : 'on'}" data-bgm="0">끄기</button></div>
       <div class="mc-vol"><span>음량</span><input type="range" min="0" max="100" step="5" value="${Math.round((S.settings.bgmV ?? .5) * 100)}" data-bgmv><b>${Math.round((S.settings.bgmV ?? .5) * 100)}</b></div></div>
@@ -3059,6 +3305,16 @@ function openSettings() {
     S.settings.sfx = +b.dataset.sfx; save();
     m.querySelectorAll('[data-sfx]').forEach(x => x.classList.toggle('on', x === b));
     sfx('merge', 3);
+  });
+  const hapticButtons = m.querySelectorAll('[data-haptic]');
+  hapticButtons.forEach(button => button.onclick = () => {
+    S.settings.haptic = button.dataset.haptic === '1';
+    hapticButtons.forEach(option => {
+      const active = option === button;
+      option.classList.toggle('on', active);
+      option.setAttribute('aria-pressed', String(active));
+    });
+    save();
   });
   m.querySelectorAll('[data-evp]').forEach(b => b.onclick = () => {
     S.settings.evPreview = b.dataset.evp === '1';
@@ -3105,7 +3361,9 @@ function openSettings() {
     try { o = sanitize(JSON.parse(txt)); } catch (_) { }
     if (!o) { toast('백업 내용을 읽을 수 없어요.'); return; }
     if (!(await confirmBox('지금 진행 상황을 백업 내용으로 덮어쓸까요?', '덮어쓰기'))) return;
-    S = o; sel = -1; tickEnergy(); await flush(); renderAll(); toast('불러오기 완료!');
+    S = o; sel = -1; tickEnergy();
+    const saved = await flush();
+    renderAll(); toast(saved ? '불러오기 완료!' : '불러온 내용을 저장하지 못했어요. 다음 저장 요청에서 다시 시도해요.');
   };
   m.querySelector('[data-imp]').onclick = () => doImport(m.querySelector('#mc-imp').value.trim());
   m.querySelector('[data-file]').onclick = () => m.querySelector('#mc-file').click();
@@ -3113,7 +3371,9 @@ function openSettings() {
   m.querySelector('[data-reset]').onclick = async () => {
     if (!(await confirmBox('정말 처음부터 다시 시작할까요?<br><span class="mc-sub">레벨, 코인, 보드, 도감이 모두 사라져요.</span>', '초기화'))) return;
     if (!(await confirmBox('되돌릴 수 없어요. 진짜로 초기화할까요?', '진짜 초기화'))) return;
-    S = newState(); sel = -1; await flush(); renderAll(); toast('새 카페를 열었어요!');
+    S = newState(); sel = -1;
+    const saved = await flush();
+    renderAll(); toast(saved ? '새 카페를 열었어요!' : '초기화한 상태를 저장하지 못했어요. 다음 저장 요청에서 다시 시도해요.');
   };
 }
 
@@ -3429,7 +3689,7 @@ function openTown() {
       const vi = +a[1], V = VILLAGES[vi]; stPop = null; v.querySelector('.tw-season')?.remove();
       if (vi === curVillage()) { pastView = -1; townCh = [...V.chs].reverse().find(chOpen) || V.chs[0]; renderTown(true); }
     }
-    else if (a === 'nextv') toast('하얀 항구는 아직 준비 중이에요. 다음 스테이지를 기대해 주세요!');
+    else if (a === 'nextv') toast('야자수 열대섬은 아직 준비 중이에요. 다음 스테이지를 기대해 주세요!');
     else if (a === 'st') { const j = +b.dataset.j; if (stPop === j) { stPop = null; b.closest('.tw-street').querySelector('.tw-pop')?.remove(); } else { jelly(b, .35, 300); showStPop(j); } }
     else if (a === 'stup') stUpgrade(+b.dataset.j);
     else if (a === 'list') { v.classList.toggle('lst'); v.querySelector('.tw-lst')?.classList.toggle('on', v.classList.contains('lst')); }
@@ -3468,7 +3728,7 @@ function renderTown(first) {
   {
     const vi = Math.max(0, villageOf(townCh)), vOpen = pastView >= 0 ? [pastView, curVillage()] : [curVillage()];
     const vchs = VILLAGES[vi].chs.filter(chOpen);
-    const row1 = pastView >= 0 || done('yacht') ? `<div class="tw-chs tw-vil">${vOpen.map(i => `<button class="mc-tab ${vi === i ? 'on' : ''}" data-tw="v${i}">${VILLAGES[i].name}</button>`).join('')}${done('yacht') ? '<button class="mc-tab dis" data-tw="nextv">하얀 항구</button>' : ''}</div>` : '';
+    const row1 = pastView >= 0 || done('yacht') ? `<div class="tw-chs tw-vil">${vOpen.map(i => `<button class="mc-tab ${vi === i ? 'on' : ''}" data-tw="v${i}">${VILLAGES[i].name}</button>`).join('')}${done('ferry') ? '<button class="mc-tab dis" data-tw="nextv">야자수 열대섬</button>' : ''}</div>` : '';
     const row2 = vchs.length > 1 ? `<div class="tw-chs ${vchs.length > 2 ? 'c3' : ''}">${vchs.map(c => `<button class="mc-tab ${townCh === c ? 'on' : ''}" data-tw="ch${c}">${vchs.length > 2 ? `${c}장` : `${c}장 ${CH_NAME[c]}`}</button>`).join('')}</div>`
       : `<div class="tw-chs"><span class="tw-chn">${vi === 0 && chs.length === 1 ? '구름언덕 마을' : `${vchs[0]}장 ${CH_NAME[vchs[0]]}`}</span></div>`;
     v.querySelector('.tw-ti').innerHTML = row1 + row2;
@@ -3482,7 +3742,7 @@ function renderTown(first) {
   const tot = shopT + ST.length * 3, dn = shopN + stDone(townCh);
   const nx = nextTask(townCh);
   v.querySelector('.tw-prog').innerHTML = `<div class="tw-pcol"><div class="tw-pbar"><b>${CH_NAME[townCh]} ${dn}/${tot}</b><div class="bar"><i style="width:${(100 * dn / tot).toFixed(1)}%"></i></div></div>
-    ${nx ? `<button class="tw-next" data-tw="next"><span class="nl">다음 할 일</span><b>${esc(nx.label)}</b><span class="nc"><i>${UI.star}</i>${nx.cost}</span><span class="na">›</span></button>` : `<div class="tw-next done"><b>${CH_NAME[townCh]}을 전부 꾸몄어요!</b></div>`}</div>
+    ${nx ? `<button class="tw-next" data-tw="next"><span class="nl">다음 할 일</span><b>${esc(nx.label)}</b><span class="nc"><i>${UI.star}</i>${nx.cost}</span><span class="na">›</span></button>` : `<div class="tw-next done"><b>${CH_NAME[townCh]}${(c => (c.charCodeAt(0) - 0xac00) % 28 ? '을' : '를')(CH_NAME[townCh].slice(-1))} 전부 꾸몄어요!</b></div>`}</div>
     <button class="tw-home" data-tw="back" title="주방으로"><i>${(ART_TOOLS && ART_TOOLS.kitchen ? `<img src="${ART_TOOLS.kitchen}" alt="">` : iconGen('bakery'))}</i><span>주방</span></button>`;
   twHud();
   townNext = nx;
@@ -3507,7 +3767,7 @@ function renderTown(first) {
     seq.push({ t: 'lot', i, A, open, svg: t.svg, wf: lw * kf, hf: lh * kf, up: (t.ground - ly) * kf, w: lw * kf + .04 });
     if (!A.event) addGap(lots.indexOf(A) + 1);
   });
-  const c2 = townCh === 2, c3 = townCh === 3, c4 = townCh === 4, c5 = townCh === 5, nx0 = nextTask(townCh);
+  const c2 = townCh === 2, c3 = townCh === 3, c4 = townCh === 4, c5 = townCh >= 5, c6 = townCh === 6, nx0 = nextTask(townCh);
   const rnd = (a, b) => { const x = Math.sin(a * 127.1 + b * 311.7 + townCh * 74.7) * 43758.5453; return x - Math.floor(x); };
   // ---- stops: big shops alternating left/right, one winding road passing every door
   const lotsSeq = seq.filter(o => o.t === 'lot'), props = seq.filter(o => o.t === 'st');
@@ -3622,8 +3882,8 @@ function renderTown(first) {
   }
   const spPts = allPts.length ? allPts : [[cw / 2, HT], [cw / 2, 0]];
   let pads = '';
-  const DK = c5 ? 'd5' : c4 ? 'd4' : c3 ? 'd3' : c2 ? 'd2' : 'd1', DI = MAP[DK] || [], DD = (ST_DIM.map || {})[DK] || [];
-  const DH = c5 ? [.44, .32, .42, .16, .14, .1, .08, .1, .16, .1, .1, .14, .16, .1, .12, .14] : c4 ? [.44, .3, .42, .16, .2, .1, .14, .1, .12, .12, .1, .1, .12, .1, .12, .12] : c3 ? [.42, .42, .46, .38, .2, .18, .1, .18, .12, .14, .12, .14, .22, .14, .16, .14] : c2 ? [.4, .32, .24, .1, .14, .1, .18, .18, .2, .16, .15, .16, .22, .1, .1, .42] : [.5, .4, .5, .2, .16, .16, .13, .12, .1, .1, .14, .13, .13, .12, .1, .13];
+  const DK = c6 ? 'd6' : c5 ? 'd5' : c4 ? 'd4' : c3 ? 'd3' : c2 ? 'd2' : 'd1', DI = MAP[DK] || [], DD = (ST_DIM.map || {})[DK] || [];
+  const DH = c6 ? [.44, .36, .32, .22, .3, .26, .12, .14, .12, .1, .12, .1, .12, .08, .08, .1] : c5 ? [.44, .32, .42, .16, .14, .1, .08, .1, .16, .1, .1, .14, .16, .1, .12, .14] : c4 ? [.44, .3, .42, .16, .2, .1, .14, .1, .12, .12, .1, .1, .12, .1, .12, .12] : c3 ? [.42, .42, .46, .38, .2, .18, .1, .18, .12, .14, .12, .14, .22, .14, .16, .14] : c2 ? [.4, .32, .24, .1, .14, .1, .18, .18, .2, .16, .15, .16, .22, .1, .1, .42] : [.5, .4, .5, .2, .16, .16, .13, .12, .1, .1, .14, .13, .13, .12, .1, .13];
   const imgObj = (src, dm, hf, cx, by, u, chk) => {
     if (!src || !dm) return false;
     const hh = hf * u, ww = dm[0] / dm[1] * hh;
@@ -3707,13 +3967,13 @@ function renderTown(first) {
     stPos[j] = { x, y: y - hh };
   });
   // backdrop + nature
-  const TB = c5 ? 'top5' : c4 ? 'top4' : c3 ? 'top3' : c2 ? 'top2' : 'top1';
+  const TB = c6 ? 'top6' : c5 ? 'top5' : c4 ? 'top4' : c3 ? 'top3' : c2 ? 'top2' : 'top1';
   const seamY = Y[L - 1] - .12 * U[L - 1], topH = seamY + (c2 ? .02 : .03) * U[L - 1];
-  const SEAM = c5 ? [3, 8, 11, 5, 13, 3, 6, 8, 11, 4, 13, 5] : c4 ? [3, 5, 0, 1, 5, 3, 1, 5, 0, 3, 5, 1] : c3 ? [4, 1, 2, 0, 5, 2, 4, 3, 1, 2, 0, 5] : c2 ? [2, 8, 6, 7, 2, 9, 4, 8, 11, 6, 7, 2] : [3, 6, 1, 4, 6, 0, 5, 3, 6, 2, 4, 6];
+  const SEAM = c6 ? [6, 9, 12, 7, 10, 13, 11, 15, 14, 9, 12, 6] : c5 ? [3, 8, 11, 5, 13, 3, 6, 8, 11, 4, 13, 5] : c4 ? [3, 5, 0, 1, 5, 3, 1, 5, 0, 3, 5, 1] : c3 ? [4, 1, 2, 0, 5, 2, 4, 3, 1, 2, 0, 5] : c2 ? [2, 8, 6, 7, 2, 9, 4, 8, 11, 6, 7, 2] : [3, 6, 1, 4, 6, 0, 5, 3, 6, 2, 4, 6];
   if (c2) for (let k = 0; k < 4; k++) deco(3, (k + .3 + rnd(k, 9) * .4) * cw / 4, topH * (.9 + rnd(k, 3) * .05), U[L - 1] * .8);
   const nS = Math.ceil(cw / (.3 * U[L - 1])) + 1;
   for (let k = 0; k < nS; k++) deco(SEAM[k % SEAM.length], (k + rnd(k, 1) * .4 - .2) * cw / (nS - 1), seamY + (.02 + rnd(k, 2) * .05) * U[L - 1], U[L - 1] * .85);
-  const TREES = c5 ? [0, 2, 1, 0, 2] : c4 ? [0, 2, 1, 0, 2] : c3 ? [0, 2, 1, 3, 2] : c2 ? [0, 15, 1, 15, 0] : [0, 2, 1, 0, 2], SMALL = c5 ? [3, 4, 5, 7, 9, 10, 11, 12, 13, 14] : c4 ? [3, 4, 6, 7, 9, 10, 12, 13, 14, 5] : c3 ? [7, 11, 9, 14, 5, 10, 13, 6, 8, 12] : c2 ? [8, 9, 13, 12, 6, 7, 4, 14, 2] : [3, 9, 15, 4, 10, 5, 8, 14, 7, 11, 13];
+  const TREES = c6 ? [0, 1, 2, 0, 3] : c5 ? [0, 2, 1, 0, 2] : c4 ? [0, 2, 1, 0, 2] : c3 ? [0, 2, 1, 3, 2] : c2 ? [0, 15, 1, 15, 0] : [0, 2, 1, 0, 2], SMALL = c6 ? [4, 5, 8, 9, 10, 11, 12, 13, 14, 15] : c5 ? [3, 4, 5, 7, 9, 10, 11, 12, 13, 14] : c4 ? [3, 4, 6, 7, 9, 10, 12, 13, 14, 5] : c3 ? [7, 11, 9, 14, 5, 10, 13, 6, 8, 12] : c2 ? [8, 9, 13, 12, 6, 7, 4, 14, 2] : [3, 9, 15, 4, 10, 5, 8, 14, 7, 11, 13];
   let nt = 0, ns = 0;
   for (let k = 0; k < 70; k++) {
     const y = seamY + .25 * U[L - 1] + rnd(k, 11) * (HT - seamY - .25 * U[L - 1]), u = uAt(y);
@@ -3725,7 +3985,7 @@ function renderTown(first) {
   const rdO = paths.map(p => `<path d="${p.d}" stroke="#5b3a32" stroke-width="${(p.w + 6).toFixed(1)}"/>`).join('') + paths.map(p => `<path d="${p.d}" stroke="#f7e6cf" stroke-width="${(p.w + 1).toFixed(1)}"/>`).join('');
   const rdF = paths.map(p => `<path d="${p.d}" stroke="url(#tw-pc)" stroke-width="${(p.w - 3).toFixed(1)}"/>`).join('');
   const ground = `<svg class="tw-ground" width="${cw}" height="${HT.toFixed(0)}" viewBox="0 0 ${cw} ${HT.toFixed(0)}" xmlns="http://www.w3.org/2000/svg"><defs>
-    <pattern id="tw-pg" patternUnits="userSpaceOnUse" width="${tg.toFixed(1)}" height="${tg.toFixed(1)}"><image href="${(c5 && MAP.grass5) || (c4 && MAP.grass4) || (c3 && MAP.grass3) || MAP.grass}" width="${tg.toFixed(1)}" height="${tg.toFixed(1)}"/></pattern>
+    <pattern id="tw-pg" patternUnits="userSpaceOnUse" width="${tg.toFixed(1)}" height="${tg.toFixed(1)}"><image href="${(c6 && MAP.grass6) || (c5 && MAP.grass5) || (c4 && MAP.grass4) || (c3 && MAP.grass3) || MAP.grass}" width="${tg.toFixed(1)}" height="${tg.toFixed(1)}"/></pattern>
     <pattern id="tw-pc" patternUnits="userSpaceOnUse" width="${tc.toFixed(1)}" height="${tc.toFixed(1)}"><image href="${MAP.cobble}" width="${tc.toFixed(1)}" height="${tc.toFixed(1)}"/></pattern>
     <pattern id="tw-pw" patternUnits="userSpaceOnUse" width="${(.5 * Ub).toFixed(1)}" height="${(.5 * Ub).toFixed(1)}"><image href="${MAP.water}" width="${(.5 * Ub).toFixed(1)}" height="${(.5 * Ub).toFixed(1)}"/></pattern>
     <pattern id="tw-pd" patternUnits="userSpaceOnUse" width="${td.toFixed(1)}" height="${td.toFixed(1)}"><image href="${MAP.dirt}" width="${td.toFixed(1)}" height="${td.toFixed(1)}"/></pattern></defs>
@@ -3753,7 +4013,7 @@ function renderTown(first) {
     else { old.forEach(e => e.remove()); ibox.prepend(...nw); }
   } else {
     st.innerHTML = ground + top + `<div class="tw-items">${itemsHtml}</div>`;
-    drawRoad(st.querySelector('.tw-road'), paths, cw, HT, PW * .35, c5 ? tc * 1.2 : tc, c5 ? plankTex() : null);
+    drawRoad(st.querySelector('.tw-road'), paths, cw, HT, PW * .35, c5 ? tc * 1.2 : tc, c5 && !c6 ? plankTex() : null);
     st._sig = sig; ibox = st.querySelector('.tw-items');
     lanes.forEach((l, r) => { l.r = r; l.box = ibox; l.kinds = []; });
     kinds.slice(0, nA).forEach((ix, n) => lanes[n % lanes.length].kinds.push(ix));
@@ -4312,10 +4572,14 @@ const LETTERS = {
   flamingo: ['분홍 파르페를 보면 제 생각 나죠?', '축제 때 쓸 사탕 화관을 미리 만들어 뒀어요.'],
 };
 const mailUnread = () => S && S.mail ? S.mail.list.filter(x => !x.got).length : 0;
-function mailPush(x) {
-  const L = S.mail.list; L.unshift(Object.assign({ at: Date.now(), got: false }, x));
-  // 너무 많아지면 받은 편지부터, 그다음 오래된 편지부터 정리
-  while (L.length > MAIL_MAX) { let k = L.map(y => y.got).lastIndexOf(true); if (k < 0) k = L.length - 1; L.splice(k, 1); }
+function mailPush(x, state = S) {
+  const L = state.mail.list; L.unshift(Object.assign({ at: Date.now(), got: false }, x));
+  // 보상 우편은 수령할 때까지 보관하고, 나머지는 받은 편지부터 정리
+  while (L.length > MAIL_MAX) {
+    const claimed = L.map(letter => letter.got).lastIndexOf(true);
+    const oldest = claimed >= 0 ? claimed : L.map(letter => letter.id !== CH5_ENERGY_MAIL).lastIndexOf(true);
+    L.splice(oldest, 1);
+  }
 }
 // 지금까지 만난 주민 (지나간 마을 주민일수록 자주 편지를 보냄)
 function mailWriter() {
@@ -4477,6 +4741,72 @@ const MAIN_SCENES = [
   ['ch5_invite', '수첩 속 초대장'], ['ch5_start', '햇살 모래사장 도착'], ['yacht', '흰 돛 요트 출항'],
 ];
 const STORY_CG = { intro: 'ev01', cafe: 'ev02', station: 'ev03', ch2_start: 'ev04', dock: 'ev05', ch3_start: 'ev06', maple: 'ev07', ch4_start: 'ev08', cablecar: 'ev09', plaza: 'ev10', ch5_invite: 'ev11', ch5_start: 'ev12', yacht: 'ev13' };
+Object.assign(STORY, {
+  ch6_start: [
+    [0, '와, 하얀 집들이 언덕까지 빼곡해!'],
+    [31, '하얀 항구 도착! 그런데… 오늘은 너무 조용하네.'],
+    [32, '…누, 누구세요? 아, 나는 몽돌이야. 손님은 오랜만이라…', 0],
+    [32, '등대 불이 꺼진 뒤로 배가 잘 안 들어와서, 가게들이 하나둘 문을 닫았어.', 0],
+    [0, '우리 이 분홍 조개 초대장 때문에 왔어. "등대에서" 보냈대.'],
+    [32, '분홍 조개…! 우체국 또박이라면 알지도 몰라. 그 전에 내 젤라또 가게부터 열어 줄래?'],
+  ],
+  gelato: [
+    [32, '몽돌 젤라또 가게 다시 열었어! 레몬 맛 먼저 먹어 봐!'],
+    [32, '그러고 보니 옛날에 꿀단지 그림 수첩을 든 할머니가 여기서 레몬 젤라또 레시피를 적어 가셨어.', 0],
+    [0, '꿀단 할머니다! 수첩에 여름 레시피가 한 줄 더 생겼어!'],
+    [33, '또박! 우체국도 열어 주면 편지 기록을 찾아볼게!'],
+  ],
+  hpost: [
+    [33, '파랑 지붕 우체국 다시 문 열었습니다! 또박또박 배달해요!'],
+    [33, '찾았다! 분홍 조개로 봉한 편지… 해마다 여름이면 한 통씩 들어왔어.', 0],
+    [33, '받는 사람은 매번 달라. 꽃집, 빵집, 찻집… 보낸 곳은 전부 "등대에서".', 0],
+    [1, '그럼 우리만 받은 게 아니었구나!', 0],
+    [0, '근데 등대엔 아무도 안 산다며… 대체 누가?', 0],
+    [34, '뽀글! 바다 일은 시장에 물어봐!'],
+  ],
+  market: [
+    [34, '뱃고동 수산시장 개장! 오늘 생선 싱싱해!'],
+    [34, '등대 불이 꺼진 뒤로 물길이 바뀌었어. 분홍 조개는 남쪽 바다에서 밀려와.', 0],
+    [0, '남쪽…? 끼룩이 섬들이 움직인다고 했는데.', 0],
+    [35, '문문이야~ 돛을 고쳐 주면 옛날 바다 지도를 보여 줄게.'],
+  ],
+  sail: [
+    [35, '돛천 수선소 완성! 찢어진 돛도 새것처럼~'],
+    [35, '이건 우리 할머니 때부터 수놓아 온 바다 지도 돛이야.', 0],
+    [35, '근데 이상하지? 해마다 섬 하나가 다른 자리에 수놓아져 있어.', 0],
+    [1, '섬이 정말로 움직이는 거야…?', 0],
+    [36, '허허, 그 얘긴 전시관에서 해 주마.'],
+  ],
+  museum: [
+    [36, '옛 등대 전시관을 다시 열었네. 고맙구먼.'],
+    [36, '이 사진들 보게. 별빛 등대섬이 아직 반짝이던 때야.', 0],
+    [36, '등대 옆엔 늘 둥근 바위섬이 하나 있었지. 그런데 사진마다 자리가 달라.', 0],
+    [0, '바위섬이… 혼자 움직였다고요?', 0],
+    [36, '바다엔 아직 모르는 일이 많다네. 남쪽 섬 친구들은 더 알지도 모르지.'],
+    [37, '첨벙! 여객선 부두만 고치면 남쪽까지 태워 줄게!'],
+  ],
+  ferry: [
+    [37, '하얀 여객선 부두, 출항 준비 끝! 첨벙!'],
+    [37, '분홍 조개가 흘러오는 남쪽 끝엔 야자수 열대섬이 있어.'],
+    [36, '거기 친구들은 바다 소리를 잘 듣지. 초대장 주인을 알지도 몰라.', 0],
+    [0, '편지는 해마다 여러 마을로 갔고, 섬은 자리를 바꾸고…', 0],
+    [1, '점점 더 궁금해져! 사장님, 열대섬으로 가자!', 0],
+    [0, '수첩에 항구 레시피도 채웠으니까… 출발!'],
+  ],
+});
+Object.assign(TALK, {
+  seaotter: ['레몬 젤라또 한 숟갈 할래?', '이 조약돌, 제일 아끼는 거야.', '배 위에서 낮잠 자면 최고야.', '젤라또는 녹기 전에 먹어야 해!'],
+  puffin: ['또박또박 배달 왔습니다!', '편지 냄새만 맡아도 어디서 왔는지 알아.', '모자 비뚤어졌어? 바로 할게!', '오늘 소포가 산더미야.'],
+  hseal: ['뽀글! 생선 싱싱해!', '배로 미끄러지는 게 제일 빨라.', '비 오는 날엔 노란 모자!', '시장 종소리 들었어?'],
+  octopus: ['문문~ 돛 기워 줄까?', '손이 여덟 개라 바느질이 빨라.', '실패 굴러가는 거 잡아 줘~', '줄무늬 천이 제일 예뻐.'],
+  albatross: ['허허, 바람 냄새가 좋구먼.', '젊을 땐 바다를 세 바퀴 돌았지.', '안경 어디 뒀더라…', '등대 불빛이 그립구먼.'],
+  sealion: ['첨벙! 출항 준비 끝!', '호루라기 소리 들리면 줄 서!', '선장 모자 멋지지?', '남쪽 바다는 물빛이 달라.'],
+});
+if (CH6_ON) {
+  Object.assign(SCENE_CH, { ch6_start: 6, hpost: 6, ferry: 6 });
+  MAIN_SCENES.push(['ch6_start', '하얀 항구 도착'], ['hpost', '우체국 편지 기록'], ['ferry', '하얀 여객선 출항']);
+  Object.assign(STORY_CG, { ch6_start: 'ev14', hpost: 'ev15', ferry: 'ev16' });
+}
 function playStory(key, cb) {
   const lines = STORY[key];
   const fin = () => { try { cb && cb(); } catch (_) { } };
@@ -4560,8 +4890,7 @@ async function closeGame() {
   cleanupDrag();
   $('.mc-modal')?.remove();
   $('.mc-cafe')?.remove();
-  await Risuai.hideContainer();
-  flush();
+  try { await Risuai.hideContainer(); } finally { await flush(); }
 }
 
 // ---------- boot ----------

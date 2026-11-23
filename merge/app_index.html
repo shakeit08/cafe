@@ -30,7 +30,7 @@ window.__mcBlob = d => {
 };
 const store = p => ({
   getItem: async k => localStorage.getItem(p + k),
-  setItem: async (k, v) => { try { localStorage.setItem(p + k, typeof v === 'string' ? v : JSON.stringify(v)); } catch (e) { console.log('save fail', e); } },
+  setItem: async (k, v) => localStorage.setItem(p + k, typeof v === 'string' ? v : JSON.stringify(v)),
 });
 let opened = false;
 window.Risuai = {

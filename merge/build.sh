@@ -1,6 +1,6 @@
 #!/bin/sh
 set -e
-VER=2.21.48
+VER=2.21.55
 python3 compress.py >&2
 {
 cat <<H

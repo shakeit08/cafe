@@ -51,7 +51,13 @@ if os.environ.get('MC_EXT'):
     O['story'] = {}
     for f in ([] if os.environ.get('MC_NO_STORY') else sorted(os.listdir('story'))):
         if not f.endswith('.webp'): continue
-        if URLMODE: O['story'][f[:-5]] = one(open(os.path.join('story', f), 'rb').read()); continue
+        if URLMODE:
+            raw = open(os.path.join('story', f), 'rb').read()
+            if re.match(r'ev(1[4-9]|[2-9]\d)\.webp$', f):  # 6장부터: 웹앱은 무손실 원본, 리스 플러그인용은 화질 95 (크기 그대로)
+                import io
+                from PIL import Image
+                bb = io.BytesIO(); Image.open(io.BytesIO(raw)).save(bb, 'WEBP', quality=95, method=6); raw = bb.getvalue()
+            O['story'][f[:-5]] = one(raw); continue
         n[0] += 1; t = '@%d' % n[0]
         groups.setdefault('story', []).append((t, open(os.path.join('story', f), 'rb').read()))
         O['story'][f[:-5]] = t

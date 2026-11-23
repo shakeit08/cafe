@@ -3,4 +3,6 @@ merge/ext/
 merge/sweet_merge_cafe.js
 merge/*_c.json
 merge/.cache_c.json
+merge/.cache_c2.json
+merge/.cache_c3.json
 __pycache__/

@@ -54,39 +54,39 @@ const heart = (x, y, s, f) => g(`translate(${x} ${y}) scale(${s})`, po('M0 6 Q-8
 const CHAINS = {
   bakery: {
     name: '베이커리', gen: '빵 봉투', color: '#f4c45c',
-    items: ['밀 이삭', '밀가루', '말랑 반죽', '모닝빵', '식빵', '크루아상', '빵 바구니', '과일 샌드위치', '클럽 샌드위치 탑', '샌드위치 케이크'],
+    items: ['밀 이삭', '밀가루', '말랑 반죽', '모닝빵', '식빵', '크루아상', '빵 바구니', '과일 샌드위치', '클럽 샌드위치 탑', '샌드위치 케이크', '프렌치토스트 탑', '크루아상 탑', '브런치 보드'],
   },
   coffee: {
     name: '커피', gen: '원두 봉투', color: '#94603c',
-    items: ['커피 원두', '원두 한 줌', '원두 봉투', '에스프레소', '아메리카노', '카페라떼', '크림 프라페', '아인슈페너', '티라미수', '커피 젤리 파르페'],
+    items: ['커피 원두', '원두 한 줌', '원두 봉투', '에스프레소', '아메리카노', '카페라떼', '크림 프라페', '아인슈페너', '티라미수', '커피 젤리 파르페', '아포가토 세트', '모카 롤케이크', '커피 디저트 트레이'],
   },
   berry: {
     name: '딸기', gen: '딸기 씨앗', color: '#ff5d73',
-    items: ['딸기 꽃', '딸기', '딸기 두 알', '딸기 바구니', '딸기잼', '딸기 타르트', '딸기 케이크', '딸기 파르페', '딸기 크레페', '딸기 2단 케이크'],
+    items: ['딸기 꽃', '딸기', '딸기 두 알', '딸기 바구니', '딸기잼', '딸기 타르트', '딸기 케이크', '딸기 파르페', '딸기 크레페', '딸기 2단 케이크', '딸기 탕후루 다발', '딸기 밀푀유', '딸기 3단 케이크'],
   },
   choco: {
     name: '초콜릿', gen: '카카오 나무', color: '#7a4630',
-    items: ['카카오 열매', '카카오 빈', '초콜릿 조각', '판 초콜릿', '초코칩 쿠키', '초코 컵케이크', '하트 봉봉 상자', '초코 퐁당 케이크', '브라우니 탑', '초콜릿 하우스'],
+    items: ['카카오 열매', '카카오 빈', '초콜릿 조각', '판 초콜릿', '초코칩 쿠키', '초코 컵케이크', '하트 봉봉 상자', '초코 퐁당 케이크', '브라우니 탑', '초콜릿 하우스', '초코 에클레어 탑', '초코 3단 케이크', '초콜릿 정원'],
   },
   tea: {
     name: '꽃차', gen: '허브 다발', color: '#9cc36b',
-    items: ['허브 새싹', '캐모마일', '꽃잎 봉투', '꽃무늬 틴', '꽃잎 허브티', '찻주전자 세트', '애프터눈 티', '꽃잎 마카롱 탑', '꽃 티케이크', '꽃 화과자 세트'],
+    items: ['허브 새싹', '캐모마일', '꽃잎 봉투', '꽃무늬 틴', '꽃잎 허브티', '찻주전자 세트', '애프터눈 티', '꽃잎 마카롱 탑', '꽃 티케이크', '꽃 화과자 세트', '꽃 젤리 케이크', '정원 티파티 세트', '꽃 롤케이크'],
   },
   icecream: {
     name: '아이스크림', gen: '와플콘', color: '#ff9fb8',
-    items: ['우유병', '생크림', '딸기 스쿱', '콘 아이스크림', '트리플 콘', '선데', '아이스크림 케이크', '바나나 스플릿', '과일 빙수', '파르페 타워'],
+    items: ['우유병', '생크림', '딸기 스쿱', '콘 아이스크림', '트리플 콘', '선데', '아이스크림 케이크', '바나나 스플릿', '과일 빙수', '파르페 타워', '아이스크림 와플', '아이스크림 3단 케이크', '무지개 콘 꽃다발'],
   },
   candy: {
     name: '사탕', gen: '사탕 봉투', color: '#9fd8b5',
-    items: ['각설탕', '알사탕', '막대사탕', '젤리 컵', '솜사탕', '사탕 병', '사탕 꽃다발', '젤리 케이크', '젤리 어항', '사탕 화관'],
+    items: ['각설탕', '알사탕', '막대사탕', '젤리 컵', '솜사탕', '사탕 병', '사탕 꽃다발', '젤리 케이크', '젤리 어항', '사탕 화관', '사탕 열기구', '사탕 회전목마', '사탕 기차'],
   },
   fish: {
     name: '붕어빵', gen: '밀가루 자루', color: '#f4b860',
-    items: ['반죽 그릇', '팥앙금', '붕어빵', '붕어빵 봉투', '붕어빵 접시', '붕어빵 바구니', '붕어빵 선물 상자', '딸기 슈크림 붕어빵', '자색 고구마 붕어빵', '말차 팥 붕어빵'],
+    items: ['반죽 그릇', '팥앙금', '붕어빵', '붕어빵 봉투', '붕어빵 접시', '붕어빵 바구니', '붕어빵 선물 상자', '딸기 슈크림 붕어빵', '자색 고구마 붕어빵', '말차 팥 붕어빵', '초코 바나나 붕어빵', '미니 붕어빵 꼬치', '붕어빵 파르페'],
   },
   pie: {
     name: '애플파이', gen: '사과나무', color: '#e8574a',
-    items: ['빨간 사과', '사과잼', '사과파이 조각', '애플파이', '아이스크림 파이', '파이 바구니', '파이 선물 상자', '타르트 타탱', '사과 크럼블', '사과 장미 타르트'],
+    items: ['빨간 사과', '사과잼', '애플파이', '사과파이 조각', '아이스크림 파이', '파이 바구니', '파이 선물 상자', '타르트 타탱', '사과 크럼블', '사과 장미 타르트', '캐러멜 사과 꼬치', '사과 롤케이크', '3단 파이 탑'],
   },
   xmas: {
     name: '크리스마스', gen: '쿠키 오븐', color: '#d84a4a',
@@ -306,6 +306,9 @@ ANIMALS.push({ key: 'fox', name: '단풍', art: ANIMALS[0].art, ch2: 'photo' }, 
 ANIMALS.push({ key: 'crab', name: '집게', art: ANIMALS[0].art, ch2: 'parasol' }, { key: 'pelican', name: '꿀꺽', art: ANIMALS[0].art, ch2: 'melon' },
   { key: 'hermit', name: '또르', art: ANIMALS[0].art, ch2: 'shell' }, { key: 'turtle', name: '느릿', art: ANIMALS[0].art, ch2: 'surf' },
   { key: 'gull', name: '끼룩', art: ANIMALS[0].art, ch2: 'castle' }, { key: 'flamingo', name: '산들', art: ANIMALS[0].art, ch2: 'yacht' });
+ANIMALS.push({ key: 'seaotter', name: '몽돌', art: ANIMALS[0].art, ch2: 'gelato' }, { key: 'puffin', name: '또박', art: ANIMALS[0].art, ch2: 'hpost' },
+  { key: 'hseal', name: '뽀글', art: ANIMALS[0].art, ch2: 'market' }, { key: 'octopus', name: '문문', art: ANIMALS[0].art, ch2: 'sail' },
+  { key: 'albatross', name: '훨훨', art: ANIMALS[0].art, ch2: 'museum' }, { key: 'sealion', name: '첨벙', art: ANIMALS[0].art, ch2: 'ferry' });
 
 const UI = {
   bolt: svg(po('M27 5 L45 5 L36 26 L50 26 L22 60 L28 37 L14 37 Z', '#ffd75a', 3.5) + p('M36 26 L50 26 L22 60 L28 37 Z', 'rgba(242,155,58,.55)') + e(31, 11, 3.2, 1.8, '#fff3b0') + po('M27 5 L45 5 L36 26 L50 26 L22 60 L28 37 L14 37 Z', 'none', 3.5)),
@@ -317,7 +320,7 @@ const UI = {
 
 // ---- image overrides (painted item sheets) ----
 const OVR_B64 = __OVR__;
-const toUrl = s => { if (s[0] === '@' || s.startsWith('http')) return s; const d = s.startsWith('data:') ? s : 'data:image/webp;base64,' + s; return globalThis.__mcBlob ? globalThis.__mcBlob(d) : d; };
+const toUrl = s => { if (!s) return s; if (s[0] === '@' || s.startsWith('http')) return s; const d = s.startsWith('data:') ? s : 'data:image/webp;base64,' + s; return globalThis.__mcBlob ? globalThis.__mcBlob(d) : d; };
 // 리스 플러그인: 마을·가게 그림은 묶음 파일(EXT_FILES)에서 받아 '@번호' 자리를 채움
 const EXT_FILES = __EXTFILES__;
 function extFill(m) {
@@ -358,7 +361,7 @@ const ART_TOOLS = OVR.tool || null;
 const WHEEL = OVR.wheel || null;
 const STORY_IMG = OVR.story || null;
 const iconBag = (s) => OVR.bag ? imgTag(OVR.bag[s - 1]) : '🎁';
-const iconAnimal = (i, happy = true) => OVR.animal ? imgTag((!happy && OVR.animalDot) ? OVR.animalDot[i] : OVR.animal[i]) : svg(ANIMALS[i].art);
+const iconAnimal = (i, happy = true) => OVR.animal ? imgTag((!happy && OVR.animalDot && OVR.animalDot[i]) ? OVR.animalDot[i] : OVR.animal[i]) : svg(ANIMALS[i].art);
 
 // ===================== CAFE SCENE =====================
 const SW = 2.5;
