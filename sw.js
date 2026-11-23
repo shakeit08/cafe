@@ -1,6 +1,6 @@
 const CACHE_PREFIX = 'sweet-merge-cafe-';
-const V = CACHE_PREFIX + '2.21.54';
-const FILES = ['./', './index.html', './game.js?v=2.21.54', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png'];
+const V = CACHE_PREFIX + '2.21.55';
+const FILES = ['./', './index.html', './game.js?v=2.21.55', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(V).then(cache => cache.addAll(
     FILES.map(path => new Request(new URL(path, self.registration.scope), { cache: 'reload' }))
