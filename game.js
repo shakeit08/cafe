@@ -755,7 +755,7 @@ function lockedScene(name) {
 const esc2 = s => String(s).replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
 return { CHAINS, CHAIN_KEYS, ART_ITEMS, ART_GENS, ANIMALS, UI, iconItem, iconGen, genName, hasGenArt, iconBag, iconAnimal, cafeScene, areaScene, lockedScene, SPOT_BOX, CAFE_BOX, paintBox, spotPos, HOUSE, townLot, townFence, TOWN_BG, TOWN_BG2, WALK, ST_IMG, DEB_IMG, ST_DIM, MAP, ART_TOOLS, WHEEL, EXT_FILES, extFill, STORY_IMG, iconRes, iconChest };
 })();
-const VER = '2.21.52';
+const VER = '2.21.53';
 // ===================== GAME =====================
 const { CHAINS, CHAIN_KEYS, ANIMALS, UI, iconItem, iconGen, genName, hasGenArt, iconBag, iconAnimal, cafeScene, areaScene, lockedScene, SPOT_BOX, CAFE_BOX, paintBox, spotPos, HOUSE, townLot, townFence, TOWN_BG, TOWN_BG2, WALK, ST_IMG, DEB_IMG, ST_DIM, MAP, ART_TOOLS, WHEEL, EXT_FILES, extFill, STORY_IMG, iconRes, iconChest } = ART;
 const TAG = '[달콤 머지 카페]';
@@ -1459,7 +1459,7 @@ function newState() {
     v: 1, savedAt: 0, level: 1, xp: 0, coins: 30, energy: MAX_E, eTs: Date.now(),
     board, rows: START_ROWS, chains: ['bakery', 'coffee'], orders: [],
     disc: Object.fromEntries(CHAIN_KEYS.map(c => [c, c === 'bakery' || c === 'coffee' ? [1] : []])),
-    settings: { chatE: 3, sfx: 2, story: true, mhint: true, bgm: true, bgmV: .5 }, story: { intro: false, seen: {} }, giftDay: '', shop: { day: '', buys: 0 }, mail: { list: [], got: {}, am: '', pm: '' }, tut: { k: 0, t: 0 },
+    settings: { chatE: 3, sfx: 2, haptic: true, story: true, mhint: true, bgm: true, bgmV: .5 }, story: { intro: false, seen: {} }, giftDay: '', shop: { day: '', buys: 0 }, mail: { list: [], got: {}, am: '', pm: '' }, tut: { k: 0, t: 0 },
     stats: { merges: 0, orders: 0, made: 0 }, pendingGens: [], pendingItems: [], gdisc: {}, chatBonus: 0, snow: 0, ev: null, onEv: false, evTab: false, coll: {}, pokes: { d: '', l: [] }, seenVer: '', street: {}, stBeat: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }, spin: { d: '' }, tools: { cut: 0, up: 0 }, tbuy: { d: '', cut: 0, up: 0 }, store: [], storeN: STORE_START, nextId: 1,
     stars: 0, decor: Object.fromEntries(ALL_SPOTS.map(d => [d.k, 0])), areaDone: {},
   };
@@ -1516,6 +1516,7 @@ function sanitize(o) {
   if (o.cafeDone) s.areaDone.cafe = true;
   if (o.settings && CHAT_E_OPTIONS.includes(o.settings.chatE)) s.settings.chatE = o.settings.chatE;
   if (o.settings && [0, 1, 2, 3].includes(o.settings.sfx)) s.settings.sfx = o.settings.sfx;
+  if (o.settings && typeof o.settings.haptic === 'boolean') s.settings.haptic = o.settings.haptic;
   if (o.settings && typeof o.settings.story === 'boolean') s.settings.story = o.settings.story;
   if (o.settings && typeof o.settings.mhint === 'boolean') s.settings.mhint = o.settings.mhint;
   if (o.settings && typeof o.settings.bgm === 'boolean') s.settings.bgm = o.settings.bgm;
@@ -3376,7 +3377,10 @@ const JELLY = (k = 1) => [
   { transform: `scale(${1 - .03 * k},${1 + .03 * k})`, offset: .65 },
   { transform: 'scale(1,1)' }];
 const jelly = (el, k = 1, dur = 380) => el && el.animate(JELLY(k), { duration: dur, easing: 'cubic-bezier(.3,.6,.4,1)' });
-const haptic = ms => { try { navigator.vibrate && navigator.vibrate(ms); } catch (_) { } };
+const haptic = ms => {
+  if (S?.settings.haptic === false) return;
+  try { navigator.vibrate?.(ms); } catch (_) { }
+};
 function ring(r, color = '#ffd75a') {
   const d = document.createElement('div');
   d.className = 'mc-pt';
@@ -3938,6 +3942,8 @@ function openSettings() {
       <div class="mc-seg">${CHAT_E_OPTIONS.map(v => `<button class="mc-btn wh ${S.settings.chatE === v ? 'on' : ''}" data-ce="${v}">${v ? '+' + v : '끄기'}</button>`).join('')}</div></div>`}
     <div class="mc-sec"><h4>효과음</h4>
       <div class="mc-seg">${['끄기', '작게', '보통', '크게'].map((t, v) => `<button class="mc-btn wh ${S.settings.sfx === v ? 'on' : ''}" data-sfx="${v}">${t}</button>`).join('')}</div></div>
+    <div class="mc-sec"><h4>진동</h4>
+      <div class="mc-seg" role="group" aria-label="진동"><button class="mc-btn wh ${S.settings.haptic ? 'on' : ''}" data-haptic="1" aria-pressed="${S.settings.haptic}">켜기</button><button class="mc-btn wh ${S.settings.haptic ? '' : 'on'}" data-haptic="0" aria-pressed="${!S.settings.haptic}">끄기</button></div></div>
     <div class="mc-sec"><h4>배경 음악</h4>
       <div class="mc-seg"><button class="mc-btn wh ${S.settings.bgm !== false ? 'on' : ''}" data-bgm="1">켜기</button><button class="mc-btn wh ${S.settings.bgm !== false ? '' : 'on'}" data-bgm="0">끄기</button></div>
       <div class="mc-vol"><span>음량</span><input type="range" min="0" max="100" step="5" value="${Math.round((S.settings.bgmV ?? .5) * 100)}" data-bgmv><b>${Math.round((S.settings.bgmV ?? .5) * 100)}</b></div></div>
@@ -3966,6 +3972,16 @@ function openSettings() {
     S.settings.sfx = +b.dataset.sfx; save();
     m.querySelectorAll('[data-sfx]').forEach(x => x.classList.toggle('on', x === b));
     sfx('merge', 3);
+  });
+  const hapticButtons = m.querySelectorAll('[data-haptic]');
+  hapticButtons.forEach(button => button.onclick = () => {
+    S.settings.haptic = button.dataset.haptic === '1';
+    hapticButtons.forEach(option => {
+      const active = option === button;
+      option.classList.toggle('on', active);
+      option.setAttribute('aria-pressed', String(active));
+    });
+    save();
   });
   m.querySelectorAll('[data-evp]').forEach(b => b.onclick = () => {
     S.settings.evPreview = b.dataset.evp === '1';
