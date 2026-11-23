@@ -39,6 +39,7 @@ def winpic(path,i):
     c=a[:ch,i*cw:(i+1)*cw].astype(int); nw=(c.min(2)<235)
     lab,n=ndimage.label(nw); sz=ndimage.sum(nw,lab,range(1,n+1)); m=lab==(np.argmax(sz)+1)
     ys,xs=np.where(m); return Image.fromarray(c[ys.min():ys.max()+1,xs.min():xs.max()+1].astype(np.uint8)).convert('RGBA')
+SRC={'hpost':'post'}
 SEED={'gelato':(292,307),'hpost':(281,330),'market':(384,340),'sail':(394,224),'museum':(366,324),'ferry':(216,334)}
 TOL={'market':60,'museum':75}
 def opening(k,p,tol=None,cl=1):
@@ -59,17 +60,17 @@ def signbox(k,ps,om):
     d=ndimage.binary_opening(d,iterations=2); d=ndimage.binary_closing(d,iterations=6)
     lab,n=ndimage.label(d); sz=ndimage.sum(d,lab,range(1,n+1)); m=lab==(np.argmax(sz)+1)
     ys,xs=np.where(m); return (xs.min(),ys.min(),xs.max()-xs.min()+1,ys.max()-ys.min()+1)
-PRE={'gelato':'gl','post':'ps','market':'mk','sail':'sa','museum':'ms','ferry':'fr'}
-GK={'gelato':['glcart','gltable','gllemon'],'post':['psbox','pscart','psbike'],'market':['mkcrate','mkscale','mkbarrel'],
+PRE={'gelato':'gl','hpost':'ps','market':'mk','sail':'sa','museum':'ms','ferry':'fr'}
+GK={'gelato':['glcart','gltable','gllemon'],'hpost':['psbox','pscart','psbike'],'market':['mkcrate','mkscale','mkbarrel'],
     'sail':['saspool','saroll','sabask'],'museum':['mslamp','mswheel','mslog'],'ferry':['frpost','frcart','frboard']}
 HANG={'gelato','sail'}
 def build(k,gx=(None,None,None),gh=.17):
-    ps=panels(G+f'base_{k}.png'); ph,pw=ps[0].shape[:2]; S=2; W,H=pw*S,ph*S
+    ps=panels(G+f'base_{SRC.get(k,k)}.png'); ph,pw=ps[0].shape[:2]; S=2; W,H=pw*S,ph*S
     om=opening(k,ps[2]); ys,xs=np.where(om); ob=(xs.min(),ys.min(),xs.max()+1,ys.max()+1)
-    wsf=G+('ws_sail_window.png' if k=='sail' else f'ws_{k}.png'); sgf=G+('ws_sail_signonly.png' if k=='sail' else f'ws_{k}.png')
+    wsf=G+('ws_sail_window.png' if k=='sail' else f'ws_{SRC.get(k,k)}.png'); sgf=G+('ws_sail_signonly.png' if k=='sail' else f'ws_{SRC.get(k,k)}.png')
     wins=[winpic(wsf,i) for i in (0,1)]
     sc=cells(sgf,2,2,holes=False); signs=[biggest(sc[2]),biggest(sc[3])]
-    grc=cells(G+f'gr_{k}.png',3,2)
+    grc=cells(G+f'gr_{SRC.get(k,k)}.png',3,2)
     pre=PRE[k]; wk,sk=pre+'win',pre+'sign'; g=GK[k]
     P={'W':W,'H':H,'baseKey':pre+'wall','order':[wk,sk]+g,'ground':list(g),'rect':{},'open':{},'fill':[],'behind':[],'p':{'1':{},'2':{}}}
     # 창문: 구멍 모양대로 잘라 넣음
@@ -106,4 +107,4 @@ def preview(P,lv):
             c.alpha_composite(im,(round(x),round(y)))
     return c.resize((W//3,H//3),Image.LANCZOS)
 
-GX={'gelato':(.14,.86,.55),'post':(.15,.86,.29),'market':(.12,.88,.62),'sail':(.14,.86,.62),'museum':(.09,.91,.57),'ferry':(.1,.9,.42)}
+GX={'gelato':(.14,.86,.55),'hpost':(.15,.86,.29),'market':(.12,.88,.62),'sail':(.14,.86,.62),'museum':(.09,.91,.57),'ferry':(.1,.9,.42)}
