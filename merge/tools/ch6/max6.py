@@ -7,5 +7,5 @@ for k in re.findall(r"\{ k: '(\w+)', ch: 6",a): s['areaDone'][k]=True
 for k in re.findall(r"\['(\w+)', '[^']*', [.\d]+\]",a[a.index('const STREET6'):]): s['street']['c6_'+k]=3
 s['stBeat']['6']=99
 for c in s['disc']: s['disc'][c]=list(range(1,14))
-s['tut']={'k':1,'t':1}; s.setdefault('settings',{})['story']=False
+s['tut']={'k':1,'t':1}
 print(json.dumps(s))
