@@ -1981,6 +1981,7 @@ html,body{margin:0;height:100%;background:transparent!important;overflow:hidden}
 @media (hover:hover) and (pointer:fine){.tw-arr{display:block}.tw-scroll{cursor:grab}.tw-scroll.drag{cursor:grabbing;user-select:none}.tw-scroll.drag .tw-lot{pointer-events:none}}
 .tw-scroll{position:absolute;inset:0;overflow-x:hidden;overflow-y:auto;background:#94d7fe;border-top:3px solid #5b3a32;border-bottom:3px solid #5b3a32;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .tw-scroll::-webkit-scrollbar{display:none}
+.tw-scroll{touch-action:pan-x pan-y}
 .tw-street.nar{margin:0 auto;border-left:3px solid #5b3a32;border-right:3px solid #5b3a32;box-sizing:content-box}
 .tw-street{position:relative;overflow:hidden;background-repeat:repeat-x;background-position:0 0}
 .tw-lot{position:absolute;padding:0;margin:0;border:0;background:none;cursor:pointer;overflow:visible}
@@ -3663,8 +3664,20 @@ function openTown() {
   const sc = v.querySelector('.tw-scroll');
   let dragX = null, moved = false;
   sc.addEventListener('wheel', ev => {
-    if (sc.scrollWidth > sc.clientWidth + 2 && Math.abs(ev.deltaY) > Math.abs(ev.deltaX)) { sc.scrollLeft += ev.deltaY; ev.preventDefault(); }
+    if (ev.ctrlKey) { ev.preventDefault(); const r = sc.getBoundingClientRect(); twZoomTo(twZ * Math.exp(-ev.deltaY * .01), ev.clientX - r.left, ev.clientY - r.top); return; }
+    if (twZ === 1 && sc.scrollWidth > sc.clientWidth + 2 && Math.abs(ev.deltaY) > Math.abs(ev.deltaX)) { sc.scrollLeft += ev.deltaY; ev.preventDefault(); }
   }, { passive: false });
+  // 마을 화면만 두 손가락으로 확대·축소 (퍼즐판은 확대 안 됨)
+  let pinch = null;
+  const tdist = t => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
+  sc.addEventListener('touchstart', ev => { if (ev.touches.length === 2) { const r = sc.getBoundingClientRect(); pinch = { d: tdist(ev.touches), z: twZ, r }; } }, { passive: true });
+  sc.addEventListener('touchmove', ev => {
+    if (!pinch || ev.touches.length !== 2) return;
+    ev.preventDefault();
+    const t = ev.touches, cx = (t[0].clientX + t[1].clientX) / 2 - pinch.r.left, cy = (t[0].clientY + t[1].clientY) / 2 - pinch.r.top;
+    twZoomTo(pinch.z * tdist(t) / pinch.d, cx, cy); moved = true;
+  }, { passive: false });
+  sc.addEventListener('touchend', ev => { if (ev.touches.length < 2 && pinch) { pinch = null; setTimeout(() => { moved = false; }, 0); } }, { passive: true });
   sc.addEventListener('pointerdown', ev => {
     moved = false;
     if (ev.pointerType !== 'mouse' || ev.button !== 0) return;
@@ -3702,13 +3715,23 @@ function openTown() {
     else if (a === 'list') { v.classList.toggle('lst'); v.querySelector('.tw-lst')?.classList.toggle('on', v.classList.contains('lst')); }
     else if (a === 'next' && townNext) {
       const nx = townNext;
-      if (nx.j != null) { sc.scrollTo({ top: Math.max(0, stPos[nx.j].y - sc.clientHeight / 2), behavior: 'smooth' }); showStPop(nx.j); }
+      if (nx.j != null) { sc.scrollTo({ top: Math.max(0, stPos[nx.j].y * twZ - sc.clientHeight / 2), left: Math.max(0, stPos[nx.j].x * twZ - sc.clientWidth / 2), behavior: 'smooth' }); showStPop(nx.j); }
       else openCafe(nx.i);
     }
   });
   renderTown(true);
 }
 let townCh = 1, townH = 0;
+// 마을 확대 배율 (1 = 기본, 최대 2.5배)
+let twZ = 1;
+function twZoomTo(z, cx, cy) {
+  const v = $('.mc-town'), sc = v && v.querySelector('.tw-scroll'), st = sc && sc.querySelector('.tw-street'); if (!st) return;
+  z = Math.max(1, Math.min(2.5, z || 1));
+  if (cx == null) { cx = sc.clientWidth / 2; cy = sc.clientHeight / 2; }
+  const px = (sc.scrollLeft + cx) / twZ, py = (sc.scrollTop + cy) / twZ;
+  twZ = z; st.style.zoom = z === 1 ? '' : z; sc.style.overflowX = z > 1 ? 'auto' : '';
+  sc.scrollLeft = px * z - cx; sc.scrollTop = py * z - cy;
+}
 function showVillageCard(vi) {
   const V = VILLAGES[vi];
   modal(`<button class="mc-xbtn" data-x aria-label="닫기">×</button><div class="tw-scard al-vcard"><div class="tw-simg">${vi === 0 && MAP.season ? `<img src="${MAP.season}" alt="" draggable="false">` : ''}</div>
@@ -4033,7 +4056,7 @@ function renderTown(first) {
   }).join('');
   townCenters = centers;
   v.querySelector('.tw-spin')?.classList.toggle('new', S.spin.d !== today());
-  if (first) { const c = nx ? (nx.j != null ? stPos[nx.j] : centers[nx.i]) : centers[defaultArea()]; sc.scrollTop = c ? Math.max(0, c.y - sc.clientHeight / 2) : sc.scrollHeight; v.querySelector('.tw-list').scrollTop = 0; }
+  if (first) { twZoomTo(1); const c = nx ? (nx.j != null ? stPos[nx.j] : centers[nx.i]) : centers[defaultArea()]; sc.scrollTop = c ? Math.max(0, c.y - sc.clientHeight / 2) : sc.scrollHeight; v.querySelector('.tw-list').scrollTop = 0; }
   if (stPop != null && stPos[stPop]) showStPop(stPop); else v.querySelector('.tw-pop')?.remove();
   if (!reuse) startWalkers(lanes);
 }
@@ -4331,7 +4354,7 @@ function startWalkers(lanes) {
     // 30fps로 충분: 프레임마다 스타일을 쓰면 폰에서 스크롤·터치가 버벅임
     if (now - last < 32 || document.hidden) { walkRaf = requestAnimationFrame(tick); return; }
     const dt = Math.min(.08, (now - last) / 1000); last = now;
-    const vy0 = scv ? scv.scrollTop - 160 : -1e9, vy1 = scv ? scv.scrollTop + scv.clientHeight + 160 : 1e9;
+    const vy0 = scv ? scv.scrollTop / twZ - 160 : -1e9, vy1 = scv ? (scv.scrollTop + scv.clientHeight) / twZ + 160 : 1e9;
     for (const w of ws) {
       w.t -= dt;
       if (w.st === 'walk') {
