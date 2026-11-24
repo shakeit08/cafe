@@ -4813,7 +4813,9 @@ function openReplay() {
   const seen = k => k === 'intro' || S.story.seen[k];
   const cur = curVillage(), num = {};
   MAIN_SCENES.forEach(([k], i) => num[k] = i + 1);
-  XMAS_CHAINS.forEach((c, i) => num[XMAS_STORIES[c].scene] = i + 1);
+  // 시즌 이벤트 이야기는 별도 섹션 (본편 번호와 따로)
+  const SEASON_SCENES = [...XMAS_CHAINS.map(c => [XMAS_STORIES[c].scene, XMAS_STORIES[c].title]), ['plaza', '크리스마스 광장']];
+  SEASON_SCENES.forEach(([k], i) => num[k] = i + 1);
   const cell = ([k, t]) => {
     const ok = seen(k), cg = STORY_CG[k];
     const u = ok && cg ? cgSrc(cg, true) : null;
@@ -4832,8 +4834,8 @@ function openReplay() {
       idx += `<button class="al-ix" data-ix="v${vi}">${esc(V.name)}</button>`;
     } else body += `<div class="al-sec al-vh"><h3 class="al-vn">${esc(V.name)}</h3></div>` + vChs(vi).map(chSec).join('');
   });
-  if (S.ev || XMAS_CHAINS.some(c => seen(XMAS_STORIES[c].scene))) {
-    const season = XMAS_CHAINS.map(c => cell([XMAS_STORIES[c].scene, XMAS_STORIES[c].title])).join('');
+  if (S.ev || SEASON_SCENES.some(([k]) => seen(k))) {
+    const season = SEASON_SCENES.map(cell).join('');
     body += `<div class="al-sec" data-sec="xmas"><h4>크리스마스 시즌</h4><div class="al-grid">${season}</div></div>`;
     if (idx) idx += '<button class="al-ix" data-ix="xmas">크리스마스</button>';
   }
@@ -4875,7 +4877,7 @@ const SCENE_CH = { intro: 1, cafe: 1, station: 1, ch2_start: 2, dock: 2, ch3_sta
 const MAIN_SCENES = [
   ['intro', '프롤로그 · 낡은 카페의 열쇠'], ['cafe', '카페 다시 문 열던 날'], ['station', '구름언덕역의 기차표'],
   ['ch2_start', '강가 거리에 도착'], ['dock', '선착장의 병 편지'], ['ch3_start', '가을 숲에 도착'],
-  ['maple', '단풍 산장역의 소식'], ['ch4_start', '눈꽃 언덕에 도착'], ['cablecar', '설산 꼭대기의 엽서'], ['plaza', '크리스마스 광장'],
+  ['maple', '단풍 산장역의 소식'], ['ch4_start', '눈꽃 언덕에 도착'], ['cablecar', '설산 꼭대기의 엽서'],
   ['ch5_invite', '수첩 속 초대장'], ['ch5_start', '햇살 모래사장 도착'], ['yacht', '흰 돛 요트 출항'],
 ];
 const STORY_CG = { intro: 'ev01', cafe: 'ev02', station: 'ev03', ch2_start: 'ev04', dock: 'ev05', ch3_start: 'ev06', maple: 'ev07', ch4_start: 'ev08', cablecar: 'ev09', plaza: 'ev10', ch5_invite: 'ev11', ch5_start: 'ev12', yacht: 'ev13' };
