@@ -9,7 +9,7 @@ rm -rf $O/img; mkdir -p $O/img
 echo "(async () => {"
 echo "const ART = (() => {"
 MC_RAW=1 MC_EXT=1 MC_NO_STORY=1 MC_EXT_DIR=$O/img python3 embed.py
-echo "return { CHAINS, CHAIN_KEYS, ART_ITEMS, ART_GENS, ANIMALS, UI, iconItem, iconGen, genName, hasGenArt, iconBag, iconAnimal, cafeScene, areaScene, lockedScene, SPOT_BOX, CAFE_BOX, paintBox, spotPos, HOUSE, townLot, townFence, TOWN_BG, TOWN_BG2, WALK, ST_IMG, DEB_IMG, ST_DIM, MAP, ART_TOOLS, WHEEL, EXT_FILES, extFill, STORY_IMG, iconRes, iconChest };"
+echo "return { CHAINS, CHAIN_KEYS, XMAS_CHAINS, XMAS_ART, ART_ITEMS, ART_GENS, ANIMALS, UI, iconItem, iconGen, genName, hasGenArt, iconBag, iconAnimal, cafeScene, areaScene, lockedScene, SPOT_BOX, CAFE_BOX, paintBox, spotPos, HOUSE, townLot, townFence, TOWN_BG, TOWN_BG2, WALK, ST_IMG, DEB_IMG, ST_DIM, MAP, ART_TOOLS, WHEEL, EXT_FILES, extFill, STORY_IMG, iconRes, iconChest };"
 echo "})();"
 echo "const VER = '$VER';"
 python3 font.py

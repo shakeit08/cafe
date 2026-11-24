@@ -1,6 +1,6 @@
 #!/bin/sh
 set -e
-VER=2.21.57
+VER=2.21.60
 python3 compress.py >&2
 {
 cat <<H
@@ -14,7 +14,7 @@ cat <<H
 H
 echo "const ART = (() => {"
 MC_EXT=1 MC_EXT_URL=1 python3 embed.py
-echo "return { CHAINS, CHAIN_KEYS, ART_ITEMS, ART_GENS, ANIMALS, UI, iconItem, iconGen, genName, hasGenArt, iconBag, iconAnimal, cafeScene, areaScene, lockedScene, SPOT_BOX, CAFE_BOX, paintBox, spotPos, HOUSE, townLot, townFence, TOWN_BG, TOWN_BG2, WALK, ST_IMG, DEB_IMG, ST_DIM, MAP, ART_TOOLS, WHEEL, EXT_FILES, extFill, STORY_IMG, iconRes, iconChest };"
+echo "return { CHAINS, CHAIN_KEYS, XMAS_CHAINS, XMAS_ART, ART_ITEMS, ART_GENS, ANIMALS, UI, iconItem, iconGen, genName, hasGenArt, iconBag, iconAnimal, cafeScene, areaScene, lockedScene, SPOT_BOX, CAFE_BOX, paintBox, spotPos, HOUSE, townLot, townFence, TOWN_BG, TOWN_BG2, WALK, ST_IMG, DEB_IMG, ST_DIM, MAP, ART_TOOLS, WHEEL, EXT_FILES, extFill, STORY_IMG, iconRes, iconChest };"
 echo "})();"
 echo "const VER = '$VER';"
 echo

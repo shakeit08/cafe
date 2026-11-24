@@ -1,5 +1,5 @@
 // ===================== GAME =====================
-const { CHAINS, CHAIN_KEYS, ANIMALS, UI, iconItem, iconGen, genName, hasGenArt, iconBag, iconAnimal, cafeScene, areaScene, lockedScene, SPOT_BOX, CAFE_BOX, paintBox, spotPos, HOUSE, townLot, townFence, TOWN_BG, TOWN_BG2, WALK, ST_IMG, DEB_IMG, ST_DIM, MAP, ART_TOOLS, WHEEL, EXT_FILES, extFill, STORY_IMG, iconRes, iconChest } = ART;
+const { CHAINS, CHAIN_KEYS, XMAS_CHAINS, XMAS_ART, ANIMALS, UI, iconItem, iconGen, genName, hasGenArt, iconBag, iconAnimal, cafeScene, areaScene, lockedScene, SPOT_BOX, CAFE_BOX, paintBox, spotPos, HOUSE, townLot, townFence, TOWN_BG, TOWN_BG2, WALK, ST_IMG, DEB_IMG, ST_DIM, MAP, ART_TOOLS, WHEEL, EXT_FILES, extFill, STORY_IMG, iconRes, iconChest } = ART;
 const TAG = '[달콤 머지 카페]';
 const COLS = 7, ROWS = 9, START_ROWS = 6;
 const ROW_COST = { 6: 200, 7: 500, 8: 1000 };
@@ -456,6 +456,38 @@ if (CH6_ON) {
   STREET[6] = STREET6; STREET_TALK[6] = STREET_TALK6;
   CH_GATE[6] = 'yacht'; CH_NAME[6] = '하얀 항구'; CHS.push(6); VILLAGES[1].chs.push(6);
 }
+const XMAS_STORIES = {
+  xmas: {
+    scene: 'xmas_cake', resident: 'rabbit', title: '광장의 크리스마스 케이크', reward: { x: [3] },
+    letter: '다 같이 케이크를 나눠 먹어서 즐거웠어! 다음에 또 광장에서 만나자, 사장님.',
+    lines: [
+      ['rabbit', '사장님, 첫 조각은 사장님 거야! 다 같이 먹으려고 딸기도 잔뜩 올렸어.'],
+      ['hamster', '난 한 입만 줘! 아, 내 한 입은 조금 큰데…'],
+      ['penguin', '그럼 쿠키 접시는 큰 걸로 가져올게!'],
+      ['rabbit', '좋아, 쿠키 건 조금 두껍게 썰어 줄게. 펭구 것도 남겨 둘 거야!'],
+    ],
+  },
+  xmasCocoa: {
+    scene: 'xmas_cocoa', resident: 'polarbear', title: '포근의 핫초코 두 잔', reward: { e: 80 },
+    letter: '따뜻한 컵을 같이 들고 있으니 좋았어. 추운 날엔 또 손 녹이고 가!',
+    lines: [
+      ['polarbear', '마시멜로는 세 개씩 띄웠어! 한 잔은 사장님 거야. 컵 잡고 손부터 녹여.'],
+      ['ermine', '잘 셌네! 녹기 전에 마시멜로 하나 건져 먹어 봐.'],
+      ['polarbear', '앗, 내 건 벌써 하나 녹았어. 사장님, 우리 같이 호호 불어서 마시자!'],
+    ],
+  },
+  xmasCandy: {
+    scene: 'xmas_candy', resident: 'reindeer', title: '사뿐의 캔디케인 장식', reward: { x: [2] },
+    letter: '사장님이랑 고른 가지가 내 자리가 됐어. 트리 불이 켜지면 또 보러 와!',
+    lines: [
+      ['reindeer', '사장님, 여기 봐! 초록 리본으로 묶은 캔디케인, 이 가지에 걸면 딱이겠다!'],
+      ['alpaca', '리본 끝을 길게 남기길 잘했어. 바람 부니까 살랑살랑 움직여!'],
+      ['reindeer', '사장님, 한 걸음만 뒤로 가 봐. 트리 불빛에 사탕 줄무늬가 더 또렷하게 보여!'],
+    ],
+  },
+};
+const XMAS_MAIL_IDS = new Set(Object.values(XMAS_STORIES).map(event => event.scene));
+const residentIndex = key => ANIMALS.findIndex(animal => animal.key === key);
 const STORY = {
   chestnut: [
     [12, '안녕! 알밤이야. 숲 입구에서 군밤 굽는 게 내 꿈이었어!'],
@@ -736,6 +768,9 @@ const areaFull = a => areaCount(a) >= a.spots.length * 2;
 const evOn = () => { if (S && S.settings && S.settings.evPreview) return true; const d = new Date(), mo = d.getMonth() + 1; return mo === 12 || (mo === 1 && d.getDate() <= 7); };
 const areaOpen = i => AREAS[i].event ? (evOn() || areaCount(AREAS[i]) > 0) : (i === 0 || areaFull(AREAS[i - 1])) && chOpen(AREAS[i].ch || 1);
 const curOf = a => a.cur === 'snow' ? 'snow' : 'stars';
+for (const { scene, lines } of Object.values(XMAS_STORIES)) {
+  STORY[scene] = lines.map(([key, text]) => [residentIndex(key), text]);
+}
 const MC = () => S.onEv && S.ev ? S.ev.chains : S.chains;
 const maxE = () => MAX_E + 10 * D('terrace') + (done('flower') ? 20 : 0) + (done('chestnut') ? 20 : 0) + (done('hotteok') ? 20 : 0) + (APP ? 10 * D('lamp') : 0);
 const regenMs = () => Math.round((REGEN_MS - 10000 * D('planter')) * (done('bath') ? .8 : 1) * (done('camp') ? .9 : 1) * (done('cocoa') ? .9 : 1));
@@ -777,7 +812,7 @@ function newState() {
     board, rows: START_ROWS, chains: ['bakery', 'coffee'], orders: [],
     disc: Object.fromEntries(CHAIN_KEYS.map(c => [c, c === 'bakery' || c === 'coffee' ? [1] : []])),
     settings: { chatE: 3, sfx: 2, haptic: true, story: true, mhint: true, bgm: true, bgmV: .5 }, story: { intro: false, seen: {} }, giftDay: '', shop: { day: '', buys: 0 }, mail: { list: [], got: { [CH5_ENERGY_MAIL]: 1 }, am: '', pm: '' }, tut: { k: 0, t: 0 },
-    stats: { merges: 0, orders: 0, made: 0 }, pendingGens: [], pendingItems: [], gdisc: {}, chatBonus: 0, snow: 0, ev: null, onEv: false, evTab: false, coll: {}, pokes: { d: '', l: [] }, seenVer: '', street: {}, stBeat: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }, spin: { d: '' }, tools: { cut: 0, up: 0 }, tbuy: { d: '', cut: 0, up: 0 }, store: [], storeN: STORE_START, nextId: 1,
+    stats: { merges: 0, orders: 0, made: 0 }, pendingGens: [], pendingItems: [], gdisc: {}, chatBonus: 0, snow: 0, ev: null, onEv: false, evTab: false, coll: { xmasMenuUpdate: true }, pokes: { d: '', l: [] }, seenVer: '', street: {}, stBeat: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }, spin: { d: '' }, tools: { cut: 0, up: 0 }, tbuy: { d: '', cut: 0, up: 0 }, store: [], storeN: STORE_START, nextId: 1,
     stars: 0, decor: Object.fromEntries(ALL_SPOTS.map(d => [d.k, 0])), areaDone: {},
   };
   while (st.orders.length < 3) st.orders.push(genOrder(st));
@@ -818,15 +853,28 @@ function autoClear(s) {
 function sanitize(o) {
   if (!o || typeof o !== 'object' || !Array.isArray(o.board)) return null;
   const s = newState();
+  const updateXmas = !o.coll?.xmasMenuUpdate;
+  const savedItem = item => {
+    if (updateXmas && item?.c === 'xmas' && item.l === 5) return { c: 'xmasCocoa', l: 5 };
+    return validItem(item);
+  };
+  const savedSlot = item => {
+    if (item?.b && Array.isArray(item.in)) return validItem({ ...item, in: item.in.map(savedItem) });
+    return savedItem(item);
+  };
   for (const k of ['level', 'xp', 'coins', 'energy', 'eTs', 'rows', 'savedAt', 'chatBonus', 'nextId', 'stars', 'snow']) {
     if (typeof o[k] === 'number' && isFinite(o[k])) s[k] = o[k];
   }
   s.level = Math.max(1, Math.floor(s.level));
   s.rows = Math.min(ROWS, Math.max(START_ROWS, Math.floor(s.rows)));
-  s.board = Array.from({ length: COLS * ROWS }, (_, i) => validItem(o.board[i]));
-  if (Array.isArray(o.chains)) s.chains = o.chains.filter(c => CHAINS[c]);
+  s.board = Array.from({ length: COLS * ROWS }, (_, i) => savedSlot(o.board[i]));
+  if (Array.isArray(o.chains)) s.chains = o.chains.filter(c => CHAINS[c] && !XMAS_CHAINS.includes(c));
   if (!s.chains.length) s.chains = ['bakery', 'coffee'];
   if (o.disc && typeof o.disc === 'object') for (const c of CHAIN_KEYS) s.disc[c] = Array.isArray(o.disc[c]) ? o.disc[c].filter(n => n >= 1 && n <= CHAINS[c].items.length) : [];
+  if (updateXmas && s.disc.xmas.includes(5)) {
+    s.disc.xmas = s.disc.xmas.filter(l => l !== 5);
+    if (!s.disc.xmasCocoa.includes(5)) s.disc.xmasCocoa.push(5);
+  }
   if (o.gdisc && typeof o.gdisc === 'object') for (const c of CHAIN_KEYS) { const v = Math.floor(+o.gdisc[c] || 0); if (v > 0) s.gdisc[c] = Math.min(GEN_MAX, v); }
   if (o.decor && typeof o.decor === 'object') for (const d of ALL_SPOTS) s.decor[d.k] = Math.min(2, Math.max(0, Math.floor(+o.decor[d.k] || 0)));
   if (o.areaDone && typeof o.areaDone === 'object') for (const a of AREAS) if (o.areaDone[a.k]) s.areaDone[a.k] = true;
@@ -857,25 +905,36 @@ function sanitize(o) {
   if (o.shop && typeof o.shop.day === 'string') s.shop = { day: o.shop.day, buys: +o.shop.buys || 0 };
   if (o.tools && typeof o.tools === 'object') for (const k of ['cut', 'up']) s.tools[k] = Math.max(0, Math.min(999, Math.floor(+o.tools[k] || 0)));
   if (Number.isInteger(o.storeN)) s.storeN = Math.max(STORE_START, Math.min(STORE_MAX, o.storeN));
-  if (Array.isArray(o.store)) { const a = Array.from({ length: s.storeN }, (_, k) => validItem(o.store[k]) || null).filter(Boolean); s.store = Array.from({ length: s.storeN }, (_, k) => a[k] || null); }
+  if (Array.isArray(o.store)) { const a = Array.from({ length: s.storeN }, (_, k) => savedSlot(o.store[k]) || null).filter(Boolean); s.store = Array.from({ length: s.storeN }, (_, k) => a[k] || null); }
   for (const k of ['cut', 'up']) if (s.tools[k] > 0) { const n = s.tools[k]; s.tools[k] = 0; const h = s.store.find(x => x && x.tool === k); if (h) h.n = (h.n || 1) + n; else { const e = s.store.findIndex(x => !x), it = n > 1 ? { tool: k, n } : { tool: k }; if (e >= 0) s.store[e] = it; else s.pendingItems.push(it); } }
   if (o.spin && typeof o.spin.d === 'string') s.spin = { d: o.spin.d };
   if (o.tbuy && typeof o.tbuy.d === 'string') s.tbuy = { d: o.tbuy.d, cut: +o.tbuy.cut || 0, up: +o.tbuy.up || 0 };
   if (o.stats) for (const k in s.stats) s.stats[k] = +o.stats[k] || 0;
-  if (Array.isArray(o.pendingGens)) s.pendingGens = o.pendingGens.filter(c => CHAINS[c]);
-  if (Array.isArray(o.pendingItems)) s.pendingItems = o.pendingItems.map(validItem).filter(Boolean);
+  if (Array.isArray(o.pendingGens)) s.pendingGens = o.pendingGens.filter(c => CHAINS[c] && XMAS_CHAINS.indexOf(c) <= 0);
+  if (Array.isArray(o.pendingItems)) s.pendingItems = o.pendingItems.map(savedSlot).filter(Boolean);
   for (const a of AREAS) if (a.gen && s.areaDone[a.k] && !s.chains.includes(a.gen)) { s.chains.push(a.gen); if (!s.pendingGens.includes(a.gen)) s.pendingGens.push(a.gen); }
-  scanGens(s);
   s.orders = Array.isArray(o.orders) ? o.orders.filter(od => od && Array.isArray(od.req) && od.req.length && od.req.every(r => CHAINS[r.c] && r.l >= 1 && r.l <= CHAINS[r.c].items.length)).slice(0, 3) : [];
   s.orders = s.orders.map(od => od.req.filter(r => r.l >= ORD_HI).length > 1 ? genOrder(s) : od);
   while (s.orders.length < 3) s.orders.push(genOrder(s));
   if (o.ev && Array.isArray(o.ev.board)) {
-    const ev = { board: Array.from({ length: COLS * ROWS }, (_, i) => { const it = validItem(o.ev.board[i]); return it && (it.b ? null : it); }), rows: Math.min(ROWS, Math.max(START_ROWS, Math.floor(+o.ev.rows || START_ROWS))), chains: ['xmas'],
-      orders: Array.isArray(o.ev.orders) ? o.ev.orders.filter(od => od && Array.isArray(od.req) && od.req.length && od.req.every(r => r.c === 'xmas' && r.l >= 1 && r.l <= 7)).slice(0, 3) : [] };
+    const ev = {
+      board: Array.from({ length: COLS * ROWS }, (_, i) => { const it = savedSlot(o.ev.board[i]); return it && !it.b ? it : null; }),
+      rows: Math.min(ROWS, Math.max(START_ROWS, Math.floor(+o.ev.rows || START_ROWS))),
+      chains: [...XMAS_CHAINS],
+      orders: Array.isArray(o.ev.orders) ? o.ev.orders.filter(od => od && Array.isArray(od.req) && od.req.length &&
+        od.req.every(r => r && XMAS_CHAINS.includes(r.c) && Number.isInteger(r.l) && r.l >= 1 && r.l <= CHAINS[r.c].items.length)).slice(0, 3) : [],
+    };
+    if (updateXmas) ev.orders = ev.orders.map(od => ({ ...od, req: od.req.map(savedItem) }));
     fillEvOrders(s, ev);
+    ensureXmasGenerators(ev.board, ev.rows);
     s.ev = ev;
   }
+  scanGens(s);
   autoClear(s);
+  const plaza = AREAS.find(a => a.k === 'plaza');
+  if (updateXmas && (s.coll.xmas || s.areaDone.plaza || plaza.spots.every(spot => s.decor[spot.k] >= 2))) {
+    for (const c of XMAS_CHAINS) awardXmasMenu(s, c);
+  }
   if (!o.mail?.got?.[CH5_ENERGY_MAIL] && !s.mail.list.some(letter => letter.id === CH5_ENERGY_MAIL)) {
     const completed = AREAS.filter(area => area.ch === 5 && s.areaDone[area.k]).length;
     if (completed) {
@@ -894,10 +953,18 @@ function fillEvOrders(s, ev) {
   while (ev.orders.length < 3) ev.orders.push(genOrder(t));
   s.nextId = t.nextId;
 }
+function ensureXmasGenerators(board, rows) {
+  for (const [c, preferred] of [['xmasCocoa', 2], ['xmasCandy', 4]]) {
+    if (board.some(it => it?.g === c)) continue;
+    const i = !board[preferred] ? preferred : board.findIndex((it, n) => n < rows * COLS && !it);
+    if (i >= 0) board[i] = { g: c };
+  }
+}
 function newEv() {
-  const ev = { board: Array(COLS * ROWS).fill(null), rows: START_ROWS, chains: ['xmas'], orders: [] };
+  const ev = { board: Array(COLS * ROWS).fill(null), rows: START_ROWS, chains: [...XMAS_CHAINS], orders: [] };
   ev.board[3] = { g: 'xmas' };
-  if (S.disc.xmas && !S.disc.xmas.includes(1)) S.disc.xmas.push(1);
+  ensureXmasGenerators(ev.board, ev.rows);
+  if (!S.disc.xmas.includes(1)) S.disc.xmas.push(1);
   fillEvOrders(S, ev);
   return ev;
 }
@@ -920,7 +987,9 @@ const ITEM_DESC = {
   candy: ["반짝반짝 네모난 각설탕이에요.", "주머니에 넣어 다니는 동그란 알사탕이에요.", "퐁당이 물놀이 끝나고 받는 막대사탕이에요.", "탱글탱글 흔들리는 말랑 젤리 컵이에요.", "몽실이 자기 털이랑 헷갈리는 솜사탕이에요.", "알록달록 사탕을 병에 가득 담았어요.", "고마운 이웃에게 건네는 사탕 꽃다발이에요.", "반짝이 보석 같다고 좋아하는 젤리 케이크예요.", "또르가 바다를 닮았다며 들여다보는 젤리 어항이에요.", "축제 날 산들이 머리에 쓰는 사탕 화관이에요.", "바닷바람을 타고 날아갈 것 같은 사탕 열기구예요.", "항구 광장에서 빙글빙글 도는 사탕 회전목마예요.", "젤리를 싣고 칙칙폭폭 달리는 사탕 기차예요."],
   fish: ["주르륵 부어 쓸 붕어빵 반죽이에요.", "꿀단 할머니 수첩에 적힌 비법 팥앙금이에요.", "찰랑이 꼬리부터 먹는다고 우기는 붕어빵이에요.", "따끈한 붕어빵을 종이봉투에 담았어요.", "사뿐이 썰매 타기 전에 먹는 붕어빵 한 접시예요.", "눈 오는 날 다 함께 나눠 먹는 붕어빵 바구니예요.", "따끈이 이웃집마다 돌리는 붕어빵 선물 상자예요.", "솜이가 분홍색이라 고르는 딸기 슈크림 붕어빵이에요.", "도토리가 군고구마보다 좋다는 자색 고구마 붕어빵이에요.", "느릿이 천천히 음미하는 말차 팥 붕어빵이에요.", "바나나와 초코가 듬뿍 든 붕어빵이에요.", "뽀글이 시장에서 꼬치에 꽂아 파는 미니 붕어빵이에요.", "붕어빵을 퐁당 얹은 달콤한 파르페예요."],
   pie: ["가을 숲에서 빨갛게 익은 사과예요.", "알밤이 겨울 내내 아껴 먹는 사과잼이에요.", "단풍이 꼬리를 흔들며 기다리는 애플파이예요.", "김이 모락모락 나는 사과파이 한 조각이에요.", "따끈한 파이 위에 아이스크림을 올렸어요.", "숲속 소풍에 챙겨 가는 파이 바구니예요.", "타닥이 고마운 이웃에게 보내는 파이 선물 상자예요.", "캐러멜이 반짝이는 뒤집어 구운 타르트 타탱이에요.", "새콤이 바삭바삭 소리에 반한 사과 크럼블이에요.", "사과를 장미처럼 돌돌 말아 구운 타르트예요.", "반질반질 캐러멜을 입힌 사과 꼬치예요.", "사과 조각을 듬뿍 올린 사과 롤케이크예요.", "파이 세 판을 탑처럼 쌓은 3단 파이 탑이에요."],
-  xmas: ["생강 향이 솔솔 나는 쿠키 반죽이에요.", "방긋 웃는 진저브레드맨이에요.", "사뿐이 아이싱으로 옷을 입혀 준 진저맨이에요.", "트리에 매달아 두는 크리스마스 쿠키예요.", "포근이 마시멜로를 세 개 띄우는 핫초코예요.", "광장에서 다 함께 지은 달콤한 과자 집이에요.", "크리스마스 밤을 밝히는 눈꽃 케이크예요."],
+  xmas: ["생강 향이 솔솔 나는 쿠키 반죽이에요.", "방긋 웃는 진저브레드맨이에요.", "사뿐이 아이싱으로 옷을 입혀 준 진저맨이에요.", "트리에 매달아 두는 크리스마스 쿠키예요.", "진저맨과 별 쿠키를 리본 달린 통에 담았어요.", "광장에서 다 함께 지은 달콤한 과자 집이에요.", "크리스마스 밤을 밝히는 눈꽃 케이크예요."],
+  xmasCocoa: ['진한 코코아 향이 나는 가루예요.', '코코아를 부드럽게 갠 초콜릿 베이스예요.', '우유를 넣고 냄비에서 데웠어요.', '호랑가시나무가 그려진 머그컵에 담았어요.', '포근이 마시멜로를 세 개 띄운 핫초코예요.', '광장에서 나눠 마실 핫초코 두 잔이에요.'],
+  xmasCandy: ['냄비에서 보글보글 끓는 설탕 시럽이에요.', '빨간 반죽과 하얀 반죽을 준비했어요.', '두 색을 함께 굴려 줄무늬를 만들었어요.', '끝을 구부려 사탕 지팡이를 만들었어요.', '사뿐이 트리에 달려고 초록 리본으로 묶었어요.'],
 };
 // 생산기 설명 (레벨별)
 const GEN_DESC = {
@@ -1109,7 +1178,7 @@ function completeOrder(id) {
 const SNOW = '<svg viewBox="0 0 24 24" fill="none" stroke-linecap="round"><g stroke="#5b3a32" stroke-width="4.2"><path d="M12 2.5v19M3.8 7.25l16.4 9.5M3.8 16.75l16.4-9.5"/></g><g stroke="#bfe6ff" stroke-width="2.2"><path d="M12 2.5v19M3.8 7.25l16.4 9.5M3.8 16.75l16.4-9.5"/><path d="M9.5 4.5 12 7l2.5-2.5M9.5 19.5 12 17l2.5 2.5"/></g></svg>';
 // ---------- generators & gift bags ----------
 const GEN_MAX = 8;
-const genMax = () => hiOpen() ? 8 : 5;
+const genMax = c => XMAS_CHAINS.indexOf(c) > 0 ? 1 : hiOpen() ? 8 : 5;
 const jo = (w, a, b) => { const c = String(w).charCodeAt(String(w).length - 1) - 0xAC00; return c >= 0 && c < 11172 && c % 28 ? a : b; };
 const GEN_ODDS = [null, [.12, 0, 0, 0, 0], [.25, 0, 0, 0, 0], [.30, .08, 0, 0, .05], [.35, .15, 0, 0, .10], [.35, .22, .05, 0, .15], [.35, .25, .08, 0, .18], [.35, .28, .12, .03, .20], [.35, .30, .15, .06, .25]]; // p(lv2), p(lv3), p(lv4), p(lv5), p(double)
 const glOf = it => it.gl || 1;
@@ -1252,6 +1321,11 @@ function dropAny(from, to) {
   const A = getIt(from), B = getIt(to);
   if (!A) return;
   const toSt = to >= STB, fromSt = from >= STB;
+  if ((toSt && XMAS_CHAINS.indexOf(A.g) > 0) || (fromSt && XMAS_CHAINS.indexOf(B?.g) > 0)) {
+    toast('이 생산기는 크리스마스 판에서만 쓸 수 있어요.');
+    renderAll();
+    return;
+  }
   if (!B) { setIt(to, A); setIt(from, null); sfx('drop'); if (!toSt) fx.push({ t: 'land', i: to }); }
   else if (A.tool && B.tool === A.tool) { B.n = tN(B) + tN(A); setIt(from, null); sfx('merge', 2); if (!toSt) fx.push({ t: 'merge', i: to }); }
   else if (chestMerge(A, B)) { setIt(to, chestMerge(A, B)); setIt(from, null); sfx('merge', A.x + 2); if (!toSt) fx.push({ t: 'merge', i: to }); }
@@ -1284,6 +1358,11 @@ function setToolMode(k) {
 function toBox(i) {
   const it = S.board[i];
   if (!it) return;
+  if (XMAS_CHAINS.indexOf(it.g) > 0) {
+    toast('이 생산기는 크리스마스 판에서만 쓸 수 있어요.');
+    renderBoard();
+    return;
+  }
   const hs = it.tool ? S.store.findIndex((x, n) => n < S.storeN && x && x.tool === it.tool) : -1;
   if (hs >= 0) { S.store[hs].n = tN(S.store[hs]) + tN(it); S.board[i] = null; if (sel === i) sel = -1; sfx('drop'); jelly($('.mc-boxb'), .4, 360); toast(`<b>${esc(TOOLS[it.tool].name)}</b>을(를) 보관함에 넣었어요.`, { icon: toolIcon(it.tool) }); placePending(); renderAll(); save(); return; }
   const k = S.store.findIndex((x, n) => n < S.storeN && !x);
@@ -1433,7 +1512,22 @@ function gainXp(n) {
   }
   if (ups.length) setTimeout(() => showLevelUp(ups), 450);
 }
+function awardXmasMenu(state, c) {
+  const event = XMAS_STORIES[c];
+  if (state.mail.got[event.scene]) return false;
+  const a = residentIndex(event.resident), from = ANIMALS[a].name;
+  state.story.seen[event.scene] = true;
+  state.mail.got[event.scene] = 1;
+  mailPush({ id: event.scene, k: 'r', a, from, ti: '크리스마스 선물', t: event.letter, rw: mailRw(event.reward) }, state);
+  return true;
+}
 function discover(c, l) {
+  if (S.onEv && XMAS_CHAINS.includes(c) && l === CHAINS[c].items.length && awardXmasMenu(S, c)) {
+    const event = XMAS_STORIES[c];
+    playStory(event.scene);
+    toast(`${ANIMALS[residentIndex(event.resident)].name}의 선물이 우편함에 도착했어요.`, { icon: MAIL_ICON() });
+    save();
+  }
   if (S.disc[c].includes(l)) return;
   S.disc[c].push(l);
   if (l === 1) return;
@@ -1511,7 +1605,7 @@ function drop(from, to) {
   if (to >= S.rows * COLS) { fx.push({ t: 'back', i: from }); renderBoard(); return; }
   const A = S.board[from], B = S.board[to];
   if (!B) { S.board[to] = A; S.board[from] = null; fx.push({ t: 'land', i: to }); sfx('drop'); }
-  else if (A.g && B.g && A.g === B.g && glOf(A) === glOf(B) && glOf(A) < genMax()) {
+  else if (A.g && B.g && A.g === B.g && glOf(A) === glOf(B) && glOf(A) < genMax(A.g)) {
     S.board[to] = { g: A.g, gl: glOf(A) + 1 }; S.board[from] = null; if ((S.gdisc[A.g] || 0) < glOf(A) + 1) S.gdisc[A.g] = glOf(A) + 1;
     S.stats.merges++;
     fx.push({ t: 'merge', i: to });
@@ -2410,7 +2504,10 @@ function watchLayout() {
 }
 
 // ---------- render ----------
-function renderAll() { renderTop(); renderOrders(); renderBoard(); renderInfo(); renderMode(); renderBoxBtn(); }
+function renderAll() {
+  if (S.onEv) ensureXmasGenerators(S.board, S.rows);
+  renderTop(); renderOrders(); renderBoard(); renderInfo(); renderMode(); renderBoxBtn();
+}
 
 function twHud() {
   const v = $('.mc-town'); if (!v || !S) return;
@@ -2538,7 +2635,7 @@ function renderBoard() {
 }
 // ---------- 머지 힌트 모션: 합칠 수 있는 재료끼리 서로 끌어당김 ----------
 const canMergeIt = (A, B) => !!(A && B && A !== B && !A.tool && !B.tool && (
-  (A.g && B.g && A.g === B.g && glOf(A) === glOf(B) && glOf(A) < genMax()) ||
+  (A.g && B.g && A.g === B.g && glOf(A) === glOf(B) && glOf(A) < genMax(A.g)) ||
   (A.b && B.b && A.b === B.b && A.b < 3) || chestMerge(A, B) || resMerge(A, B) ||
   (A.c && B.c && A.c === B.c && A.l === B.l && A.l < maxLvOf(A.c))));
 let pullAnims = [], idleAnims = [], idleT = 0;
@@ -2899,7 +2996,7 @@ function onMove(ev) {
     if (t >= 0 && t !== drag.i && cellOk(t) && t < TLB) {
       under.classList.add('tgt');
       const A = getIt(drag.i), B = getIt(t);
-      if (A && B && ((A.tool && B.tool === A.tool) || (A.tool && B.c && (A.tool === 'cut' ? B.l >= 2 : B.l < maxLvOf(B.c)) && t < STB) || (A.c && A.c === B.c && A.l === B.l && A.l < maxLvOf(A.c)) || (A.g && A.g === B.g && glOf(A) === glOf(B) && glOf(A) < genMax()) || (A.b && A.b === B.b && A.b < 3) || resMerge(A, B) || chestMerge(A, B))) {
+      if (A && B && ((A.tool && B.tool === A.tool) || (A.tool && B.c && (A.tool === 'cut' ? B.l >= 2 : B.l < maxLvOf(B.c)) && t < STB) || (A.c && A.c === B.c && A.l === B.l && A.l < maxLvOf(A.c)) || (A.g && A.g === B.g && glOf(A) === glOf(B) && glOf(A) < genMax(A.g)) || (A.b && A.b === B.b && A.b < 3) || resMerge(A, B) || chestMerge(A, B))) {
         under.classList.add('mrg');
         jelly(under.querySelector('.it'), .3, 320);
         haptic(4);
@@ -2961,6 +3058,10 @@ function toast(html, opt = {}) {
   setTimeout(() => { t.animate([{ opacity: 1 }, { opacity: 0, transform: 'translateY(-8px)' }], { duration: 250 }).onfinish = () => t.remove(); }, opt.ms || 2600);
 }
 const NOTES = [
+  ['2.21.59', [
+    '시즌이 열리면 1~6장 어느 지도에서든 가운데 마을 광장을 누르거나 목록에서 선택해 들어갈 수 있어요.',
+    '꾸민 광장과 모아 둔 눈송이는 어느 지도에서든 이어져요. 광장을 나가면 들어왔던 지도로 돌아와요.',
+  ]],
   ['2.21.56', [
     '반짝 바닷가 마을 6장 「하얀 항구」가 열렸어요! 햇살 모래사장을 다 꾸미면 갈 수 있어요.',
     '새 가게 6곳과 새 이웃 몽돌·또박·뽀글·문문·훨훨·첨벙이 기다리고 있어요. 분홍 조개 초대장의 비밀도 조금 더 밝혀져요.',
@@ -3251,7 +3352,7 @@ function openEvo(c, cur) {
 function openEvoIt(it) {
   const t = (l, cur, ic, nm, open = true) => `<div class="ev-t ${open ? '' : 'un'} ${l === cur ? 'cur' : ''}"><span class="lv">${l}</span><div class="ic">${ic}</div><b>${open ? esc(nm) : '???'}</b></div>`;
   const L = n => Array.from({ length: n }, (_, k) => k + 1);
-  if (it.g) { const gl = glOf(it); return evoModal(`${CHAINS[it.g].name} 생산기`, L(genMax()).map(l => t(l, gl, iconGen(it.g, l), genName(it.g, l), (S.gdisc[it.g] || 0) >= l || l <= gl)).join('')); }
+  if (it.g) { const gl = glOf(it); return evoModal(`${CHAINS[it.g].name} 생산기`, L(genMax(it.g)).map(l => t(l, gl, iconGen(it.g, l), genName(it.g, l), (S.gdisc[it.g] || 0) >= l || l <= gl)).join('')); }
   if (it.r) return evoModal(RES[it.r].name, L(RES_MAX).map(l => t(l, it.l, iconRes(it.r, l), RES[it.r].items[l - 1])).join(''));
   if (it.x) return evoModal('선물 상자', L(3).map(l => t(l, it.x, iconChest(l), CHEST[l].name)).join(''));
   if (it.b) return evoModal('선물 보따리', L(3).map(l => t(l, it.b, iconBag(l), BAG_NAMES[l])).join(''));
@@ -3264,16 +3365,16 @@ function evoModal(name, tiles, sub = '같은 것 2개를 합치면 다음 단계
 }
 function openDex() {
   scanGens(S);
-  const KEYS = CHAIN_KEYS.filter(c => c !== 'xmas' || S.disc.xmas.length);
+  const KEYS = CHAIN_KEYS.filter(c => !XMAS_CHAINS.includes(c) || S.onEv || S.disc[c].length);
   const total = KEYS.reduce((s, c) => s + maxLvOf(c), 0);
   const found = KEYS.reduce((s, c) => s + S.disc[c].filter(n => n <= maxLvOf(c)).length, 0);
   modal(`<button class="mc-xbtn" data-x aria-label="닫기">×</button><h3>메뉴 도감 <span class="mc-sub">${found}/${total}</span></h3>
     <div class="mc-sub" style="text-align:center">경험치 ${S.xp}/${xpNeed(S.level)} · 다음 레벨까지 ${xpNeed(S.level) - S.xp}</div>
     <div class="mc-dexlist">${KEYS.map(c => {
-      const ch = CHAINS[c], open = S.chains.includes(c) || MC().includes(c) || S.pendingGens.includes(c) || c === "xmas";
+      const ch = CHAINS[c], open = S.chains.includes(c) || MC().includes(c) || S.pendingGens.includes(c) || XMAS_CHAINS.includes(c);
       const lvU = Object.keys(UNLOCKS).find(k => UNLOCKS[k] === c);
       return `<div class="mc-sec"><h4>${esc(ch.name)} <span class="mc-sub">· ${esc(ch.gen)}${open ? '' : lvU ? ` · Lv.${lvU}에 열려요` : (a => a ? ` · ${a.name} 완성하면 열려요` : '')(AREAS.find(a => a.gen === c))}</span></h4>
-        <div class="mc-dex">${ch.items.slice(0, maxLvOf(c)).map((nm, k) => { const has = S.disc[c].includes(k + 1); return `<div class="${has ? '' : 'un'}" title="${has ? esc(nm) : '???'}">${iconItem(c, k + 1)}</div>`; }).join('')}</div>${hasGenArt(c) ? `<div class="mc-dexgl">생산기</div><div class="mc-dex mc-dexg">${Array.from({ length: genMax() }, (_, q) => q + 1).map(l => { const has = (S.gdisc[c] || 0) >= l; return `<div class="${has ? '' : 'un'}" title="${has ? esc(genName(c, l)) + ' Lv.' + l : '???'}">${iconGen(c, l)}</div>`; }).join('')}</div>` : ''}</div>`;
+        <div class="mc-dex">${ch.items.slice(0, maxLvOf(c)).map((nm, k) => { const has = S.disc[c].includes(k + 1); return `<div class="${has ? '' : 'un'}" title="${has ? esc(nm) : '???'}">${iconItem(c, k + 1)}</div>`; }).join('')}</div>${hasGenArt(c) ? `<div class="mc-dexgl">생산기</div><div class="mc-dex mc-dexg">${Array.from({ length: genMax(c) }, (_, q) => q + 1).map(l => { const has = (S.gdisc[c] || 0) >= l; return `<div class="${has ? '' : 'un'}" title="${has ? esc(genName(c, l)) + ' Lv.' + l : '???'}">${iconGen(c, l)}</div>`; }).join('')}</div>` : ''}</div>`;
     }).join('')}</div>`, m => m.querySelector('.mc-card').classList.add('mc-dexcard'));
 }
 function openSettings() {
@@ -3627,7 +3728,7 @@ function loadStory() {
   return storyJob;
 }
 // 이야기 일러스트 주소 (웹앱은 파일, 플러그인은 받아 둔 그림)
-const cgSrc = (cg, th) => { if (APP) return `story/${th ? 't_' : ''}${cg}.webp`; const u = STORY_IMG && STORY_IMG[(th ? 't_' : '') + cg]; return u && u[0] !== '@' ? u : null; };
+const cgSrc = (cg, th) => { if (XMAS_MAIL_IDS.has(cg)) return `${APP ? 'story/' : XMAS_ART}${cg}.webp`; if (APP) return `story/${th ? 't_' : ''}${cg}.webp`; const u = STORY_IMG && STORY_IMG[(th ? 't_' : '') + cg]; return u && u[0] !== '@' ? u : null; };
 async function openTownSafe() {
   if (extReady) return openTown();
   const m = modal(`<h3>마을 그림 불러오는 중</h3><p>잠시만 기다려 주세요 <span class="mc-sub mc-extp">${extDone}/${extNames.length}</span></p>`, null, true);
@@ -3767,7 +3868,7 @@ function renderTown(first) {
   const sc = v.querySelector('.tw-scroll'), st = v.querySelector('.tw-street');
   stPos = {};
   const ST = STREET[townCh], lots = chLots(townCh), nG = lots.length + 1;
-  const CA = AREAS.filter(A => chOf(A) === townCh && (!A.event || areaOpen(AREAS.indexOf(A))));
+  const chapterAreas = AREAS.filter((A, i) => A.event ? areaOpen(i) : chOf(A) === townCh);
   const shopN = lots.reduce((s, A) => s + areaCount(A), 0), shopT = lots.reduce((s, A) => s + A.spots.length * 2, 0);
   const tot = shopT + ST.length * 3, dn = shopN + stDone(townCh);
   const nx = nextTask(townCh);
@@ -3788,9 +3889,8 @@ function renderTown(first) {
   });
   addGap(0);
   AREAS.forEach((A, i) => {
-    if (chOf(A) !== townCh) return;
+    if (!chapterAreas.includes(A)) return;
     const open = areaOpen(i);
-    if (A.event && !open) return;
     const L = Object.fromEntries(A.spots.map(d => [d.k, S.decor[d.k] || 0]));
     const t = (open && townLot(A.k, L)) || townFence(A.name);
     const [lx, ly, lw, lh] = t.lot, kf = (open ? (A.k === 'station' ? 1.19 : 1) : .72) * .5 / 880;
@@ -3943,10 +4043,10 @@ function renderTown(first) {
       const P0 = townLot(o.A.k, Object.fromEntries(o.A.spots.map(d => [d.k, S.decor[d.k] || 0])));
       if (P0) {
         const [lx, ly, lw, lh] = P0.lot, fy = P0.ground - 70, sc = (RX - PW / 2 - .02 * u) / 620;
-        objs.push({ h: `<button class="tw-lot" data-tw="lot" data-i="${o.i}" style="left:${(cx - (750 - lx) * sc).toFixed(1)}px;top:${(cy - (fy - ly) * sc).toFixed(1)}px;width:${(lw * sc).toFixed(1)}px;height:${(lh * sc).toFixed(1)}px;z-index:${Math.round(cy * 10)}">${P0.svg}</button>` });
+        objs.push({ h: `<button class="tw-lot" data-tw="lot" data-i="${o.i}" aria-label="${esc(o.A.name)}" title="${esc(o.A.name)}" style="left:${(cx - (750 - lx) * sc).toFixed(1)}px;top:${(cy - (fy - ly) * sc).toFixed(1)}px;width:${(lw * sc).toFixed(1)}px;height:${(lh * sc).toFixed(1)}px;z-index:${Math.round(cy * 10)}">${P0.svg}</button>` });
       } else {
         const pw = o.wf * u;
-        objs.push({ h: `<button class="tw-lot" data-tw="lot" data-i="${o.i}" style="left:${(cx - pw / 2).toFixed(1)}px;top:${(cy + .1 * u - o.up * u).toFixed(1)}px;width:${pw.toFixed(1)}px;height:${(o.hf * u).toFixed(1)}px;z-index:${Math.round(cy * 10)}">${o.svg}</button>` });
+        objs.push({ h: `<button class="tw-lot" data-tw="lot" data-i="${o.i}" aria-label="${esc(o.A.name)}" title="${esc(o.A.name)}" style="left:${(cx - pw / 2).toFixed(1)}px;top:${(cy + .1 * u - o.up * u).toFixed(1)}px;width:${pw.toFixed(1)}px;height:${(o.hf * u).toFixed(1)}px;z-index:${Math.round(cy * 10)}">${o.svg}</button>` });
       }
       centers[o.i] = { x: cx, y: cy - o.up * u * .4, cx, base: cy, u };
       foot.push([cx - RX, cy - RY, cx + RX, cy + RY]); bodies.push([cx - RX * .8, cy - o.up * u, cx + RX * .8, cy + RY]);
@@ -4049,7 +4149,7 @@ function renderTown(first) {
     kinds.slice(0, nA).forEach((ix, n) => lanes[n % lanes.length].kinds.push(ix));
   }
   v.querySelector('.tw-list').innerHTML = AREAS.map((A, i) => {
-    if (!CA.includes(A)) return '';
+    if (!chapterAreas.includes(A)) return '';
     const open = areaOpen(i), n = areaCount(A), tot = A.spots.length * 2, ok = done(A.k);
     const st = ok ? '완성 ✓' : open ? `${n}/${tot}` : '잠김';
     return `<button class="tw-card ${open ? '' : 'lk'} ${ok ? 'ok' : ''}" data-tw="lot" data-i="${i}"><div class="tx"><b>${open ? '' : `<i class="lk">${UI.lock}</i>`}${esc(A.name)}</b><span class="mc-sub">${[A.perk && esc(A.perk), A.gen && `생산기 ${esc(CHAINS[A.gen].gen)}`].filter(Boolean).join(' · ')}</span></div><div class="pg"><span>${st}</span><div class="bar"><i style="width:${(100 * n / tot).toFixed(0)}%"></i></div></div></button>`;
@@ -4403,10 +4503,12 @@ function renderCafe(anim) {
   const A = AREAS[curArea], open = areaOpen(curArea);
   v.querySelector('.cf-st .v').textContent = S[curOf(A)];
   v.querySelector('.cf-st .ic').innerHTML = A.event ? SNOW : UI.star;
+  const chapter = A.event && $('.mc-town') ? townCh : chOf(A);
   const sx = v.querySelector('.cf-strip').scrollLeft;
   v.querySelector('.cf-strip').innerHTML = AREAS.map((a, i) => {
-    if (chOf(a) !== chOf(A)) return '';
-    const op = areaOpen(i), full = op && areaFull(a);
+    const op = areaOpen(i);
+    if (chOf(a) !== chapter && !(a.event && op)) return '';
+    const full = op && areaFull(a);
     return `<button class="cf-tab ${i === curArea ? 'on' : ''}" data-cf="area" data-i="${i}">
       <div class="th">${op ? areaScene(a.k, S.decor) : lockedScene(a.name)}</div>
       <div class="nm">${op ? '' : `<i>${UI.lock}</i>`}${esc(a.name)}${full ? ' ✓' : ''}</div></button>`;
@@ -4607,7 +4709,7 @@ function mailPush(x, state = S) {
   // 보상 우편은 수령할 때까지 보관하고, 나머지는 받은 편지부터 정리
   while (L.length > MAIL_MAX) {
     const claimed = L.map(letter => letter.got).lastIndexOf(true);
-    const oldest = claimed >= 0 ? claimed : L.map(letter => letter.id !== CH5_ENERGY_MAIL).lastIndexOf(true);
+    const oldest = claimed >= 0 ? claimed : L.map(letter => letter.id !== CH5_ENERGY_MAIL && !XMAS_MAIL_IDS.has(letter.id)).lastIndexOf(true);
     L.splice(oldest, 1);
   }
 }
@@ -4711,6 +4813,7 @@ function openReplay() {
   const seen = k => k === 'intro' || S.story.seen[k];
   const cur = curVillage(), num = {};
   MAIN_SCENES.forEach(([k], i) => num[k] = i + 1);
+  XMAS_CHAINS.forEach((c, i) => num[XMAS_STORIES[c].scene] = i + 1);
   const cell = ([k, t]) => {
     const ok = seen(k), cg = STORY_CG[k];
     const u = ok && cg ? cgSrc(cg, true) : null;
@@ -4729,6 +4832,11 @@ function openReplay() {
       idx += `<button class="al-ix" data-ix="v${vi}">${esc(V.name)}</button>`;
     } else body += `<div class="al-sec al-vh"><h3 class="al-vn">${esc(V.name)}</h3></div>` + vChs(vi).map(chSec).join('');
   });
+  if (S.ev || XMAS_CHAINS.some(c => seen(XMAS_STORIES[c].scene))) {
+    const season = XMAS_CHAINS.map(c => cell([XMAS_STORIES[c].scene, XMAS_STORIES[c].title])).join('');
+    body += `<div class="al-sec" data-sec="xmas"><h4>크리스마스 시즌</h4><div class="al-grid">${season}</div></div>`;
+    if (idx) idx += '<button class="al-ix" data-ix="xmas">크리스마스</button>';
+  }
   const main = `<h3>이야기 앨범</h3><div class="al-body"><div class="al-scr">${body}</div></div>${idx ? `<nav class="al-idx">${idx}</nav>` : ''}<div class="acts"><button class="mc-btn wh" data-x>닫기</button></div>`;
   const inner = vi => `<div class="al-ih"><button class="mc-btn wh al-bk" data-bk>‹ 앨범</button><h3>${esc(VILLAGES[vi].name)}</h3></div><div class="al-body"><div class="al-scr">${vChs(vi).map(chSec).join('')}</div></div><div class="acts"><button class="mc-btn wh" data-x>닫기</button></div>`;
   modal(main, m => {
@@ -4837,6 +4945,7 @@ if (CH6_ON) {
   MAIN_SCENES.push(['ch6_start', '하얀 항구 도착'], ['hpost', '우체국 편지 기록'], ['ferry', '하얀 여객선 출항']);
   Object.assign(STORY_CG, { ch6_start: 'ev14', hpost: 'ev15', ferry: 'ev16' });
 }
+for (const { scene } of Object.values(XMAS_STORIES)) STORY_CG[scene] = scene;
 function playStory(key, cb) {
   const lines = STORY[key];
   const fin = () => { try { cb && cb(); } catch (_) { } };
@@ -4901,12 +5010,13 @@ async function openGame() {
       { const nm = checkMail(); if (nm) toast(`우편함에 새 편지가 ${nm}통 왔어요! 마을에서 열어 보세요.`, { icon: MAIL_ICON() }); fetchDevMail(); }
       setTimeout(() => runTut('k'), 900);
       const evr = checkEvent();
-      if (S.evTab && S.ev && !S.onEv) swapEv();
-      if (evr) renderAll();
+      const restoreEvTab = S.evTab && S.ev && !S.onEv;
+      if (restoreEvTab) swapEv();
+      if (evr || restoreEvTab) renderAll();
       const prevVer = S.seenVer;
       if (prevVer !== VER) { if (prevVer ? verCmp(prevVer, '2.13.2') < 0 : S.level > 1) { addEnergy(100, true); renderTop(); toast(`업데이트 기념 선물이에요! <span class="mc-mini">${UI.bolt}+100</span>`); }
         // 2.21.27 업데이트 선물: 왕관 선물 상자 3개
-        if (prevVer ? verCmp(prevVer, '2.21.27') < 0 : S.level > 1) { for (let k = 0; k < 3; k++) placeItem({ x: 3 }); renderBoard(); toast(`업데이트 선물로 <b>${esc(CHEST[3].name)}</b> 3개가 도착했어요!`, { icon: iconChest(3) }); } S.seenVer = VER; if (prevVer || S.level > 1) setTimeout(() => { if (!$('.mc-story') && !$('.mc-modal')) openNotes(prevVer ? (verCmp(prevVer, '2.13.2') > 0 && verCmp(prevVer, '2.15.0') <= 0 ? '2.13.2' : prevVer) : NOTES[4][0]); }, 500); }
+        if (prevVer ? verCmp(prevVer, '2.21.27') < 0 : S.level > 1) { for (let k = 0; k < 3; k++) placeItem({ x: 3 }); renderBoard(); toast(`업데이트 선물로 <b>${esc(CHEST[3].name)}</b> 3개가 도착했어요!`, { icon: iconChest(3) }); } S.seenVer = VER; if (prevVer ? NOTES.some(([v]) => verCmp(v, prevVer) > 0) : S.level > 1) setTimeout(() => { if (!$('.mc-story') && !$('.mc-modal')) openNotes(prevVer ? (verCmp(prevVer, '2.13.2') > 0 && verCmp(prevVer, '2.15.0') <= 0 ? '2.13.2' : prevVer) : NOTES[4][0]); }, 500); }
       if (!S.story.intro) { S.story.intro = true; save(); playStory('intro'); }
       else if (evr === 'start' && !S.story.seen.xmas_intro) setTimeout(() => playStory('xmas_intro'), 400);
       else if (evr && evr.end) { playStory('xmas_end'); if (evr.gain) toast(`크리스마스 판에 남은 물건을 정산했어요 <span class="mc-mini">${UI.coin}+${evr.gain}</span>`); }

@@ -90,9 +90,18 @@ const CHAINS = {
   },
   xmas: {
     name: '크리스마스', gen: '쿠키 오븐', color: '#d84a4a',
-    items: ['진저 반죽', '진저브레드맨', '아이싱 진저맨', '크리스마스 쿠키', '핫초코', '과자 집', '크리스마스 케이크'],
+    items: ['진저 반죽', '진저브레드맨', '아이싱 진저맨', '크리스마스 쿠키', '크리스마스 쿠키 틴', '과자 집', '크리스마스 케이크'],
+  },
+  xmasCocoa: {
+    name: '크리스마스 핫초코', gen: '핫초코 디스펜서', color: '#edada8',
+    items: ['코코아 가루', '초콜릿 베이스', '우유를 데운 핫초코', '따뜻한 핫초코', '마시멜로 핫초코', '크리스마스 핫초코 두 잔'],
+  },
+  xmasCandy: {
+    name: '크리스마스 캔디케인', gen: '캔디 롤러', color: '#b9dfc6',
+    items: ['설탕 시럽', '두 가지 색의 사탕 반죽', '줄무늬 사탕 막대', '캔디케인', '캔디케인 묶음'],
   },
 };
+const XMAS_CHAINS = ['xmas', 'xmasCocoa', 'xmasCandy'];
 const CHAIN_KEYS = Object.keys(CHAINS);
 
 const ART_ITEMS = {
@@ -333,6 +342,12 @@ const OVR = Object.fromEntries(Object.entries(OVR_B64).map(([k, v]) => [k, Array
   const blobOf = u => { try { if (!u.startsWith('data:')) return u; const [h, b] = u.split(','), bin = atob(b), arr = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i); return URL.createObjectURL(new Blob([arr], { type: h.slice(5, h.indexOf(';')) })); } catch (_) { return u; } };
   if (OVR.ui) for (const k of ['bolt', 'coin', 'star']) if (OVR.ui[k]) UI[k] = svg(`<image href="${blobOf(OVR.ui[k])}" x="0" y="0" width="64" height="64"/>`);
 }
+const XMAS_ART = globalThis.__MC_APP ? 'img/christmas/' : 'https://raw.githubusercontent.com/shakeit08/risu-plugins/main/sweet_merge_cafe_img/christmas/';
+const oldXmasCocoa = OVR.xmas[4];
+OVR.xmas[4] = XMAS_ART + 'cookie-tin.webp';
+for (const c of XMAS_CHAINS.slice(1)) {
+  OVR[c] = CHAINS[c].items.map((_, i) => c === 'xmasCocoa' && i === 4 ? oldXmasCocoa : `${XMAS_ART}${c}-${i + 1}.webp`);
+}
 const GEN_IDX = { bakery: 0, coffee: 1, berry: 2, choco: 3, tea: 4, icecream: 5 };
 const imgTag = src => `<img src="${src}" alt="" draggable="false">`;
 // 에너지·코인 아이템 그림 (상자는 그림이 오기 전까지 선물 아이콘)
@@ -350,7 +365,7 @@ const GEN_LV_NAMES = {
   pie: ['사과나무', '사과 바구니', '사과 수레', '밀대와 반죽', '파이 틀', '오븐', '벽돌 화덕', '파이 가게'],
   icecream: ['와플콘', '아이스크림 통', '아이스크림 메이커', '소프트콘 기계', '아이스바 냉동고', '아이스크림 수레', '젤라토 쇼케이스', '아이스크림 가게'],
 };
-const iconGen = (c, gl = 1) => (OVR.genLv && OVR.genLv[c]) ? imgTag(OVR.genLv[c][Math.min(gl, OVR.genLv[c].length) - 1]) : (OVR.genOne && OVR.genOne[c]) ? imgTag(OVR.genOne[c]) : svg(ART_GENS[c]);
+const iconGen = (c, gl = 1) => XMAS_CHAINS.indexOf(c) > 0 ? imgTag(`${XMAS_ART}${c}-gen.webp`) : (OVR.genLv && OVR.genLv[c]) ? imgTag(OVR.genLv[c][Math.min(gl, OVR.genLv[c].length) - 1]) : (OVR.genOne && OVR.genOne[c]) ? imgTag(OVR.genOne[c]) : svg(ART_GENS[c]);
 const hasGenArt = c => !!(OVR.genLv && OVR.genLv[c]);
 const genName = (c, gl = 1) => (GEN_LV_NAMES[c] && OVR.genLv && OVR.genLv[c]) ? GEN_LV_NAMES[c][gl - 1] : CHAINS[c].gen;
 const WALK = OVR.walk || {};
