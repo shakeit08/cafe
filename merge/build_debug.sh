@@ -17,7 +17,7 @@ src = _re.sub(r'(\.[0-9a-f]{10}\.bin)"', r'\1.webp"', src)
 N = 3; L = len(src); parts = []
 for i in range(N):
     fn = f'game{i + 1}.txt'; open(f'{out}/{fn}', 'w', encoding='utf-8').write(src[i * L // N:(i + 1) * L // N]); parts.append(fn)
-maxed = subprocess.check_output(['python3', '-I', '/home/claude/work/merge/tools/ch6/max6.py', ver]).decode()
+maxed = subprocess.check_output(['python3', '-I', '/home/claude/work/merge/tools/ch7/max7.py', ver]).decode()
 h = open('app_debug.html', encoding='utf-8').read().replace('__MAXED__', maxed.strip()).replace('__PARTS__', json.dumps(parts))
 open(f'{out}/index.html', 'w', encoding='utf-8').write(h)
 PY

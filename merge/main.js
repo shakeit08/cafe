@@ -456,6 +456,78 @@ if (CH6_ON) {
   STREET[6] = STREET6; STREET_TALK[6] = STREET_TALK6;
   CH_GATE[6] = 'yacht'; CH_NAME[6] = '하얀 항구'; CHS.push(6); VILLAGES[1].chs.push(6);
 }
+// ── 7장 야자수 열대섬 ──
+// 이웃 번호: 38 대롱(원숭이) 39 재잘(앵무새) 40 통통(하마) 41 꾸벅(나무늘보) 42 쫑긋(큰부리새) 43 폴짝(청개구리)
+const CH7_ON = true;
+const AREAS7 = [
+  { k: 'coconut', ch: 7, name: '대롱 코코넛 가게', reward: { coins: 7600, e: 0 }, once: ['e', 50], perk: null, doneText: '시원한 코코넛 잔에 알록달록 빨대가 꽂혔어요.', spots: [
+    sp('ccwall', '코코넛 가게', [20, 30], ['낡은', '대나무', '민트 테두리'], ['새 대나무 벽과 초가지붕', '민트 테두리와 히비스커스']),
+    sp('ccwin', '판매대', [17, 27], ['깨진', '코코넛 세 알', '코코넛 잔 가득'], ['코코넛과 빨대 꽂은 잔', '종이우산 꽂은 코코넛 잔']),
+    sp('ccsign', '간판', [16, 26], ['없는', '나무', '민트'], ['코코넛 간판이 걸려요', '민트 간판과 히비스커스']),
+    sp('cccart', '코코넛 수레', [16, 25], ['없는', '나무', '파라솔 단'], ['작은 나무 수레', '민트 파라솔과 코코넛 잔']),
+    sp('cctable', '대나무 탁자', [16, 25], ['없는', '나무', '음료 놓인'], ['대나무 탁자와 의자', '복숭앗빛 식탁보와 코코넛 음료']),
+    sp('ccpalm', '야자 화분', [16, 25], ['없는', '어린', '코코넛 달린'], ['어린 야자 화분', '코코넛 달린 민트 화분']),
+  ] },
+  { k: 'lei', ch: 7, name: '재잘 꽃목걸이 공방', reward: { coins: 7800, e: 0 }, once: ['cut', 1], perk: null, doneText: '알록달록 꽃목걸이가 공방 가득 걸렸어요.', spots: [
+    sp('lewall', '꽃목걸이 공방', [20, 30], ['무너진', '나무', '연보라'], ['나무 벽과 초가지붕', '연보라 벽과 꽃 장식']),
+    sp('lewin', '작업대', [17, 27], ['깨진', '꽃목걸이 하나', '꽃목걸이 가득'], ['꽃 바구니와 꽃목걸이', '알록달록 꽃목걸이와 꽃관']),
+    sp('lesign', '간판', [16, 26], ['없는', '나무', '꽃 덩굴'], ['꽃목걸이 간판이 걸려요', '연보라 테두리와 꽃 덩굴']),
+    sp('lebask', '꽃 바구니', [16, 25], ['없는', '하얀 꽃', '꽃 가득'], ['하얀 꽃 바구니', '세 가지 색 꽃이 넘치는 바구니']),
+    sp('lestand', '꽃목걸이 걸이', [16, 25], ['없는', '하나 건', '셋 건'], ['꽃목걸이 하나 건 걸이', '꽃목걸이 셋과 꽃관']),
+    sp('leperch', '앵무새 횃대', [16, 25], ['없는', '나무', '꽃 감은'], ['나무 횃대', '꽃 덩굴과 물컵']),
+  ] },
+  { k: 'mango', ch: 7, name: '통통 망고 빙수 오두막', reward: { coins: 8000, e: 0 }, once: ['up', 1], perk: null, doneText: '망고 빙수 한 그릇에 섬의 더위가 싹 가셔요.', spots: [
+    sp('mgwall', '빙수 오두막', [20, 30], ['찢어진', '크림색', '노랑 분홍'], ['크림색 벽과 잎사귀 지붕', '노란 벽과 분홍 테두리']),
+    sp('mgwin', '빙수 창구', [17, 27], ['깨진', '빙수 한 그릇', '망고 빙수 가득'], ['빙수 한 그릇과 망고', '망고 빙수와 종이 등']),
+    sp('mgsign', '간판', [16, 26], ['없는', '크림색', '분홍'], ['빙수 간판이 걸려요', '분홍 간판과 망고']),
+    sp('mgshaver', '빙수 기계', [16, 25], ['없는', '손잡이', '노란'], ['손으로 돌리는 빙수 기계', '노란 기계와 망고 빙수']),
+    sp('mgcrate', '망고 상자', [16, 25], ['없는', '빈', '망고 가득'], ['나무 상자', '잘 익은 망고와 분홍 리본']),
+    sp('mgstool', '동그란 의자', [16, 25], ['없는', '하나', '둘'], ['나무 의자', '분홍 노랑 방석 의자 두 개']),
+  ] },
+  { k: 'hammock', ch: 7, name: '꾸벅 해먹 쉼터', reward: { coins: 8200, e: 0 }, once: ['bag', 2], perk: null, doneText: '살랑이는 해먹에서 다들 꾸벅꾸벅 낮잠이 솔솔.', spots: [
+    sp('hmwall', '해먹 쉼터', [20, 30], ['찢어진', '대나무', '민트'], ['대나무 기둥과 초가지붕', '민트 기둥과 잎사귀 장식']),
+    sp('hmwin', '쉼터 안', [17, 27], ['찢어진', '해먹 하나', '줄무늬 해먹'], ['하얀 해먹', '줄무늬 해먹과 덩굴, 등불']),
+    sp('hmsign', '간판', [16, 26], ['없는', '잎사귀', '달과 별'], ['잎사귀 간판이 걸려요', '민트 잎사귀와 달님']),
+    sp('hmstand', '해먹 받침', [16, 25], ['없는', '빈', '줄무늬'], ['나무 해먹 받침', '파스텔 줄무늬 해먹과 베개']),
+    sp('hmpillow', '방석 더미', [16, 25], ['없는', '하나', '셋'], ['동그란 방석', '파스텔 방석 세 개']),
+    sp('hmlamp', '덩굴 등불', [16, 25], ['없는', '꺼진', '덩굴 감은'], ['대나무 등불', '불 켜진 등불과 꽃 덩굴']),
+  ] },
+  { k: 'radio', ch: 7, name: '쫑긋 소라 방송국', reward: { coins: 8400, e: 0 }, once: ['e', 50], perk: null, doneText: '소라 방송국에서 오늘의 바다 소리를 들려줘요.', spots: [
+    sp('rdwall', '소라 방송국', [20, 30], ['금 간', '크림색', '산호 줄무늬'], ['크림색 소라 벽과 안테나', '산호 줄무늬와 금빛 별']),
+    sp('rdwin', '방송 책상', [17, 27], ['깨진', '라디오와 소라', '방송 장비 가득'], ['낡은 라디오와 소라', '헤드폰과 마이크, 조개 전구']),
+    sp('rdsign', '간판', [16, 26], ['없는', '나무', '산호색'], ['방송국 간판이 걸려요', '산호색 간판과 음표']),
+    sp('rdspeaker', '나팔 스피커', [16, 25], ['없는', '나무', '금빛'], ['나무 기둥 스피커', '산호색 기둥과 금빛 나팔']),
+    sp('rdconch', '소라 받침', [16, 25], ['없는', '하얀', '꽃 감은'], ['받침 위 큰 소라', '분홍 소라와 꽃 화환']),
+    sp('rdcrate', '레코드 상자', [16, 25], ['없는', '빈', '레코드 가득'], ['나무 상자', '파스텔 레코드와 고사리 화분']),
+  ] },
+  { k: 'raft', ch: 7, name: '폴짝 뗏목 나루터', reward: { coins: 8800, e: 0 }, perk: '에너지가 5% 더 빨리 차요', doneText: '잎사귀 돛을 단 뗏목이 출발 준비를 마쳤어요. 야자수 열대섬 완성! 7장 완성!', spots: [
+    sp('rfwall', '탐험대 나루터', [21, 31], ['부서진', '나무', '민트'], ['나무 벽과 전망대', '민트 벽과 잎사귀 돛']),
+    sp('rfwin', '지도 창', [17, 27], ['깨진', '지도 한 장', '섬 지도'], ['말린 지도와 나침반', '동굴이 그려진 섬 지도']),
+    sp('rfsign', '간판', [16, 26], ['없는', '밧줄 테', '민트'], ['밧줄 테 간판이 걸려요', '민트 간판과 잎사귀 깃발']),
+    sp('rfpaddle', '노 걸이', [16, 25], ['없는', '하나', '알록달록'], ['노 하나 건 걸이', '파스텔 노 세 개와 깃발']),
+    sp('rfbarrel', '탐험 통', [16, 25], ['없는', '빈', '짐 실은'], ['나무 통', '밧줄과 등불, 불가사리']),
+    sp('rfscope', '망원경', [16, 25], ['없는', '놋쇠', '금빛'], ['놋쇠 망원경', '금빛 망원경과 작은 깃발']),
+  ] },
+];
+const STREET7 = [['palmpot', '야자수 화분', .3], ['banana', '바나나 나무', .36], ['hibiscus', '히비스커스 덤불', .24], ['monstera', '몬스테라 화분', .3], ['bamboobench', '대나무 벤치', .22], ['tiki', '티키 횃불', .4],
+  ['cocopile', '코코넛 더미', .2], ['pineapple', '파인애플 화분', .24], ['canoe', '카누 거치대', .24], ['chime', '조개 풍경', .36], ['fence', '대나무 울타리', .2], ['swing', '나무 그네', .36],
+  ['bamboolamp', '대나무 가로등', .42], ['islandsign', '섬 이정표', .33], ['flowerarch', '꽃 아치', .4], ['perch', '앵무새 횃대', .33], ['fruitcart', '열대 과일 손수레', .27], ['bamboofountain', '대나무 물받이 분수', .3],
+  ['lilypond', '연잎 연못', .18], ['shelllamp', '조개 등불', .26], ['conchhorn', '소라 나팔 받침', .24], ['mangotree', '망고 나무', .4], ['sandbed', '모래 화단', .18], ['raftbed', '작은 뗏목 화단', .2]];
+const STREET_TALK7 = [
+  [[38, '모래에 묻힌 야자잎부터 치우자!'], [39, '재잘재잘! 같이 하면 금방이야!']],
+  [[40, '파인애플 화분 놓으니까 달콤한 냄새가 나!'], [38, '하나만 따 먹어도 돼?', 0]],
+  [[41, '그네… 타면서… 낮잠 자면… 좋겠다…'], [39, '꾸벅, 그네에서 떨어지면 어떡해!']],
+  [[42, '조개 풍경 소리 들려? 바다 소리랑 닮았어.'], [43, '쫑긋은 귀가 정말 좋구나!']],
+  [[43, '섬 이정표 보면 동굴 가는 길도 나와!'], [40, '동굴엔 시원한 물이 있으려나?', 0]],
+  [[39, '꽃 아치 아래로 지나가면 행운이 온대!'], [41, '…그럼… 열 번 지나갈래…']],
+  [[38, '대나무 분수 물 진짜 시원해!'], [42, '물 떨어지는 소리도 방송에 내보낼까?']],
+  [[40, '야자수 열대섬이 이렇게 북적일 줄이야!'], [43, '이제 뗏목 타고 어디든 갈 수 있어!']],
+];
+if (CH7_ON) {
+  AREAS.splice(AREAS.findIndex(a => a.k === 'plaza'), 0, ...AREAS7);
+  STREET[7] = STREET7; STREET_TALK[7] = STREET_TALK7;
+  CH_GATE[7] = 'ferry'; CH_NAME[7] = '야자수 열대섬'; CHS.push(7); VILLAGES[1].chs.push(7);
+}
 const XMAS_STORIES = {
   xmas: {
     scene: 'xmas_cake', resident: 'rabbit', title: '광장의 크리스마스 케이크', reward: { x: [3] },
@@ -773,7 +845,7 @@ for (const { scene, lines } of Object.values(XMAS_STORIES)) {
 }
 const MC = () => S.onEv && S.ev ? S.ev.chains : S.chains;
 const maxE = () => MAX_E + 10 * D('terrace') + (done('flower') ? 20 : 0) + (done('chestnut') ? 20 : 0) + (done('hotteok') ? 20 : 0) + (APP ? 10 * D('lamp') : 0);
-const regenMs = () => Math.round((REGEN_MS - 10000 * D('planter')) * (done('bath') ? .8 : 1) * (done('camp') ? .9 : 1) * (done('cocoa') ? .9 : 1));
+const regenMs = () => Math.round((REGEN_MS - 10000 * D('planter')) * (done('bath') ? .8 : 1) * (done('camp') ? .9 : 1) * (done('cocoa') ? .9 : 1) * (done('raft') ? .95 : 1));
 // 에너지 100을 50코인부터 팔고, 하루 안에서 살 때마다 두 배 (50 → 100 → … → 12800, 9번째부터는 그대로)
 const energyPrice = n => Math.round(50 * 2 ** Math.min(n, 8) * (1 - 0.1 * D('wall')));
 // 행운 뽑기: 코인을 쓰는 곳. 값은 레벨 비례, 횟수 제한 없음
@@ -782,7 +854,7 @@ const DRAW_ICON = () => (WHEEL && WHEEL.draw && WHEEL.draw[0] !== '@' ? `<img sr
 const drawPrice = () => Math.round(30 + 6 * (S ? S.level : 1));
 const DRAW = [['e', 20, 35], ['e', 50, 14], ['e', 100, 4], ['cut', 1, 17], ['up', 1, 8], ['bag', 1, 7], ['bag', 2, 4], ['bag', 3, 1], ['s', 2, 8], ['s', 5, 2], ['box', 1, 8], ['box', 2, 2]];
 const coinsOf = od => Math.round(od.coins * (1 + 0.1 * D('sign') + (done('station') ? 0.2 : 0) + (done('maple') ? 0.2 : 0) + (done('cablecar') ? 0.2 : 0) + (done('yacht') ? 0.05 : 0)));
-const xpOf = od => Math.round(od.xp * (1 + 0.1 * D('awning') + (done('book') ? 0.2 : 0) + (done('library') ? 0.2 : 0) + (done('musichall') ? 0.2 : 0)));
+const xpOf = od => Math.round(od.xp * (1 + 0.1 * D('awning') + (done('book') ? 0.2 : 0) + (done('library') ? 0.2 : 0) + (done('musichall') ? 0.2 : 0) + (done('ferry') ? 0.05 : 0)));
 const starsOf = od => od.req.reduce((s, r) => s + (r.l <= 3 ? 1 : r.l <= 5 ? 2 : r.l <= 7 ? 3 : 4), 0) + (done('park') ? 1 : 0) + (done('dock') ? 1 : 0) + (done('skate') ? 1 : 0);
 const stOpen = (ch, j) => { const g = stGapOf(ch, j); if (g < 0) return true; const A = chLots(ch)[g]; return !!A && areaOpen(AREAS.indexOf(A)); };
 const chLots = ch => AREAS.filter(A => !A.event && (A.ch || 1) === ch);
@@ -3058,6 +3130,13 @@ function toast(html, opt = {}) {
   setTimeout(() => { t.animate([{ opacity: 1 }, { opacity: 0, transform: 'translateY(-8px)' }], { duration: 250 }).onfinish = () => t.remove(); }, opt.ms || 2600);
 }
 const NOTES = [
+  ['2.21.63', [
+    '반짝 바닷가 마을 7장 「야자수 열대섬」이 열렸어요! 하얀 항구를 다 꾸미면 갈 수 있어요.',
+    '새 가게 6곳과 새 이웃 대롱·재잘·통통·꾸벅·쫑긋·폴짝이 기다리고 있어요. 바다에서 들려오는 이상한 소리의 정체도 조금 더 밝혀져요.',
+    '7장이 열리면 모든 메뉴에 새 단계 Lv.12가 추가돼요.',
+    '하얀 여객선 부두를 완성하면 받는 주문 경험치 +5%가 적용되지 않던 문제를 고쳤어요.',
+    '마을 주민들이 이제 길을 따라 이곳저곳 돌아다녀요.',
+  ]],
   ['2.21.59', [
     '시즌이 열리면 1~6장 어느 지도에서든 가운데 마을 광장을 누르거나 목록에서 선택해 들어갈 수 있어요.',
     '꾸민 광장과 모아 둔 눈송이는 어느 지도에서든 이어져요. 광장을 나가면 들어왔던 지도로 돌아와요.',
@@ -3810,7 +3889,7 @@ function openTown() {
       const vi = +a[1], V = VILLAGES[vi]; stPop = null; v.querySelector('.tw-season')?.remove();
       if (vi === curVillage()) { pastView = -1; townCh = [...V.chs].reverse().find(chOpen) || V.chs[0]; renderTown(true); }
     }
-    else if (a === 'nextv') toast('야자수 열대섬은 아직 준비 중이에요. 다음 스테이지를 기대해 주세요!');
+    else if (a === 'nextv') toast('물빛 조개 동굴은 아직 준비 중이에요. 다음 스테이지를 기대해 주세요!');
     else if (a === 'st') { const j = +b.dataset.j; if (stPop === j) { stPop = null; b.closest('.tw-street').querySelector('.tw-pop')?.remove(); } else { jelly(b, .35, 300); showStPop(j); } }
     else if (a === 'stup') stUpgrade(+b.dataset.j);
     else if (a === 'list') { v.classList.toggle('lst'); v.querySelector('.tw-lst')?.classList.toggle('on', v.classList.contains('lst')); }
@@ -3859,7 +3938,7 @@ function renderTown(first) {
   {
     const vi = Math.max(0, villageOf(townCh)), vOpen = pastView >= 0 ? [pastView, curVillage()] : [curVillage()];
     const vchs = VILLAGES[vi].chs.filter(chOpen);
-    const row1 = pastView >= 0 || done('yacht') ? `<div class="tw-chs tw-vil">${vOpen.map(i => `<button class="mc-tab ${vi === i ? 'on' : ''}" data-tw="v${i}">${VILLAGES[i].name}</button>`).join('')}${done('ferry') ? '<button class="mc-tab dis" data-tw="nextv">야자수 열대섬</button>' : ''}</div>` : '';
+    const row1 = pastView >= 0 || done('yacht') ? `<div class="tw-chs tw-vil">${vOpen.map(i => `<button class="mc-tab ${vi === i ? 'on' : ''}" data-tw="v${i}">${VILLAGES[i].name}</button>`).join('')}${done('raft') ? '<button class="mc-tab dis" data-tw="nextv">물빛 조개 동굴</button>' : ''}</div>` : '';
     const row2 = vchs.length > 1 ? `<div class="tw-chs ${vchs.length > 2 ? 'c3' : ''}">${vchs.map(c => `<button class="mc-tab ${townCh === c ? 'on' : ''}" data-tw="ch${c}">${vchs.length > 2 ? `${c}장` : `${c}장 ${CH_NAME[c]}`}</button>`).join('')}</div>`
       : `<div class="tw-chs"><span class="tw-chn">${vi === 0 && chs.length === 1 ? '구름언덕 마을' : `${vchs[0]}장 ${CH_NAME[vchs[0]]}`}</span></div>`;
     v.querySelector('.tw-ti').innerHTML = row1 + row2;
@@ -3897,7 +3976,7 @@ function renderTown(first) {
     seq.push({ t: 'lot', i, A, open, svg: t.svg, wf: lw * kf, hf: lh * kf, up: (t.ground - ly) * kf, w: lw * kf + .04 });
     if (!A.event) addGap(lots.indexOf(A) + 1);
   });
-  const c2 = townCh === 2, c3 = townCh === 3, c4 = townCh === 4, c5 = townCh >= 5, c6 = townCh === 6, nx0 = nextTask(townCh);
+  const c2 = townCh === 2, c3 = townCh === 3, c4 = townCh === 4, c5 = townCh >= 5, c6 = townCh === 6, c7 = townCh === 7, nx0 = nextTask(townCh);
   const rnd = (a, b) => { const x = Math.sin(a * 127.1 + b * 311.7 + townCh * 74.7) * 43758.5453; return x - Math.floor(x); };
   // ---- stops: big shops alternating left/right, one winding road passing every door
   const lotsSeq = seq.filter(o => o.t === 'lot'), props = seq.filter(o => o.t === 'st');
@@ -4012,8 +4091,8 @@ function renderTown(first) {
   }
   const spPts = allPts.length ? allPts : [[cw / 2, HT], [cw / 2, 0]];
   let pads = '';
-  const DK = c6 ? 'd6' : c5 ? 'd5' : c4 ? 'd4' : c3 ? 'd3' : c2 ? 'd2' : 'd1', DI = MAP[DK] || [], DD = (ST_DIM.map || {})[DK] || [];
-  const DH = c6 ? [.44, .36, .32, .22, .3, .26, .12, .14, .12, .1, .12, .1, .12, .08, .08, .1] : c5 ? [.44, .32, .42, .16, .14, .1, .08, .1, .16, .1, .1, .14, .16, .1, .12, .14] : c4 ? [.44, .3, .42, .16, .2, .1, .14, .1, .12, .12, .1, .1, .12, .1, .12, .12] : c3 ? [.42, .42, .46, .38, .2, .18, .1, .18, .12, .14, .12, .14, .22, .14, .16, .14] : c2 ? [.4, .32, .24, .1, .14, .1, .18, .18, .2, .16, .15, .16, .22, .1, .1, .42] : [.5, .4, .5, .2, .16, .16, .13, .12, .1, .1, .14, .13, .13, .12, .1, .13];
+  const DK = c7 ? 'd7' : c6 ? 'd6' : c5 ? 'd5' : c4 ? 'd4' : c3 ? 'd3' : c2 ? 'd2' : 'd1', DI = MAP[DK] || [], DD = (ST_DIM.map || {})[DK] || [];
+  const DH = c7 ? [.44, .32, .3, .18, .3, .34, .12, .08, .1, .1, .14, .2, .14, .1, .1, .08] : c6 ? [.44, .36, .32, .22, .3, .26, .12, .14, .12, .1, .12, .1, .12, .08, .08, .1] : c5 ? [.44, .32, .42, .16, .14, .1, .08, .1, .16, .1, .1, .14, .16, .1, .12, .14] : c4 ? [.44, .3, .42, .16, .2, .1, .14, .1, .12, .12, .1, .1, .12, .1, .12, .12] : c3 ? [.42, .42, .46, .38, .2, .18, .1, .18, .12, .14, .12, .14, .22, .14, .16, .14] : c2 ? [.4, .32, .24, .1, .14, .1, .18, .18, .2, .16, .15, .16, .22, .1, .1, .42] : [.5, .4, .5, .2, .16, .16, .13, .12, .1, .1, .14, .13, .13, .12, .1, .13];
   const imgObj = (src, dm, hf, cx, by, u, chk) => {
     if (!src || !dm) return false;
     const hh = hf * u, ww = dm[0] / dm[1] * hh;
@@ -4097,13 +4176,13 @@ function renderTown(first) {
     stPos[j] = { x, y: y - hh };
   });
   // backdrop + nature
-  const TB = c6 ? 'top6' : c5 ? 'top5' : c4 ? 'top4' : c3 ? 'top3' : c2 ? 'top2' : 'top1';
+  const TB = c7 ? 'top7' : c6 ? 'top6' : c5 ? 'top5' : c4 ? 'top4' : c3 ? 'top3' : c2 ? 'top2' : 'top1';
   const seamY = Y[L - 1] - .12 * U[L - 1], topH = seamY + (c2 ? .02 : .03) * U[L - 1];
-  const SEAM = c6 ? [6, 9, 12, 7, 10, 13, 11, 15, 14, 9, 12, 6] : c5 ? [3, 8, 11, 5, 13, 3, 6, 8, 11, 4, 13, 5] : c4 ? [3, 5, 0, 1, 5, 3, 1, 5, 0, 3, 5, 1] : c3 ? [4, 1, 2, 0, 5, 2, 4, 3, 1, 2, 0, 5] : c2 ? [2, 8, 6, 7, 2, 9, 4, 8, 11, 6, 7, 2] : [3, 6, 1, 4, 6, 0, 5, 3, 6, 2, 4, 6];
+  const SEAM = c7 ? [3, 4, 12, 13, 5, 3, 10, 4, 14, 13, 5, 12] : c6 ? [6, 9, 12, 7, 10, 13, 11, 15, 14, 9, 12, 6] : c5 ? [3, 8, 11, 5, 13, 3, 6, 8, 11, 4, 13, 5] : c4 ? [3, 5, 0, 1, 5, 3, 1, 5, 0, 3, 5, 1] : c3 ? [4, 1, 2, 0, 5, 2, 4, 3, 1, 2, 0, 5] : c2 ? [2, 8, 6, 7, 2, 9, 4, 8, 11, 6, 7, 2] : [3, 6, 1, 4, 6, 0, 5, 3, 6, 2, 4, 6];
   if (c2) for (let k = 0; k < 4; k++) deco(3, (k + .3 + rnd(k, 9) * .4) * cw / 4, topH * (.9 + rnd(k, 3) * .05), U[L - 1] * .8);
   const nS = Math.ceil(cw / (.3 * U[L - 1])) + 1;
   for (let k = 0; k < nS; k++) deco(SEAM[k % SEAM.length], (k + rnd(k, 1) * .4 - .2) * cw / (nS - 1), seamY + (.02 + rnd(k, 2) * .05) * U[L - 1], U[L - 1] * .85);
-  const TREES = c6 ? [0, 1, 2, 0, 3] : c5 ? [0, 2, 1, 0, 2] : c4 ? [0, 2, 1, 0, 2] : c3 ? [0, 2, 1, 3, 2] : c2 ? [0, 15, 1, 15, 0] : [0, 2, 1, 0, 2], SMALL = c6 ? [4, 5, 8, 9, 10, 11, 12, 13, 14, 15] : c5 ? [3, 4, 5, 7, 9, 10, 11, 12, 13, 14] : c4 ? [3, 4, 6, 7, 9, 10, 12, 13, 14, 5] : c3 ? [7, 11, 9, 14, 5, 10, 13, 6, 8, 12] : c2 ? [8, 9, 13, 12, 6, 7, 4, 14, 2] : [3, 9, 15, 4, 10, 5, 8, 14, 7, 11, 13];
+  const TREES = c7 ? [0, 1, 2, 0, 1] : c6 ? [0, 1, 2, 0, 3] : c5 ? [0, 2, 1, 0, 2] : c4 ? [0, 2, 1, 0, 2] : c3 ? [0, 2, 1, 3, 2] : c2 ? [0, 15, 1, 15, 0] : [0, 2, 1, 0, 2], SMALL = c7 ? [3, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] : c6 ? [4, 5, 8, 9, 10, 11, 12, 13, 14, 15] : c5 ? [3, 4, 5, 7, 9, 10, 11, 12, 13, 14] : c4 ? [3, 4, 6, 7, 9, 10, 12, 13, 14, 5] : c3 ? [7, 11, 9, 14, 5, 10, 13, 6, 8, 12] : c2 ? [8, 9, 13, 12, 6, 7, 4, 14, 2] : [3, 9, 15, 4, 10, 5, 8, 14, 7, 11, 13];
   let nt = 0, ns = 0;
   for (let k = 0; k < 70; k++) {
     const y = seamY + .25 * U[L - 1] + rnd(k, 11) * (HT - seamY - .25 * U[L - 1]), u = uAt(y);
@@ -4115,7 +4194,7 @@ function renderTown(first) {
   const rdO = paths.map(p => `<path d="${p.d}" stroke="#5b3a32" stroke-width="${(p.w + 6).toFixed(1)}"/>`).join('') + paths.map(p => `<path d="${p.d}" stroke="#f7e6cf" stroke-width="${(p.w + 1).toFixed(1)}"/>`).join('');
   const rdF = paths.map(p => `<path d="${p.d}" stroke="url(#tw-pc)" stroke-width="${(p.w - 3).toFixed(1)}"/>`).join('');
   const ground = `<svg class="tw-ground" width="${cw}" height="${HT.toFixed(0)}" viewBox="0 0 ${cw} ${HT.toFixed(0)}" xmlns="http://www.w3.org/2000/svg"><defs>
-    <pattern id="tw-pg" patternUnits="userSpaceOnUse" width="${tg.toFixed(1)}" height="${tg.toFixed(1)}"><image href="${(c6 && MAP.grass6) || (c5 && MAP.grass5) || (c4 && MAP.grass4) || (c3 && MAP.grass3) || MAP.grass}" width="${tg.toFixed(1)}" height="${tg.toFixed(1)}"/></pattern>
+    <pattern id="tw-pg" patternUnits="userSpaceOnUse" width="${tg.toFixed(1)}" height="${tg.toFixed(1)}"><image href="${(c7 && MAP.grass7) || (c6 && MAP.grass6) || (c5 && MAP.grass5) || (c4 && MAP.grass4) || (c3 && MAP.grass3) || MAP.grass}" width="${tg.toFixed(1)}" height="${tg.toFixed(1)}"/></pattern>
     <pattern id="tw-pc" patternUnits="userSpaceOnUse" width="${tc.toFixed(1)}" height="${tc.toFixed(1)}"><image href="${MAP.cobble}" width="${tc.toFixed(1)}" height="${tc.toFixed(1)}"/></pattern>
     <pattern id="tw-pw" patternUnits="userSpaceOnUse" width="${(.5 * Ub).toFixed(1)}" height="${(.5 * Ub).toFixed(1)}"><image href="${MAP.water}" width="${(.5 * Ub).toFixed(1)}" height="${(.5 * Ub).toFixed(1)}"/></pattern>
     <pattern id="tw-pd" patternUnits="userSpaceOnUse" width="${td.toFixed(1)}" height="${td.toFixed(1)}"><image href="${MAP.dirt}" width="${td.toFixed(1)}" height="${td.toFixed(1)}"/></pattern></defs>
@@ -4143,7 +4222,7 @@ function renderTown(first) {
     else { old.forEach(e => e.remove()); ibox.prepend(...nw); }
   } else {
     st.innerHTML = ground + top + `<div class="tw-items">${itemsHtml}</div>`;
-    drawRoad(st.querySelector('.tw-road'), paths, cw, HT, PW * .35, c5 ? tc * 1.2 : tc, c5 && !c6 ? plankTex() : null);
+    drawRoad(st.querySelector('.tw-road'), paths, cw, HT, PW * .35, c5 ? tc * 1.2 : tc, c5 && !c6 && !c7 ? plankTex() : null);
     st._sig = sig; ibox = st.querySelector('.tw-items');
     lanes.forEach((l, r) => { l.r = r; l.box = ibox; l.kinds = []; });
     kinds.slice(0, nA).forEach((ix, n) => lanes[n % lanes.length].kinds.push(ix));
@@ -4158,6 +4237,7 @@ function renderTown(first) {
   v.querySelector('.tw-spin')?.classList.toggle('new', S.spin.d !== today());
   if (first) { twZoomTo(1); const c = nx ? (nx.j != null ? stPos[nx.j] : centers[nx.i]) : centers[defaultArea()]; sc.scrollTop = c ? Math.max(0, c.y - sc.clientHeight / 2) : sc.scrollHeight; v.querySelector('.tw-list').scrollTop = 0; }
   if (stPop != null && stPos[stPop]) showStPop(stPop); else v.querySelector('.tw-pop')?.remove();
+  lanes.roads = roads.filter(r => r.pts.length > 3).map(r => { const c = [0]; for (let k = 1; k < r.pts.length; k++) c.push(c[k - 1] + Math.hypot(r.pts[k][0] - r.pts[k - 1][0], r.pts[k][1] - r.pts[k - 1][1])); return { pts: r.pts, c, len: c[c.length - 1] }; }).filter(r => r.len > Ub * .8);
   if (!reuse) startWalkers(lanes);
 }
 // road: rasterised once, inner corners of tight bends filled by a morphological closing (no SVG filters)
@@ -4421,6 +4501,15 @@ function startWalkers(lanes) {
     ln.box.appendChild(el);
     ws.push({ el, ix, size, sp: ln.U * .11, lo: ln.x0 + size * .4, hi: ln.x1 - size * .4, lane: ln.r, key: ANIMALS[ix].key, img: el.querySelector('.tw-f'), frs: [...el.querySelectorAll('.tw-f img')], bub: el.querySelector('.tw-bub'), fr: WALK[ANIMALS[ix].key], x: ln.x0 + (W / (ln.kinds.length + 1)) * (n + 1) + (Math.random() - .5) * W * .2, dir: Math.random() < .5 ? 1 : -1, st: 'walk', t: 2 + Math.random() * 4, ph: Math.random() * 4, cur: -1, mate: null, talks: 0 });
   }));
+  // 길 따라 걷는 주민: 두 명 중 한 명은 길(위아래)을 따라 돌아다님
+  const RD = lanes.roads || [], rdTot = RD.reduce((a, r) => a + r.len, 0);
+  const rdAt = (r, d) => { let k = 1; while (k < r.c.length - 1 && r.c[k] < d) k++; const a = r.pts[k - 1], b = r.pts[k], t = (d - r.c[k - 1]) / Math.max(1e-6, r.c[k] - r.c[k - 1]); return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]; };
+  if (rdTot) ws.forEach((w, n) => {
+    if (n % 2 === 0) return;
+    let q = Math.random() * rdTot, r = RD[0]; for (const x of RD) { if (q < x.len) { r = x; break; } q -= x.len; }
+    w.road = r; w.d = Math.random() * r.len; w.rd = Math.random() < .5 ? 1 : -1; w.lane = -1 - n;
+    w.el.style.top = '0px'; { const [px, py] = rdAt(r, w.d); w.x = px; w.y = py - w.size; w.el.style.zIndex = String(Math.round(py * 10)); }
+  });
   const box = lanes[0] && lanes[0].box;
   if (!box) return;
   const setFrame = (w, f) => { if (w.cur !== f) { w.frs[w.cur]?.classList.remove('on'); w.cur = f; w.frs[f]?.classList.add('on'); } };
@@ -4457,7 +4546,20 @@ function startWalkers(lanes) {
     const vy0 = scv ? scv.scrollTop / twZ - 160 : -1e9, vy1 = scv ? (scv.scrollTop + scv.clientHeight) / twZ + 160 : 1e9;
     for (const w of ws) {
       w.t -= dt;
-      if (w.st === 'walk') {
+      if (w.st === 'walk' && w.road) {
+        const r = w.road; w.d += w.rd * w.sp * dt; w.ph += dt * 6;
+        if (w.d < 0) { w.d = 0; w.rd = 1; } if (w.d > r.len) { w.d = r.len; w.rd = -1; }
+        const [px, py] = rdAt(r, w.d), [qx] = rdAt(r, Math.max(0, Math.min(r.len, w.d + w.rd * 4)));
+        if (Math.abs(qx - px) > .3) w.dir = qx > px ? 1 : -1;
+        w.x = px; w.y = py - w.size;
+        setFrame(w, [0, 1, 2, 1][Math.floor(w.ph) % 4]);
+        if (w.t <= 0) {
+          const q = Math.random();
+          if (q < .3) { w.st = 'think'; w.t = 2.2; setFrame(w, 5); bubble(w, pick(['…', '?'])); }
+          else if (q < .6) { w.st = 'idle'; w.t = 1.2 + Math.random(); setFrame(w, 3); }
+          else { w.rd *= -1; w.t = 4 + Math.random() * 6; }
+        }
+      } else if (w.st === 'walk') {
         w.x += w.dir * w.sp * dt; w.ph += dt * 6;
         if (w.x < w.lo) { w.x = w.lo; w.dir = 1; } if (w.x > w.hi) { w.x = w.hi; w.dir = -1; }
         setFrame(w, [0, 1, 2, 1][Math.floor(w.ph) % 4]);
@@ -4488,8 +4590,8 @@ function startWalkers(lanes) {
       } else if (w.t <= 0) { bubble(w, ''); w.bub.classList.remove('long'); w.st = 'walk'; w.t = 2 + Math.random() * 4; }
       if (w.y == null) w.y = parseFloat(w.el.style.top) || 0;
       if (w.y + w.size < vy0 || w.y > vy1) continue;
-      const tx = `translateX(${(w.x - w.size * .35).toFixed(0)}px)`, fl = w.dir < 0 ? 'scaleX(-1)' : '', bo = w.st === 'walk' ? `0 ${(-Math.abs(Math.sin(w.ph * Math.PI / 2)) * w.size * .03).toFixed(0)}px` : '0 0';
-      if (w._tx !== tx) { w.el.style.transform = tx; w._tx = tx; }
+      const tx = w.road ? `translate(${(w.x - w.size * .35).toFixed(0)}px,${w.y.toFixed(0)}px)` : `translateX(${(w.x - w.size * .35).toFixed(0)}px)`, fl = w.dir < 0 ? 'scaleX(-1)' : '', bo = w.st === 'walk' ? `0 ${(-Math.abs(Math.sin(w.ph * Math.PI / 2)) * w.size * .03).toFixed(0)}px` : '0 0';
+      if (w._tx !== tx) { w.el.style.transform = tx; w._tx = tx; if (w.road) { const z = String(Math.round((w.y + w.size) * 10)); if (w.el.style.zIndex !== z) w.el.style.zIndex = z; } }
       if (w._fl !== fl) { w.img.style.transform = fl; w._fl = fl; }
       if (w._bo !== bo) { w.img.style.translate = bo; w._bo = bo; }
     }
@@ -4946,6 +5048,65 @@ if (CH6_ON) {
   Object.assign(SCENE_CH, { ch6_start: 6, hpost: 6, ferry: 6 });
   MAIN_SCENES.push(['ch6_start', '하얀 항구 도착'], ['hpost', '우체국 편지 기록'], ['ferry', '하얀 여객선 출항']);
   Object.assign(STORY_CG, { ch6_start: 'ev14', hpost: 'ev15', ferry: 'ev16' });
+}
+Object.assign(STORY, {
+  ch7_start: [
+    [37, '야자수 열대섬 도착! 돌아갈 땐 언제든 불러, 첨벙!'],
+    [0, '와, 바다 색이 사탕처럼 투명해!'],
+    [38, '안녕! 나는 대롱이야. 손님이다, 손님!'],
+    [38, '바다가 시끄러워진 뒤로 다들 가게 문을 닫고 해먹에서 잠만 자.', 0],
+    [1, '바다가 시끄러워졌다고?', 0],
+    [38, '그건 쫑긋이 제일 잘 알아. 그 전에 내 코코넛 가게부터 열어 줄래?'],
+  ],
+  coconut: [
+    [38, '대롱 코코넛 가게 다시 열었어! 시원한 코코넛 한 잔!'],
+    [38, '옛날에 꿀단지 수첩을 든 할머니도 여기서 코코넛 푸딩 레시피를 적어 가셨어.', 0],
+    [0, '또 꿀단 할머니! 수첩에 섬 레시피가 한 줄 생겼어!'],
+    [39, '재잘재잘! 손님 왔다며? 꽃목걸이 걸어 줄게!'],
+  ],
+  lei: [
+    [39, '꽃목걸이 공방 다시 열었어! 손님 목에 하나씩, 재잘!'],
+    [39, '이 분홍 조개, 섬 친구들도 가끔 주워. 늘 바닷물이 반짝이는 날 떠내려와.', 0],
+    [40, '다들 모였네! 더운데 빙수 먹고 가!'],
+  ],
+  mango: [
+    [40, '망고 빙수 오두막, 다시 시원해졌어!'],
+    [40, '꾸벅이 해먹 쉼터 좀 깨워 줘. 걔가 일어나야 섬이 다시 북적이거든.', 0],
+  ],
+  hammock: [
+    [41, '…음냐. 해먹 쉼터… 다시 열었어… 고마워…'],
+    [41, '밤마다… 바다에서 쿵… 쿵… 하는 소리가 나서… 잠이 안 왔어…', 0],
+    [1, '쿵쿵? 무슨 소리일까?', 0],
+    [41, '쫑긋한테… 물어봐…'],
+  ],
+  radio: [
+    [42, '쫑긋 소라 방송국, 다시 방송 시작합니다!'],
+    [42, '이 소라에 귀를 대 봐. 바다 소리가 다 들려.'],
+    [0, '…쿵… 쿵… 정말 뭔가 지나가는 소리야!', 0],
+    [42, '해마다 여름이면 둥근 바위섬이 섬 앞을 천천히 지나가. 그 소리야.', 0],
+    [1, '바위섬이 움직인다고?!', 0],
+    [42, '그리고 그 바위섬이 지나간 다음 날엔 꼭 분홍 조개가 떠내려와.', 0],
+  ],
+  raft: [
+    [43, '뗏목 나루터, 출발 준비 끝! 폴짝!'],
+    [43, '분홍 조개가 처음 떠내려오는 곳을 알아. 저 절벽 아래 물빛 조개 동굴이야.'],
+    [0, '둥근 바위섬, 분홍 조개, 등대에서 온 초대장…', 0],
+    [1, '동굴에 가면 뭔가 알 수 있을 거야!'],
+    [0, '수첩에 섬 레시피도 채웠으니까… 물빛 조개 동굴로 출발!'],
+  ],
+});
+Object.assign(TALK, {
+  monkey: ['코코넛 한 잔 할래?', '꼬리로 매달리는 거 제일 자신 있어!', '야자수 꼭대기에서 보면 바다가 다 보여.', '바나나는 내 간식이야!'],
+  parrot: ['재잘재잘! 꽃목걸이 하나 걸어 줄게!', '꽃 냄새 맡으면 기분이 좋아져.', '말하는 건 내가 섬에서 제일 잘해!', '오늘은 분홍 꽃이 제일 예뻐.'],
+  hippo: ['망고 빙수 한 그릇 줄까?', '더운 날엔 물속이 최고야.', '숟가락은 큰 걸로!', '망고는 꼭 잘 익은 걸로 골라야 해.'],
+  sloth: ['…안녕… 반가워…', '해먹이… 나를 부르고 있어…', '천천히 가도… 다 도착해…', '…음냐… 조금만 더 잘게…'],
+  toucan: ['쫑긋! 바다 소리 들려?', '헤드폰 끼면 먼 바다 소리도 다 들려.', '오늘의 방송은 파도 소리 특집!', '부리가 커서 노래가 멀리 퍼져.'],
+  frog: ['폴짝! 탐험 갈 준비 됐어?', '지도만 있으면 어디든 갈 수 있어.', '비 오는 날이 제일 신나!', '뗏목 위에서도 균형 잘 잡아!'],
+});
+if (CH7_ON) {
+  Object.assign(SCENE_CH, { ch7_start: 7, radio: 7, raft: 7 });
+  MAIN_SCENES.push(['ch7_start', '야자수 열대섬 도착'], ['radio', '소라 방송국의 바다 소리'], ['raft', '뗏목 출발']);
+  Object.assign(STORY_CG, { ch7_start: 'ev17', radio: 'ev18', raft: 'ev19' });
 }
 for (const { scene } of Object.values(XMAS_STORIES)) STORY_CG[scene] = scene;
 function playStory(key, cb) {

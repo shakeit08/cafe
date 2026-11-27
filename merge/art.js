@@ -318,6 +318,9 @@ ANIMALS.push({ key: 'crab', name: '집게', art: ANIMALS[0].art, ch2: 'parasol' 
 ANIMALS.push({ key: 'seaotter', name: '몽돌', art: ANIMALS[0].art, ch2: 'gelato' }, { key: 'puffin', name: '또박', art: ANIMALS[0].art, ch2: 'hpost' },
   { key: 'hseal', name: '뽀글', art: ANIMALS[0].art, ch2: 'market' }, { key: 'octopus', name: '문문', art: ANIMALS[0].art, ch2: 'sail' },
   { key: 'albatross', name: '훨훨', art: ANIMALS[0].art, ch2: 'museum' }, { key: 'sealion', name: '첨벙', art: ANIMALS[0].art, ch2: 'ferry' });
+ANIMALS.push({ key: 'monkey', name: '대롱', art: ANIMALS[0].art, ch2: 'coconut' }, { key: 'parrot', name: '재잘', art: ANIMALS[0].art, ch2: 'lei' },
+  { key: 'hippo', name: '통통', art: ANIMALS[0].art, ch2: 'mango' }, { key: 'sloth', name: '꾸벅', art: ANIMALS[0].art, ch2: 'hammock' },
+  { key: 'toucan', name: '쫑긋', art: ANIMALS[0].art, ch2: 'radio' }, { key: 'frog', name: '폴짝', art: ANIMALS[0].art, ch2: 'raft' });
 
 const UI = {
   bolt: svg(po('M27 5 L45 5 L36 26 L50 26 L22 60 L28 37 L14 37 Z', '#ffd75a', 3.5) + p('M36 26 L50 26 L22 60 L28 37 Z', 'rgba(242,155,58,.55)') + e(31, 11, 3.2, 1.8, '#fff3b0') + po('M27 5 L45 5 L36 26 L50 26 L22 60 L28 37 L14 37 Z', 'none', 3.5)),
