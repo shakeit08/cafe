@@ -1869,6 +1869,7 @@ html,body{margin:0;height:100%;background:transparent!important;overflow:hidden}
  background-image:radial-gradient(circle at 1px 1px,rgba(255,143,163,.18) 1.5px,transparent 1.6px);background-size:16px 16px}
 @media (max-width:480px){.mc-panel{width:100vw;height:100dvh;border:none;border-radius:0;box-shadow:none}}
 @media (min-width:481px) and (max-height:700px){.mc-panel{height:100dvh;border-top:none;border-bottom:none;border-radius:0;box-shadow:none}}
+.mc-zb{position:absolute;top:12px;right:12px;z-index:5;display:none;align-items:center;gap:5px;font-family:inherit;font-size:14px;color:#5b3a32;background:#fff7ec;border:2.5px solid #5b3a32;border-radius:99px;box-shadow:0 3px 0 #5b3a32;padding:5px 12px;cursor:pointer}#mc.zok .mc-zb{display:flex}#mc.big .mc-panel{width:580px}.mc-wrap{background-repeat:repeat-x,repeat}
 .mc-top{display:flex;align-items:center;gap:5px;padding:9px 8px 6px;flex-shrink:0}
 .mc-lv{position:relative;width:40px;height:40px;border-radius:50%;border:2.5px solid #5b3a32;background:conic-gradient(#ff6b81 calc(var(--p)*1%),#f6dccf 0);flex-shrink:0;box-shadow:0 2px 0 #5b3a32;cursor:pointer}
 .mc-lv b{position:absolute;inset:4px;border-radius:50%;background:#fff;border:2px solid #5b3a32;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:15px;line-height:1}
@@ -2464,6 +2465,7 @@ function buildUI() {
   const root = document.createElement('div');
   root.id = 'mc';
   root.innerHTML = `
+    <button class="mc-zb" data-act="zoom"></button>
     <div class="mc-panel">
       <div class="mc-top">
         <div class="mc-lv" data-act="set" title="설정"><b></b></div>
@@ -2488,6 +2490,7 @@ function buildUI() {
     const act = a.dataset.act;
     if (act !== 'order' && act !== 'sell') sfx('ui');
     if (act === 'close') closeGame();
+    else if (act === 'zoom') { S.settings.big = !S.settings.big; save(); applyZoom(); layout(); }
     else if (act === 'shop') openShop(false);
     else if (act === 'dex') openDex();
     else if (act === 'cafe') openTownSafe();
@@ -2526,7 +2529,8 @@ function buildUI() {
     else if ($('.mc-cafe')) closeCafe();
     else if (!APP) closeGame();
   });
-  window.addEventListener('resize', () => { if (visible) layout(); });
+  window.addEventListener('resize', () => { applyZoom(); if (visible) layout(); });
+  applyZoom();
   setInterval(() => { if (visible && S) { const e0 = S.energy; tickEnergy(); renderTop(); renderMode(); if (e0 !== S.energy) renderBoard(); } }, 1000);
   uiBuilt = true;
 }
@@ -2549,13 +2553,32 @@ function renderMode() {
   b.classList.toggle('dis', !superOn && S.energy < SUPER_COST);
   $('.mc-board')?.classList.toggle('sup', superOn);
 }
+// 넓은 화면(PC·태블릿)에서 창을 통째로 크게: 화면 구성은 그대로, 비율만 키움
+let PZ = 1;
+function applyZoom() {
+  const mc = $('#mc'), p = $('.mc-panel'), b = $('.mc-zb'); if (!mc || !p) return;
+  const k = Math.min(innerWidth / 472, innerHeight / 892), ok = k > 1.05, big = ok && S && S.settings && S.settings.big;
+  PZ = big ? Math.floor(Math.min(innerWidth / 600, innerHeight / 892) * 100) / 100 : 1;
+  p.style.zoom = PZ === 1 ? '' : String(PZ);
+  mc.classList.toggle('zok', ok); mc.classList.toggle('big', !!big);
+  // 퍼즐판 뒤 바탕에 지금 마을의 풍경 띠(하늘·바다)와 바닥을 깜. 그림은 GitHub에서 불러옴 (크게 보기면 창이 넓어져 더 잘 보임)
+  const wr = $('.mc-wrap');
+  if (wr && S) {
+    const ch = twSeen ? townCh : ([...CHS].reverse().find(chOpen) || 1);
+    const top = MAP['top' + ch] || MAP.top1, gr = MAP['grass' + ch] || MAP.grass, th = Math.round(Math.max(120, wr.clientHeight * .45));
+    const bg = `url(${top}),url(${gr})`, key = bg + th;
+    if (wr._bg !== key) { wr._bg = key; wr.style.backgroundImage = bg; wr.style.backgroundSize = `auto ${th}px,140px 140px`; wr.style.backgroundPosition = `center top,center ${th}px`; }
+  }
+  if (b) b.textContent = PZ > 1 ? '작게 보기' : '크게 보기';
+}
 function layout() {
+  applyZoom();
   const wrap = $('.mc-wrap'), mc = $('#mc'), bd = $('.mc-board');
   if (!wrap) return;
   // 판이 높이 때문에 작아지면, 아래 설명칸·주문칸·윗줄을 단계별로 줄여서 판 자리를 넓힘
   const sw = $('.mc-swr'), swH = () => sw ? sw.offsetHeight : 0;
   const fit = () => !bd || (bd.offsetHeight + swH() <= wrap.clientHeight - 4 && bd.offsetWidth <= wrap.clientWidth - 8);
-  const byWidth = () => Math.floor(Math.max(24, Math.min((wrap.clientWidth - 8 - 18 - 6 * 3) / COLS, 74)));
+  const byWidth = () => Math.floor(Math.max(24, Math.min((Math.min(wrap.clientWidth, mc.classList.contains('big') ? 444 : 1e9) - 8 - 18 - 6 * 3) / COLS, 74)));
   let cell = 0;
   for (let t = 0; t <= (APP ? 3 : 0); t++) {
     mc.classList.toggle('t1', t >= 1); mc.classList.toggle('t2', t >= 2); mc.classList.toggle('t3', t >= 3);
@@ -2621,7 +2644,7 @@ function bindOrderBar() {
   const o = $('.mc-orders'), b = $('.mc-osb');
   o.addEventListener('scroll', orderBar, { passive: true });
   let drag = null;
-  const go = ev => { const r = b.getBoundingClientRect(), tw = b.firstElementChild.offsetWidth; const f = Math.max(0, Math.min(1, (ev.clientX - r.left - (drag ?? tw / 2)) / (r.width - tw))); o.scrollLeft = f * (o.scrollWidth - o.clientWidth); };
+  const go = ev => { const r = b.getBoundingClientRect(), tw = b.firstElementChild.offsetWidth * PZ; const f = Math.max(0, Math.min(1, (ev.clientX - r.left - (drag ?? tw / 2)) / (r.width - tw))); o.scrollLeft = f * (o.scrollWidth - o.clientWidth); };
   b.addEventListener('pointerdown', ev => { const t = b.firstElementChild.getBoundingClientRect(); drag = ev.clientX >= t.left && ev.clientX <= t.right ? ev.clientX - t.left : t.width / 2; o.style.scrollSnapType = 'none'; go(ev); try { b.setPointerCapture(ev.pointerId); } catch (_) { } });
   b.addEventListener('pointermove', ev => { if (drag != null) go(ev); });
   const up = () => { drag = null; o.style.scrollSnapType = ''; };
@@ -2718,7 +2741,7 @@ function pullTo(i, j, amp, dur, iters) {
   if (!el || !cj || !el.animate) return null;
   const a = ci.getBoundingClientRect(), b = cj.getBoundingClientRect();
   let dx = b.left - a.left, dy = b.top - a.top; const L = Math.hypot(dx, dy) || 1; dx /= L; dy /= L;
-  const k = amp * a.width;
+  const k = amp * a.width / PZ;
   try {
     // 상대 쪽으로 쭉 늘어나며 끌려갔다가 젤리처럼 뚀잉뚀잉 튕기며 돌아옴
     const ax = Math.abs(dx), ay = Math.abs(dy);
@@ -2896,7 +2919,7 @@ function runBoardFx() {
       const a = cellEl(f.from)?.getBoundingClientRect(), b = cellEl(f.to);
       const it = b?.querySelector('.it');
       if (!a || !it) continue;
-      const br = b.getBoundingClientRect(), dx = a.left - br.left, dy = a.top - br.top;
+      const br = b.getBoundingClientRect(), dx = (a.left - br.left) / PZ, dy = (a.top - br.top) / PZ;
       it.animate([
         { transform: `translate(${dx}px,${dy}px) scale(.4)`, opacity: .4 },
         { transform: `translate(${dx * .4}px,${dy * .4 - 12}px) scale(.85)`, offset: .5, opacity: 1 },
@@ -3844,7 +3867,7 @@ function openTown() {
   const sc = v.querySelector('.tw-scroll');
   let dragX = null, moved = false;
   sc.addEventListener('wheel', ev => {
-    if (ev.ctrlKey) { ev.preventDefault(); const r = sc.getBoundingClientRect(); twZoomTo(twZ * Math.exp(-ev.deltaY * .01), ev.clientX - r.left, ev.clientY - r.top); return; }
+    if (ev.ctrlKey) { ev.preventDefault(); const r = sc.getBoundingClientRect(); twZoomTo(twZ * Math.exp(-ev.deltaY * .01), (ev.clientX - r.left) / PZ, (ev.clientY - r.top) / PZ); return; }
     if (twZ === 1 && sc.scrollWidth > sc.clientWidth + 2 && Math.abs(ev.deltaY) > Math.abs(ev.deltaX)) { sc.scrollLeft += ev.deltaY; ev.preventDefault(); }
   }, { passive: false });
   // 마을 화면만 두 손가락으로 확대·축소 (퍼즐판은 확대 안 됨)
@@ -3867,7 +3890,7 @@ function openTown() {
     if (!dragX) return;
     const dx = ev.clientX - dragX.x;
     if (Math.abs(dx) > 8) { moved = true; sc.classList.add('drag'); }
-    if (moved) sc.scrollLeft = dragX.s - dx;
+    if (moved) sc.scrollLeft = dragX.s - dx / PZ;
   });
   window.addEventListener('pointerup', () => { if (dragX) setTimeout(() => { moved = false; }, 0); dragX = null; sc.classList.remove('drag'); });
   v.addEventListener('click', ev => {
@@ -3928,7 +3951,9 @@ function villageDone(vi) {
   m.querySelector('[data-go]').onclick = () => { m.remove(); pastView = -1; townCh = N.chs[0]; $('.mc-town .tw-season')?.remove(); if ($('.mc-town')) renderTown(true); };
 }
 const chOf = A => A.event ? (seasonDone() ? 5 : done('station') ? 2 : 1) : (A.ch || 1);
+let twSeen = false;
 function renderTown(first) {
+  twSeen = true; setTimeout(applyZoom, 0);
   setTimeout(mailBadge, 0);
   { const ck = 'ch' + townCh + '_start'; if (townCh > 1 && STORY[ck] && !S.story.seen[ck] && chOpen(townCh) && nextTask(townCh)) setTimeout(() => { if ($('.mc-story')) return; if (townCh === 5 && !S.story.seen.ch5_invite) playStory('ch5_invite', () => playStory(ck)); else playStory(ck); }, 350); }
   const v = $('.mc-town'); if (!v) return;
@@ -4770,7 +4795,7 @@ function runTut(kind, force) {
     if (!el || !el.getClientRects().length) { k++; return show(); }
     try { el.scrollIntoView?.({ block: 'nearest', inline: 'nearest' }); } catch (_) { }
     const P = panel.getBoundingClientRect(), R = el.getBoundingClientRect(), pad = 6;
-    const x = R.left - P.left - pad, y = R.top - P.top - pad, w = R.width + pad * 2, h = R.height + pad * 2;
+    const x = (R.left - P.left) / PZ - pad, y = (R.top - P.top) / PZ - pad, w = R.width / PZ + pad * 2, h = R.height / PZ + pad * 2;
     Object.assign(hole.style, { left: x + 'px', top: y + 'px', width: w + 'px', height: h + 'px' });
     bub.querySelector('p').textContent = txt;
     bub.querySelector('.tu-n').textContent = `${k + 1} / ${steps.length}`;
