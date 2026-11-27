@@ -1,0 +1,36 @@
+# 크리스마스 시즌 패스 옷 — 그림 프롬프트
+
+그림 3장입니다. 크기는 모두 1536×1024 (가로 3:2). 레퍼런스는 이 폴더 refs/에 넣어 두었습니다.
+
+
+## 1. 보리 트리 옷 걷기 시트
+레퍼런스 순서: refs/ref_walk_bear.png + ch5/refs/ref_C_걷기시트_형식.webp
+```
+Cute cozy kawaii mobile game art in the exact style of the reference image: thick dark brown outlines (#5b3a32), soft pastel colors, flat cel shading with one soft shade per color and small soft highlights, clean simple rounded shapes, no texture, no grain.
+A character sprite sheet of one cute kawaii character: the chubby brown bear with a cream muzzle from the reference sheet, the exact same face, body shape, size and colors, now wearing a cozy Christmas tree costume: a soft green felt hooded poncho shaped like a little Christmas tree, with three wavy layered tiers like tree branches that end just above the knees, the hood covering the head with the bear's round ears poking out of two holes, a small golden star on the top of the hood, a few round red and gold ornament dots and one soft white garland band wrapping diagonally around the poncho. The short arms come out at the sides and the legs and feet stay brown. The outfit is gender-neutral and simple: no bows, no ribbons, no skirt, no dress, no frills, no makeup, no eyelashes. The first reference image shows this same character's original walking sheet: copy its face, proportions, size and poses exactly, only add the outfit. The second reference image is only for the grid layout. Six poses of the same character in a grid of 3 columns and 2 rows, all facing right, all at the same size and on the same baseline, with clear space between them, none cut off:
+Top row, a walk cycle seen from the side, walking to the right. The two legs must be two different shades so they are easy to tell apart: the NEAR leg (closest to the viewer) is the normal bright color, the FAR leg is clearly darker and partly hidden behind the body. Frame (1): the bright near leg is stepping FORWARD (on the right, toward the walking direction) and the dark far leg is BEHIND (on the left). Frame (2): both legs together under the body, mid-step. Frame (3): the exact opposite of frame (1): the dark far leg is stepping FORWARD (on the right) and the bright near leg is BEHIND (on the left). Frames (1) and (3) must clearly look different, like left-right-left steps, never the same pose twice. The arms swing opposite to the legs.
+Bottom row: standing still with a gentle smile; holding up a small wrapped gift box in one paw and waving the other, with closed happy eyes and three small yellow sparkle marks; tapping its chin with one paw and looking up at the star on its hood, thinking.
+Transparent background (PNG with a real alpha channel), no background color, no white box behind the character. No shadows, no props other than the ones described, no background objects. No text, no letters, no numbers, no logos, no watermark, no frame or border.
+```
+
+## 2. 솜이 산타 옷 걷기 시트
+레퍼런스 순서: refs/ref_walk_rabbit.png + ch5/refs/ref_C_걷기시트_형식.webp
+```
+Cute cozy kawaii mobile game art in the exact style of the reference image: thick dark brown outlines (#5b3a32), soft pastel colors, flat cel shading with one soft shade per color and small soft highlights, clean simple rounded shapes, no texture, no grain.
+A character sprite sheet of one cute kawaii character: the white bunny with long upright ears and pink inner ears from the reference sheet, the exact same face, body shape, size and colors, now wearing a cozy Santa outfit: a red hooded Santa jumpsuit with fluffy white trim on the hood edge, the cuffs and the ankles, a wide black belt with a small gold buckle, and two round black buttons, the long ears coming out through two holes in the hood, and a small red Santa sack with a white cord slung over one shoulder. The outfit is gender-neutral and simple: no bows, no ribbons, no skirt, no dress, no frills, no makeup, no eyelashes. The first reference image shows this same character's original walking sheet: copy its face, proportions, size and poses exactly, only add the outfit. The second reference image is only for the grid layout. Six poses of the same character in a grid of 3 columns and 2 rows, all facing right, all at the same size and on the same baseline, with clear space between them, none cut off:
+Top row, a walk cycle seen from the side, walking to the right. The two legs must be two different shades so they are easy to tell apart: the NEAR leg (closest to the viewer) is the normal bright color, the FAR leg is clearly darker and partly hidden behind the body. Frame (1): the bright near leg is stepping FORWARD (on the right, toward the walking direction) and the dark far leg is BEHIND (on the left). Frame (2): both legs together under the body, mid-step. Frame (3): the exact opposite of frame (1): the dark far leg is stepping FORWARD (on the right) and the bright near leg is BEHIND (on the left). Frames (1) and (3) must clearly look different, like left-right-left steps, never the same pose twice. The arms swing opposite to the legs.
+Bottom row: standing still with a gentle smile; holding up a small candy cane in one paw and waving the other, with closed happy eyes and three small yellow sparkle marks; peeking into the Santa sack with one paw on the cheek, thinking.
+Transparent background (PNG with a real alpha channel), no background color, no white box behind the character. No shadows, no props other than the ones described, no background objects. No text, no letters, no numbers, no logos, no watermark, no frame or border.
+```
+
+## 3. 얼굴 시트 (옷 입은 보리·솜이)
+레퍼런스 순서: refs/ref_faces_bear_rabbit.png + 방금 뽑은 걷기 시트 2장
+```
+Cute cozy kawaii mobile game art in the exact style of the reference image: thick dark brown outlines (#5b3a32), soft pastel colors, flat cel shading with one soft shade per color and small soft highlights, clean simple rounded shapes, no texture, no grain.
+Four round face icons in one row, matching the first reference image exactly (same head shapes, sizes, colors and the same two expressions), now with the hood of the new outfit from the attached walking sheets. Each is only the head, front view, with clear space between them:
+1) the brown bear in the green Christmas tree hood with the small golden star on top and its round ears poking out, closed happy eyes, a small open smiling mouth and rosy cheeks;
+2) the same bear in the same hood, with calm open round eyes exactly like the second face in the first reference image, a small closed smile and rosy cheeks;
+3) the white bunny in the red Santa hood with fluffy white trim and its long ears coming out of the hood, closed happy eyes, a small open smiling mouth and rosy cheeks;
+4) the same bunny in the same hood, with calm open round eyes exactly like the fourth face in the first reference image, a small closed smile and rosy cheeks.
+The outfit is gender-neutral and simple: no bows, no ribbons, no skirt, no dress, no frills, no makeup, no eyelashes. Transparent background (PNG with a real alpha channel), no background color, no white box behind the character. No text, no letters, no numbers, no logos, no watermark, no frame or border.
+```

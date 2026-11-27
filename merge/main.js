@@ -1980,7 +1980,7 @@ html,body{margin:0;height:100%;background:transparent!important;overflow:hidden}
 .mc-tmode.on{opacity:1;transform:translate(-50%,-50%);pointer-events:auto}
 .mc-tmode i{width:28px;height:28px;display:block}.mc-tmode b{font-weight:normal;color:#e04a68}.mc-tmode .mc-btn{font-size:13px;padding:3px 9px}
 .mc-board.tmode .c:not(.tok) .it{opacity:.35}
-.mc-board .c.tok{box-shadow:inset 0 0 0 3px #ff8fa3;animation:suptk 1s ease-in-out infinite alternate}@keyframes suptk{to{box-shadow:inset 0 0 0 2.5px #ff8fa3,0 0 12px rgba(255,143,163,.95)}}
+.mc-board .c.tok{box-shadow:inset 0 0 0 3px #ff8fa3}.mc-board .c.tok::before{content:'';position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 2.5px #ff8fa3,0 0 12px rgba(255,143,163,.95);pointer-events:none;z-index:2;will-change:opacity;animation:supg 1s ease-in-out infinite alternate}@keyframes suptk{to{box-shadow:inset 0 0 0 2.5px #ff8fa3,0 0 12px rgba(255,143,163,.95)}}
 .mc-boxb{position:relative;margin-right:0!important}.mc-shopb2{margin-right:auto}
 .mc-boxb .n{position:absolute;right:-6px;top:-7px;min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:#ff8fa3;color:#fff;border:2px solid #5b3a32;font-size:11px;font-weight:normal;line-height:13px;text-align:center}
 .mc-boxb.tgt{background:rgba(255,224,138,.75);border-radius:16px;transform:scale(1.1)}
@@ -2158,7 +2158,7 @@ html,body{margin:0;height:100%;background:transparent!important;overflow:hidden}
 .tw-w{pointer-events:auto;cursor:pointer}
 .tw-bub.long{white-space:normal;width:max-content;max-width:150px;font-size:13px;line-height:1.35;padding:4px 9px;z-index:2}
 .tw-w{position:absolute;left:0;will-change:transform}
-.tw-w img{height:100%;width:auto;display:block;filter:drop-shadow(0 3px 0 rgba(91,58,50,.18))}
+.tw-w img,.tw-w canvas{height:100%;width:auto;display:block}.tw-w img{filter:drop-shadow(0 3px 0 rgba(91,58,50,.18))}.tw-f canvas:not(.on){position:absolute;left:0;top:0;visibility:hidden}
 .tw-f{display:block;height:100%;position:relative}
 .tw-f img:not(.on){position:absolute;left:0;top:0;visibility:hidden}
 .tw-bub{position:absolute;left:50%;bottom:100%;transform:translate(-30%,0) scale(0);transform-origin:20% 100%;background:#fff;border:2.5px solid #5b3a32;border-radius:14px;padding:1px 8px;font-size:15px;line-height:1.4;white-space:nowrap;box-shadow:0 2px 0 #5b3a32;transition:transform .18s cubic-bezier(.3,1.5,.5,1)}
@@ -2367,7 +2367,7 @@ html,body{margin:0;height:100%;background:transparent!important;overflow:hidden}
 .mc-ordw{display:flex;align-items:stretch;flex-shrink:0;min-width:0}
 .mc-ordw .mc-orders{flex:1;min-width:0}
 .mc-ordw .mc-orders{padding-left:6px}
-.mc-evb{flex:0 0 58px;margin:2px 0 5px 8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:4px 2px;font-family:inherit;font-size:12px;line-height:1.1;color:#fff;background:#d84a4a;border:2.5px solid #5b3a32;border-radius:14px;box-shadow:0 3px 0 #5b3a32;cursor:pointer;animation:mcevb 1.6s ease-in-out infinite alternate}
+.mc-evb{flex:0 0 58px;margin:2px 0 5px 8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:4px 2px;font-family:inherit;font-size:12px;line-height:1.1;color:#fff;background:#d84a4a;border:2.5px solid #5b3a32;border-radius:14px;box-shadow:0 3px 0 #5b3a32;cursor:pointer;position:relative}.mc-evb::after{content:'';position:absolute;inset:-2.5px;border-radius:14px;box-shadow:0 0 0 4px rgba(216,74,74,.25);pointer-events:none;will-change:opacity;animation:supg 1.6s ease-in-out infinite alternate}.mc-evb.home::after{display:none}
 .mc-evb i{display:block;width:38px;height:38px;background:#fff;border-radius:50%;border:2px solid #5b3a32;padding:2px}
 .mc-evb.home{background:#ffd75a;color:#5b3a32;animation:none}
 .mc-evb:active{transform:translateY(2px);box-shadow:none}
@@ -4489,6 +4489,8 @@ const pokeLine = key => {
   return pick([...TALK[key], ...ex]);
 };
 let walkRaf = 0;
+let twInput = performance.now();
+['pointerdown', 'wheel', 'scroll', 'touchmove', 'keydown'].forEach(t => document.addEventListener(t, () => { twInput = performance.now(); }, { passive: true, capture: true }));
 function startWalkers(lanes) {
   cancelAnimationFrame(walkRaf);
   const ws = [];
@@ -4510,6 +4512,23 @@ function startWalkers(lanes) {
     w.road = r; w.d = Math.random() * r.len; w.rd = Math.random() < .5 ? 1 : -1; w.lane = -1 - n;
     w.el.style.top = '0px'; { const [px, py] = rdAt(r, w.d); w.x = px; w.y = py - w.size; w.el.style.zIndex = String(Math.round(py * 10)); }
   });
+  // 그림자 효과를 매번 다시 그리지 않도록 걷기 그림마다 그림자를 한 번만 구워 둠
+  const bake = (w, i) => {
+    const img = w.frs[i];
+    const go = () => {
+      try {
+        const nh = img.naturalHeight, nw = img.naturalWidth; if (!nh || !nw) return;
+        const oy = Math.max(1, Math.round(3 * nh / Math.max(1, w.size))), c = document.createElement('canvas');
+        c.width = nw; c.height = nh + oy;
+        const x = c.getContext('2d'); x.shadowColor = 'rgba(91,58,50,.18)'; x.shadowOffsetY = oy; x.drawImage(img, 0, 0);
+        c.style.height = (100 * (nh + oy) / nh).toFixed(2) + '%';
+        if (img.classList.contains('on')) c.classList.add('on');
+        img.replaceWith(c); w.frs[i] = c;
+      } catch (_) { }
+    };
+    if (img.complete && img.naturalWidth) go(); else img.addEventListener('load', go, { once: true });
+  };
+  ws.forEach(w => w.frs.forEach((_, i) => bake(w, i)));
   const box = lanes[0] && lanes[0].box;
   if (!box) return;
   const setFrame = (w, f) => { if (w.cur !== f) { w.frs[w.cur]?.classList.remove('on'); w.cur = f; w.frs[f]?.classList.add('on'); } };
@@ -4541,7 +4560,7 @@ function startWalkers(lanes) {
   const tick = now => {
     if (!box.isConnected) return;
     // 30fps로 충분: 프레임마다 스타일을 쓰면 폰에서 스크롤·터치가 버벅임
-    if (now - last < 32 || document.hidden) { walkRaf = requestAnimationFrame(tick); return; }
+    if (now - last < (now - twInput > 20000 ? 100 : 32) || document.hidden) { walkRaf = requestAnimationFrame(tick); return; }
     const dt = Math.min(.08, (now - last) / 1000); last = now;
     const vy0 = scv ? scv.scrollTop / twZ - 160 : -1e9, vy1 = scv ? (scv.scrollTop + scv.clientHeight) / twZ + 160 : 1e9;
     for (const w of ws) {
