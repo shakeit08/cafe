@@ -379,7 +379,9 @@ const ART_TOOLS = OVR.tool || null;
 const WHEEL = OVR.wheel || null;
 const STORY_IMG = OVR.story || null;
 const iconBag = (s) => OVR.bag ? imgTag(OVR.bag[s - 1]) : '🎁';
-const iconAnimal = (i, happy = true) => OVR.animal ? imgTag((!happy && OVR.animalDot && OVR.animalDot[i]) ? OVR.animalDot[i] : OVR.animal[i]) : svg(ANIMALS[i].art);
+// 입고 있는 옷(스킨)이 있으면 그 얼굴로 바꿔 보여 줌: SKIN_FACE[이웃 번호] = 옷 얼굴 번호
+const SKIN_FACE = {};
+const iconAnimal = (i, happy = true) => (i = SKIN_FACE[i] ?? i, OVR.animal) ? imgTag((!happy && OVR.animalDot && OVR.animalDot[i]) ? OVR.animalDot[i] : OVR.animal[i]) : svg(ANIMALS[i].art);
 
 // ===================== CAFE SCENE =====================
 const SW = 2.5;

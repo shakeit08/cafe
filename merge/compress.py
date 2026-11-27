@@ -62,6 +62,10 @@ def main():
         elif k in ('animal', 'animalDot'):  # 6장부터 새 이웃 얼굴(원래 크기)은 화질 95, 예전 얼굴은 그대로
             for i, x in enumerate(v):
                 if isinstance(x, str) and len(x) > 200: plan.append((v, i, want(x, 'LL' if i >= 32 else 76, 75)))
+        elif k == 'wheel':  # 옷장 아이콘(새 그림)은 화질 95, 나머지는 예전대로
+            for wk, wv in v.items():
+                if wk == 'ward' and isinstance(wv, str): plan.append((v, wk, want(wv, 'LL')))
+                else: walk({wk: wv}, 76, 75) if not isinstance(wv, str) else (plan.append((v, wk, want(wv, 76, 75))) if len(wv) > 200 else None)
         else: walk(v, QS.get(k, 76), 75 if k not in QS else 70)
     if jobs:
         with Pool(os.cpu_count()) as pool:

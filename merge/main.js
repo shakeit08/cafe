@@ -1,5 +1,5 @@
 // ===================== GAME =====================
-const { CHAINS, CHAIN_KEYS, XMAS_CHAINS, XMAS_ART, ANIMALS, UI, iconItem, iconGen, genName, hasGenArt, iconBag, iconAnimal, cafeScene, areaScene, lockedScene, SPOT_BOX, CAFE_BOX, paintBox, spotPos, HOUSE, townLot, townFence, TOWN_BG, TOWN_BG2, WALK, ST_IMG, DEB_IMG, ST_DIM, MAP, ART_TOOLS, WHEEL, EXT_FILES, extFill, STORY_IMG, iconRes, iconChest } = ART;
+const { CHAINS, CHAIN_KEYS, XMAS_CHAINS, XMAS_ART, SKIN_FACE, ANIMALS, UI, iconItem, iconGen, genName, hasGenArt, iconBag, iconAnimal, cafeScene, areaScene, lockedScene, SPOT_BOX, CAFE_BOX, paintBox, spotPos, HOUSE, townLot, townFence, TOWN_BG, TOWN_BG2, WALK, ST_IMG, DEB_IMG, ST_DIM, MAP, ART_TOOLS, WHEEL, EXT_FILES, extFill, STORY_IMG, iconRes, iconChest } = ART;
 const TAG = '[달콤 머지 카페]';
 const COLS = 7, ROWS = 9, START_ROWS = 6;
 const ROW_COST = { 6: 200, 7: 500, 8: 1000 };
@@ -962,6 +962,12 @@ function sanitize(o) {
   if (o.coll && typeof o.coll === 'object') for (const k in o.coll) if (o.coll[k]) s.coll[k] = true;
   s.evTab = !!o.evTab;
   if (typeof o.seenVer === 'string') s.seenVer = o.seenVer;
+  if (o.skin && typeof o.skin === 'object') { s.skin = { own: {}, on: {} }; for (const k in SKINS) { if (o.skin.own && o.skin.own[k]) s.skin.own[k] = true; if (o.skin.on && o.skin.on[k] && s.skin.own[k]) s.skin.on[k] = true; } }
+  if (o.pass && typeof o.pass === 'object' && typeof o.pass.id === 'string') {
+    const P = o.pass, ok = a => Array.isArray(a) ? a.filter(n => Number.isInteger(n) && n >= 1 && n <= PASS_LV).slice(0, PASS_LV) : [];
+    s.pass = { id: P.id, pts: Math.max(0, Math.floor(+P.pts || 0)), gold: !!P.gold, cf: ok(P.cf), cg: ok(P.cg), day: typeof P.day === 'string' ? P.day : '', base: P.base && typeof P.base === 'object' ? { merges: +P.base.merges || 0, orders: +P.base.orders || 0, made: +P.base.made || 0 } : null,
+      m: Array.isArray(P.m) ? P.m.filter(x => x && PASS_MIS[x.t] && Number.isInteger(x.g) && Number.isInteger(x.p)).slice(0, 3).map(x => ({ t: x.t, g: x.g, p: x.p, got: !!x.got })) : [] };
+  }
   if (o.street && typeof o.street === 'object') for (const ch of CHS) STREET[ch].forEach((_, j) => { const k = stKey(ch, j), v = o.street[k]; if (Number.isInteger(v) && v > 0) s.street[k] = Math.min(3, v); });
   if (o.stBeat && typeof o.stBeat === 'object') for (const ch of CHS) if (Number.isInteger(o.stBeat[ch])) s.stBeat[ch] = o.stBeat[ch];
   if (o.pokes && typeof o.pokes.d === 'string' && Array.isArray(o.pokes.l)) s.pokes = { d: o.pokes.d, l: o.pokes.l.filter(k => typeof k === 'string') };
@@ -1081,6 +1087,116 @@ const RES_DESC = {
 };
 const CHEST_DESC = ['', '이웃이 살짝 두고 간 작은 선물 상자예요.', '민트색 포장지가 예쁜 선물 상자예요.', '왕관 리본을 단 특별한 선물 상자예요.'];
 const BAG_DESC = ['', '작은 보따리 안에 이것저것 들어 있어요.', '이웃들이 챙겨 준 선물 보따리예요.', '무엇이 나올지 두근두근 큰 선물 보따리예요.'];
+// ── 크리스마스 시즌 패스 ──
+// 시즌 기간(evOn)에만 열림. 매일 미션 3개로 패스 점수를 모아 20단계 보상을 받음. 황금 줄은 500코인으로 열림.
+const PASS_ID = () => { const d = new Date(); return 'xmas' + (d.getMonth() === 0 ? d.getFullYear() - 1 : d.getFullYear()); };
+const PASS_LV = 20, PASS_STEP = 150, PASS_GOLD = 500;
+const SKINS = {
+  bear_tree: { a: 0, face: 44, name: '트리 옷', how: '크리스마스 시즌 패스 황금 줄 20단계' },
+  rabbit_santa: { a: 1, face: 45, name: '산타 옷', how: '크리스마스 시즌 패스 기본 줄 10단계' },
+};
+const PASS_MIS = {
+  merges: { name: n => `재료 ${n}번 합치기`, g: [30, 50, 80] },
+  orders: { name: n => `주문 ${n}개 완료하기`, g: [3, 5, 8] },
+  made: { name: n => `재료 ${n}개 만들기`, g: [40, 60, 100] },
+};
+// 보상: [종류, 양] (e 에너지, c 코인, cut 가위, up 강화, bag 보따리, box 선물 상자, skin 옷)
+const PASS_FREE = [['e', 30], ['c', 300], ['cut', 1], ['e', 40], ['bag', 1], ['c', 500], ['up', 1], ['e', 50], ['box', 1], ['skin', 'rabbit_santa'],
+  ['c', 700], ['e', 50], ['cut', 1], ['bag', 2], ['c', 900], ['e', 60], ['up', 1], ['box', 2], ['c', 1200], ['e', 80]];
+const PASS_GOLDR = [['e', 60], ['bag', 1], ['c', 600], ['up', 1], ['e', 80], ['box', 1], ['cut', 2], ['c', 1000], ['bag', 2], ['e', 100],
+  ['up', 2], ['c', 1500], ['box', 2], ['cut', 2], ['e', 120], ['bag', 3], ['c', 2000], ['up', 2], ['box', 3], ['skin', 'bear_tree']];
+const iconAnimalRaw = (i, h) => { const s = SKIN_FACE[i]; delete SKIN_FACE[i]; const r = iconAnimal(i, h); if (s != null) SKIN_FACE[i] = s; return r; };
+const walkKey = ix => { if (S && S.skin) for (const k in SKINS) if (SKINS[k].a === ix && S.skin.on[k] && WALK[k]) return k; return ANIMALS[ix].key; };
+function applySkins() {
+  for (const k in SKINS) delete SKIN_FACE[SKINS[k].a];
+  if (S && S.skin) for (const k in SKINS) if (S.skin.on[k]) SKIN_FACE[SKINS[k].a] = SKINS[k].face;
+}
+function passState() {
+  if (!evOn()) return null;
+  const id = PASS_ID();
+  if (!S.pass || S.pass.id !== id) S.pass = { id, pts: 0, gold: false, cf: [], cg: [], day: '', base: null, m: [] };
+  const P = S.pass;
+  if (P.day !== today()) {
+    P.day = today(); P.base = { merges: S.stats.merges, orders: S.stats.orders, made: S.stats.made };
+    const tier = [0, 1, 2].sort(() => Math.random() - .5);
+    P.m = Object.keys(PASS_MIS).map((t, i) => ({ t, g: PASS_MIS[t].g[tier[i]], p: [50, 75, 100][tier[i]], got: false }));
+    save();
+  }
+  return P;
+}
+const passLv = P => Math.min(PASS_LV, Math.floor(P.pts / PASS_STEP));
+const misNow = (P, x) => Math.max(0, (S.stats[x.t] || 0) - ((P.base && P.base[x.t]) || 0));
+function passReady() { const P = passState(); if (!P) return false; const lv = passLv(P); if (P.m.some(x => !x.got && misNow(P, x) >= x.g)) return true; for (let n = 1; n <= lv; n++) if (!P.cf.includes(n) || (P.gold && !P.cg.includes(n))) return true; return false; }
+function rwIcon(r) {
+  if (r[0] === 'skin') return iconAnimal(SKINS[r[1]].face);
+  if (r[0] === 'e') return UI.bolt; if (r[0] === 'c') return UI.coin;
+  if (r[0] === 'bag') return iconBag(r[1]); if (r[0] === 'box') return iconChest(r[1]);
+  return toolIcon(r[0]);
+}
+const rwLabel = r => r[0] === 'skin' ? `${ANIMALS[SKINS[r[1]].a].name} ${SKINS[r[1]].name}` : r[0] === 'e' || r[0] === 'c' ? '×' + r[1] : (r[0] === 'cut' || r[0] === 'up') && r[1] > 1 ? '×' + r[1] : '';
+function giveRw(r) {
+  if (r[0] === 'skin') { S.skin = S.skin || { own: {}, on: {} }; S.skin.own[r[1]] = true; S.skin.on[r[1]] = true; applySkins(); renderAll(); return { icon: rwIcon(r), txt: `${ANIMALS[SKINS[r[1]].a].name} ${SKINS[r[1]].name}`, sub: '마을 옷장에서 입고 벗을 수 있어요' }; }
+  if (r[0] === 'c') { S.coins += r[1]; return { icon: UI.coin, txt: `코인 +${r[1]}` }; }
+  if (r[0] === 'cut' || r[0] === 'up') { let g; for (let k = 0; k < r[1]; k++) g = drawGive(r[0]); if (r[1] > 1) g.txt += ` ×${r[1]}`; return g; }
+  return drawGive(r[0], r[1]);
+}
+function openPass() {
+  const P = passState(); if (!P) { toast('시즌 패스는 크리스마스 시즌(12월 1일~1월 7일)에 열려요'); return; }
+  const draw = m => {
+    const lv = passLv(P), into = P.pts - lv * PASS_STEP;
+    const row = n => {
+      const f = PASS_FREE[n - 1], g = PASS_GOLDR[n - 1], open = n <= lv;
+      const cell = (r, got, row) => `<div class="ps-c ${row} ${got ? 'got' : open && (row === 'f' || P.gold) ? 'can' : ''}" ${!got && open && (row === 'f' || P.gold) ? `data-cl="${row}${n}"` : ''}><i>${rwIcon(r)}</i>${rwLabel(r) ? `<b>${esc(rwLabel(r))}</b>` : ''}${got ? '<em>✓</em>' : row === 'g' && !P.gold ? '<em class="lk">🔒</em>' : ''}</div>`;
+      return `<div class="ps-r ${open ? 'on' : ''}">${cell(f, P.cf.includes(n), 'f')}<div class="ps-n"><span>${n}</span></div>${cell(g, P.cg.includes(n), 'g')}</div>`;
+    };
+    m.querySelector('.ps-body').innerHTML = `
+      <div class="ps-hd"><div class="ps-hf">기본</div><div class="ps-hg">황금 ${P.gold ? '' : `<button class="mc-btn pk" data-gold>${PASS_GOLD}<i>${UI.coin}</i> 열기</button>`}</div></div>
+      <div class="ps-list">${Array.from({ length: PASS_LV }, (_, k) => row(k + 1)).join('')}</div>
+      <div class="ps-bar"><span>${lv >= PASS_LV ? '모두 달성!' : `${lv + 1}단계까지 ${into}/${PASS_STEP}`}</span><i style="width:${lv >= PASS_LV ? 100 : into / PASS_STEP * 100}%"></i></div>
+      <h4 class="ps-mh">오늘의 미션</h4>
+      ${P.m.map((x, k) => { const now = Math.min(x.g, misNow(P, x)), done = now >= x.g; return `<div class="ps-m ${x.got ? 'got' : done ? 'done' : ''}"><div class="t">${esc(PASS_MIS[x.t].name(x.g))}<span>${now}/${x.g}</span><u style="width:${now / x.g * 100}%"></u></div>${x.got ? '<b class="ok">받음</b>' : done ? `<button class="mc-btn mt" data-mis="${k}">+${x.p}</button>` : `<b>+${x.p}</b>`}</div>`; }).join('')}
+      <div class="mc-sub" style="text-align:center;margin-top:6px">미션은 매일 바뀌어요 · 시즌은 1월 7일까지</div>`;
+    m.querySelectorAll('[data-mis]').forEach(b => b.onclick = () => { const x = P.m[+b.dataset.mis]; if (x.got || misNow(P, x) < x.g) return; x.got = true; P.pts += x.p; sfx('order'); save(); draw(m); renderPassBtn(); });
+    m.querySelectorAll('[data-cl]').forEach(b => b.onclick = () => {
+      const row = b.dataset.cl[0], n = +b.dataset.cl.slice(1), L = row === 'f' ? P.cf : P.cg;
+      if (L.includes(n) || n > passLv(P) || (row === 'g' && !P.gold)) return;
+      L.push(n); const g = giveRw((row === 'f' ? PASS_FREE : PASS_GOLDR)[n - 1]); sfx('decor'); haptic(14); renderTop(); save(); draw(m); renderPassBtn();
+      toast(`${esc(g.txt)}${g.sub ? ` <span class="mc-mini">${esc(g.sub)}</span>` : ''}`, { icon: g.icon });
+    });
+    m.querySelector('[data-gold]')?.addEventListener('click', () => {
+      if (P.gold) return; if (S.coins < PASS_GOLD) { toast('코인이 모자라요'); return; }
+      S.coins -= PASS_GOLD; P.gold = true; sfx('coin'); renderTop(); save(); draw(m); renderPassBtn();
+    });
+  };
+  const m = modal(`<h3>크리스마스 시즌 패스</h3><div class="ps-body"></div><div class="acts"><button class="mc-btn pk" data-x>닫기</button></div>`);
+  m.querySelector('.mc-card')?.classList.add('ps-card');
+  draw(m);
+}
+function openWardrobe() {
+  S.skin = S.skin || { own: {}, on: {} };
+  const draw = m => {
+    m.querySelector('.wd-body').innerHTML = [0, 1].map(a => {
+      const ks = Object.keys(SKINS).filter(k => SKINS[k].a === a), cur = ks.find(k => S.skin.on[k]) || '';
+      const card = (k, face, name, own, how) => `<button class="wd-c ${cur === k ? 'on' : ''} ${own ? '' : 'lk'}" ${own ? `data-wear="${a}:${k}"` : ''}><i>${face}</i><b>${esc(name)}</b>${own ? (cur === k ? '<em>입는 중</em>' : '') : `<small>${esc(how)}</small><span class="lock">🔒</span>`}</button>`;
+      return `<div class="wd-r"><h4>${esc(ANIMALS[a].name)}</h4><div class="wd-g">${card('', iconAnimalRaw(a), '기본 옷', true)}${ks.map(k => card(k, iconAnimal(SKINS[k].face), SKINS[k].name, !!S.skin.own[k], SKINS[k].how)).join('')}</div></div>`;
+    }).join('');
+    m.querySelectorAll('[data-wear]').forEach(b => b.onclick = () => {
+      const [a, k] = b.dataset.wear.split(':');
+      for (const x in SKINS) if (SKINS[x].a === +a) delete S.skin.on[x];
+      if (k) S.skin.on[k] = true;
+      applySkins(); save(); sfx('decor'); renderOrders(); draw(m);
+      if ($('.mc-town')) renderTown();
+    });
+  };
+  const m = modal(`<h3>옷장</h3><div class="wd-body"></div><div class="acts"><button class="mc-btn pk" data-x>닫기</button></div>`);
+  draw(m);
+}
+function renderPassBtn() {
+  const b = $('.mc-passb'); if (!b || !S) return;
+  const on = evOn(); b.style.display = on ? '' : 'none';
+  if (on && !b._ic) { b._ic = 1; b.querySelector('i').innerHTML = iconAnimal(44); }
+  if (on) b.querySelector('.dot').style.display = passReady() ? '' : 'none';
+}
 // 시즌 이벤트 버튼: 이벤트마다 전용 아이콘을 만들면 icon만 바꾸면 됨
 const EV_BTN = { name: '크리스마스', icon: () => ART_TOOLS && ART_TOOLS.ev_xmas ? `<img src="${ART_TOOLS.ev_xmas}" alt="">` : iconGen('xmas') };
 function setTab(ev) {
@@ -1870,6 +1986,20 @@ html,body{margin:0;height:100%;background:transparent!important;overflow:hidden}
 @media (max-width:480px){.mc-panel{width:100vw;height:100dvh;border:none;border-radius:0;box-shadow:none}}
 @media (min-width:481px) and (max-height:700px){.mc-panel{height:100dvh;border-top:none;border-bottom:none;border-radius:0;box-shadow:none}}
 .mc-zb{position:absolute;top:12px;right:12px;z-index:5;display:none;align-items:center;gap:5px;font-family:inherit;font-size:14px;color:#5b3a32;background:#fff7ec;border:2.5px solid #5b3a32;border-radius:99px;box-shadow:0 3px 0 #5b3a32;padding:5px 12px;cursor:pointer}#mc.zok .mc-zb{display:flex}#mc.big .mc-panel{width:580px}.mc-wrap{background-repeat:repeat-x,repeat}
+.mc-passb .pic{display:block}.tw-side.l .tw-spin{background:none!important;border:0!important;box-shadow:none!important;padding:0!important;border-radius:0!important}.tw-side.l .tw-spin>img,.tw-side.l .tw-spin>svg{border-radius:0!important;filter:drop-shadow(1.5px 0 0 #fff) drop-shadow(-1.5px 0 0 #fff) drop-shadow(0 1.5px 0 #fff) drop-shadow(0 -1.5px 0 #fff) drop-shadow(0 2px 0 rgba(91,58,50,.3))}.tw-side.l .tw-spin:active{transform:translateY(2px) scale(.96)}.tw-ward .wi{display:block;width:100%;height:100%}.tw-ward .wi img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(1.5px 0 0 #fff) drop-shadow(-1.5px 0 0 #fff) drop-shadow(0 1.5px 0 #fff) drop-shadow(0 -1.5px 0 #fff) drop-shadow(0 2px 0 rgba(91,58,50,.3))}
+.wd-r h4{margin:8px 0 5px}.wd-g{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.wd-c{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 4px;border:2.5px solid #5b3a32;border-radius:14px;background:#fff;font-family:inherit;color:#5b3a32;cursor:pointer}.wd-c i{display:block;width:58px;height:58px}.wd-c b{font-size:13.5px}.wd-c em{font-style:normal;font-size:11.5px;color:#fff;background:#ff8fa3;border-radius:99px;padding:1px 7px}.wd-c small{font-size:10.5px;line-height:1.25;text-align:center;color:#a07a6a}.wd-c.on{background:#fff0f3;box-shadow:0 0 0 3px #ff8fa3}.wd-c.lk{cursor:default;background:#f6efe8}.wd-c.lk i{opacity:.45;filter:grayscale(.5)}.wd-c .lock{position:absolute;right:5px;top:4px;font-size:13px}.ps-card{max-width:440px!important;width:94%}.mc-passb .dot{position:absolute;top:2px;right:6px;width:13px;height:13px;border-radius:50%;background:#ff5d73;border:2px solid #5b3a32}
+.ps-hd{display:grid;grid-template-columns:1fr 34px 1fr;gap:6px;margin:4px 0 6px}.ps-hd>div{text-align:center;font-size:15px;padding:5px 4px;border-radius:12px;border:2.5px solid #5b3a32;display:flex;align-items:center;justify-content:center;gap:6px}
+.ps-hf{grid-column:1;background:#e8f1ff}.ps-hg{grid-column:3;background:#ffe36e}.ps-hd>div{white-space:nowrap;min-height:38px}.ps-hg .mc-btn{padding:2px 8px;font-size:12px;display:inline-flex;align-items:center;gap:2px;margin:0;box-shadow:0 2px 0 #5b3a32}.ps-hg .mc-btn i{display:inline-block;width:15px;height:15px}
+.ps-list{max-height:min(34vh,330px);overflow-y:auto;padding:2px}
+.ps-r{display:grid;grid-template-columns:1fr 34px 1fr;gap:6px;align-items:center;margin-bottom:6px;opacity:.62}.ps-r.on{opacity:1}
+.ps-n{width:30px;height:30px;margin:auto;border-radius:9px;transform:rotate(45deg);background:#cfd8f0;border:2.5px solid #5b3a32;display:flex;align-items:center;justify-content:center;font-size:13px}.ps-r.on .ps-n{background:#ffd75a}.ps-n span{transform:rotate(-45deg)}
+.ps-c{position:relative;height:54px;border:2.5px solid #5b3a32;border-radius:14px;display:flex;align-items:center;justify-content:center;gap:4px;background:#f3f7ff}.ps-c.g{background:#fff8da}
+.ps-c i{display:block;width:36px;height:36px}.ps-c b{font-size:13px;white-space:nowrap}.ps-c em{position:absolute;right:4px;bottom:2px;font-style:normal;font-size:13px}.ps-c em.lk{filter:grayscale(.2)}
+.ps-c.can{cursor:pointer;box-shadow:0 0 0 3px #8fd6b9}.ps-c.got{opacity:.5}
+.ps-bar{position:relative;height:22px;margin:4px 0 8px;border:2.5px solid #5b3a32;border-radius:99px;background:#fff;overflow:hidden}.ps-bar i{position:absolute;left:0;top:0;bottom:0;background:#ff8fa3}.ps-bar span{position:relative;z-index:1;display:block;text-align:center;font-size:12.5px;line-height:17px}
+.ps-mh{margin:6px 0 4px}.ps-m{display:flex;align-items:center;gap:8px;background:#fff;border:2px solid #f0d9c2;border-radius:12px;padding:6px 8px;margin-bottom:5px}
+.ps-m .t{flex:1;position:relative;font-size:13.5px;padding-bottom:7px}.ps-m .t span{float:right}.ps-m .t u{position:absolute;left:0;bottom:0;height:4px;border-radius:4px;background:#ffb3c1;text-decoration:none}
+.ps-m>b{font-size:13.5px;min-width:44px;text-align:center}.ps-m .ok{color:#3c9a6e}.ps-m.got{opacity:.6}.ps-m .mc-btn{padding:4px 10px}
 .mc-top{display:flex;align-items:center;gap:5px;padding:9px 8px 6px;flex-shrink:0}
 .mc-lv{position:relative;width:40px;height:40px;border-radius:50%;border:2.5px solid #5b3a32;background:conic-gradient(#ff6b81 calc(var(--p)*1%),#f6dccf 0);flex-shrink:0;box-shadow:0 2px 0 #5b3a32;cursor:pointer}
 .mc-lv b{position:absolute;inset:4px;border-radius:50%;background:#fff;border:2px solid #5b3a32;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:15px;line-height:1}
@@ -2296,6 +2426,7 @@ html,body{margin:0;height:100%;background:transparent!important;overflow:hidden}
 .tw-side{position:absolute;top:8px;z-index:50;display:flex;flex-direction:column;gap:14px}
 .tw-side.l{left:8px}.tw-side.r{right:8px}
 .tw-mail{position:absolute!important;left:auto!important;right:8px!important;top:50%!important;margin-top:-26px;z-index:50;width:52px;height:52px;border-radius:50%;padding:3px;overflow:visible}
+.mc-town.lst .tw-mail{top:var(--mailY,50%)!important}.mc-town.lst .tw-prog,.mc-town.lst .tw-list{position:relative;z-index:60;background:#fff7ec}
 .tw-mail>img,.tw-mail>svg{width:100%;height:100%;object-fit:contain;display:block}
 .tw-mail .lb{position:absolute;left:50%;bottom:-9px;transform:translateX(-50%);font-size:11px;line-height:1;background:#fff;border:2px solid #5b3a32;border-radius:99px;padding:2px 6px 1px;white-space:nowrap;color:#5b3a32}
 .tw-mail .bd{position:absolute;top:-4px;right:-4px;min-width:20px;height:20px;padding:0 5px;border-radius:99px;background:#ff6f8e;color:#fff;font-size:12px;line-height:20px;text-align:center;border:2px solid #fff}
@@ -2479,7 +2610,7 @@ function buildUI() {
       </div>
       <div class="mc-ordw"><button class="mc-evb" data-act="evsw"></button><div class="mc-orders"></div></div><div class="mc-osb"><i></i></div>
       <div class="mc-wrap"><div class="mc-board"></div><div class="mc-tmode"></div></div>
-      <div class="mc-bot"><button class="mc-fab mc-boxb" data-act="box" title="보관함"><i class="${ART_TOOLS && ART_TOOLS.box ? 'pic' : ''}">${ART_TOOLS && ART_TOOLS.box ? `<img src="${ART_TOOLS.box}" alt="">` : ICO.box}</i><span>보관함</span><b class="n"></b></button><div class="mc-info"></div><button class="mc-fab mc-cafeb" data-act="cafe" id="mc-cafeb" title="동네 꾸미기"><span class="ic ${ART_TOOLS && ART_TOOLS.town ? 'pic' : ''}">${ART_TOOLS && ART_TOOLS.town ? `<img src="${ART_TOOLS.town}" alt="">` : HOUSE}</span><span class="sv"><span class="v"></span><span class="st">${UI.star}</span></span><span class="dot"></span></button></div>
+      <div class="mc-bot"><button class="mc-fab mc-passb" data-act="pass" title="시즌 패스" style="display:none"><i class="pic"></i><span>패스</span><b class="dot"></b></button><button class="mc-fab mc-boxb" data-act="box" title="보관함"><i class="${ART_TOOLS && ART_TOOLS.box ? 'pic' : ''}">${ART_TOOLS && ART_TOOLS.box ? `<img src="${ART_TOOLS.box}" alt="">` : ICO.box}</i><span>보관함</span><b class="n"></b></button><div class="mc-info"></div><button class="mc-fab mc-cafeb" data-act="cafe" id="mc-cafeb" title="동네 꾸미기"><span class="ic ${ART_TOOLS && ART_TOOLS.town ? 'pic' : ''}">${ART_TOOLS && ART_TOOLS.town ? `<img src="${ART_TOOLS.town}" alt="">` : HOUSE}</span><span class="sv"><span class="v"></span><span class="st">${UI.star}</span></span><span class="dot"></span></button></div>
       <div class="mc-toasts"></div>
     </div>`;
   document.body.appendChild(root);
@@ -2495,6 +2626,7 @@ function buildUI() {
     else if (act === 'dex') openDex();
     else if (act === 'cafe') openTownSafe();
     else if (act === 'set') openSettings();
+    else if (act === 'pass') openPass();
     else if (act === 'order') completeOrder(+a.dataset.id);
     else if (act === 'order-evo') openEvoIt({ c: a.dataset.chain, l: +a.dataset.level });
     else if (act === 'sell') sellSelected();
@@ -2601,7 +2733,7 @@ function watchLayout() {
 // ---------- render ----------
 function renderAll() {
   if (S.onEv) ensureXmasGenerators(S.board, S.rows);
-  renderTop(); renderOrders(); renderBoard(); renderInfo(); renderMode(); renderBoxBtn();
+  applySkins(); renderTop(); renderOrders(); renderBoard(); renderInfo(); renderMode(); renderBoxBtn(); renderPassBtn();
 }
 
 function twHud() {
@@ -3153,6 +3285,12 @@ function toast(html, opt = {}) {
   setTimeout(() => { t.animate([{ opacity: 1 }, { opacity: 0, transform: 'translateY(-8px)' }], { duration: 250 }).onfinish = () => t.remove(); }, opt.ms || 2600);
 }
 const NOTES = [
+  ['2.21.67', [
+    '크리스마스 시즌 패스가 생겼어요! 시즌 동안(12월 1일~1월 7일) 아래쪽 패스 버튼에서 열 수 있어요.',
+    '매일 바뀌는 미션 3개를 끝내고 점수를 모으면 20단계까지 보상을 받아요. 황금 줄은 500코인으로 열 수 있어요.',
+    '기본 줄 10단계에서 솜이 산타 옷, 황금 줄 20단계에서 보리 트리 옷을 받을 수 있어요.',
+    '마을에 옷장이 생겼어요. 받은 옷을 입히면 보리와 솜이가 어느 마을에서든 그 옷을 입고 돌아다녀요.',
+  ]],
   ['2.21.63', [
     '반짝 바닷가 마을 7장 「야자수 열대섬」이 열렸어요! 하얀 항구를 다 꾸미면 갈 수 있어요.',
     '새 가게 6곳과 새 이웃 대롱·재잘·통통·꾸벅·쫑긋·폴짝이 기다리고 있어요. 바다에서 들려오는 이상한 소리의 정체도 조금 더 밝혀져요.',
@@ -3851,7 +3989,7 @@ function openTown() {
   townCh = (AREAS[defaultArea()] && AREAS[defaultArea()].ch) || 1;
   v.innerHTML = `<div class="tw-hud"><div class="mc-pill tw-en" data-tw="shop"><span class="ic">${UI.bolt}</span><span class="v"></span><span class="pl">${ICO.plus}</span></div><div class="mc-pill tw-co" data-tw="shop"><span class="ic">${UI.coin}</span><span class="v"></span></div><div class="mc-sp"></div><div class="mc-pill cf-st"><span class="ic">${UI.star}</span><span class="v"></span>&nbsp;</div></div>
     <div class="tw-wrap"><div class="tw-scroll"><div class="tw-street"></div></div><div class="cf-ti tw-ti"></div>
-      <div class="tw-side l"><button class="tw-spin" data-tw="spin" title="오늘의 룰렛">${WHEEL ? `<img src="${WHEEL.btn}" alt="" draggable="false">` : '🎡'}<span class="dot"></span><span class="lb">룰렛</span></button><button class="tw-spin tw-draw" data-tw="draw" title="행운 뽑기">${DRAW_ICON()}<span class="lb">뽑기</span></button></div>
+      <div class="tw-side l"><button class="tw-spin" data-tw="spin" title="오늘의 룰렛">${WHEEL ? `<img src="${WHEEL.btn}" alt="" draggable="false">` : '🎡'}<span class="dot"></span><span class="lb">룰렛</span></button><button class="tw-spin tw-draw" data-tw="draw" title="행운 뽑기">${DRAW_ICON()}<span class="lb">뽑기</span></button><button class="tw-spin tw-ward" data-tw="ward" title="옷장"><span class="wi">${WHEEL && WHEEL.ward ? `<img src="${WHEEL.ward}" alt="" draggable="false">` : iconAnimal(44)}</span><span class="lb">옷장</span></button></div>
       <div class="tw-side r"><button class="tw-spin tw-alb" data-tw="album" title="이야기 앨범">${ALBUM_ICON()}<span class="lb">앨범</span></button><button class="tw-spin tw-lst" data-tw="list" title="목록">${ICO.book}<span class="lb">목록</span></button></div>
       <button class="tw-spin tw-mail" data-tw="mail" title="우편함">${MAIL_ICON()}<span class="lb">우편함</span></button>
       <button class="tw-arr l" data-tw="arrL">‹</button><button class="tw-arr r" data-tw="arrR">›</button></div>
@@ -3907,6 +4045,7 @@ function openTown() {
     else if (a === 'album') openReplay();
     else if (a === 'mail') openMail();
     else if (a === 'draw') openDraw();
+    else if (a === 'ward') openWardrobe();
     else if (/^ch\d$/.test(a)) { townCh = +a[2]; stPop = null; v.querySelector('.tw-season')?.remove(); renderTown(true); }
     else if (/^v\d$/.test(a)) {
       const vi = +a[1], V = VILLAGES[vi]; stPop = null; v.querySelector('.tw-season')?.remove();
@@ -3983,6 +4122,7 @@ function renderTown(first) {
   townNext = nx;
   // 목록을 펼친 동안에는 마을 칸이 줄어들어 있으니, 펼치기 전 높이로 그림
   const wH = v.querySelector('.tw-wrap').clientHeight; if (!v.classList.contains('lst') || !townH) townH = wH;
+  v.style.setProperty('--mailY', (townH / 2) + 'px');
   const Ha = Math.max(260, townH - 6), cw = sc.clientWidth || 360;
   const seq = [];
   const addGap = g => ST.forEach((it, j) => {
@@ -4230,14 +4370,17 @@ function renderTown(first) {
   sc.style.background = 'transparent';
   st.style.background = c5 ? '#91cefd' : c4 ? '#c6e0fe' : c3 ? '#9ad6fd' : c2 ? '#a2d0fc' : '#94d7fe';
   st.classList.toggle('nar', cw < sc.clientWidth - 4);
-  const walk = ix => WALK[ANIMALS[ix].key];
+  const walk = ix => WALK[walkKey(ix)];
   const homeCh = ix => (AREAS.find(A => A.k === ANIMALS[ix].ch2) || {}).ch;
   const kinds = townCh === 1 ? ANIMALS.map((a, ix) => ix).filter(ix => !ANIMALS[ix].ch2 && walk(ix))
     : [...ANIMALS.map((a, ix) => ix).filter(ix => ANIMALS[ix].ch2 && homeCh(ix) === townCh && done(ANIMALS[ix].ch2) && walk(ix)), ...(c3 ? [6, 7] : [0, 1])].filter(walk);
-  const nA = townCh === 1 ? Math.min(kinds.length, 1 + AREAS.filter(A => chOf(A) === 1 && done(A.k)).length) : Math.min(6, kinds.length);
+  // 시즌 패스 옷을 입은 보리·솜이는 어느 마을에서든 같이 걸어 다님
+  const worn = [0, 1].filter(ix => walkKey(ix) !== ANIMALS[ix].key);
+  if (worn.length) { const rest = kinds.filter(ix => !worn.includes(ix)); kinds.length = 0; kinds.push(...worn, ...rest); }
+  const nA = townCh === 1 ? Math.min(kinds.length, Math.max(worn.length, 1 + AREAS.filter(A => chOf(A) === 1 && done(A.k)).length)) : Math.min(6 + worn.length, kinds.length);
   // 꾸미기 한 번 할 때마다 마을 전체(길·바닥·주민)를 새로 그리면 버벅임 → 배치가 같으면 바뀐 소품만 갈아 끼움
   const itemsHtml = objs.map(o => o.h).join('');
-  const sig = [townCh, cw, HT.toFixed(0), ground.length, top.length, JSON.stringify(paths).length, kinds.slice(0, nA).join(',')].join('|') + ground + top;
+  const sig = [townCh, cw, HT.toFixed(0), ground.length, top.length, JSON.stringify(paths).length, kinds.slice(0, nA).map(walkKey).join(',')].join('|') + ground + top;
   let ibox = st.querySelector('.tw-items');
   const reuse = !first && ibox && st._sig === sig;
   if (reuse) {
@@ -4524,9 +4667,9 @@ function startWalkers(lanes) {
     const el = document.createElement('div');
     el.className = 'tw-w';
     el.style.cssText = `height:${size.toFixed(0)}px;top:${(ln.G + ln.U * .11 - size).toFixed(0)}px;z-index:${Math.round((ln.G + ln.U * .11) * 10)}`;
-    el.innerHTML = `<span class="tw-f">${(WALK[ANIMALS[ix].key] || []).map(u => `<img alt="" draggable="false" src="${u}">`).join('')}</span><div class="tw-bub"></div>`;
+    el.innerHTML = `<span class="tw-f">${(WALK[walkKey(ix)] || []).map(u => `<img alt="" draggable="false" src="${u}">`).join('')}</span><div class="tw-bub"></div>`;
     ln.box.appendChild(el);
-    ws.push({ el, ix, size, sp: ln.U * .11, lo: ln.x0 + size * .4, hi: ln.x1 - size * .4, lane: ln.r, key: ANIMALS[ix].key, img: el.querySelector('.tw-f'), frs: [...el.querySelectorAll('.tw-f img')], bub: el.querySelector('.tw-bub'), fr: WALK[ANIMALS[ix].key], x: ln.x0 + (W / (ln.kinds.length + 1)) * (n + 1) + (Math.random() - .5) * W * .2, dir: Math.random() < .5 ? 1 : -1, st: 'walk', t: 2 + Math.random() * 4, ph: Math.random() * 4, cur: -1, mate: null, talks: 0 });
+    ws.push({ el, ix, size, sp: ln.U * .11, lo: ln.x0 + size * .4, hi: ln.x1 - size * .4, lane: ln.r, key: ANIMALS[ix].key, img: el.querySelector('.tw-f'), frs: [...el.querySelectorAll('.tw-f img')], bub: el.querySelector('.tw-bub'), fr: WALK[walkKey(ix)], x: ln.x0 + (W / (ln.kinds.length + 1)) * (n + 1) + (Math.random() - .5) * W * .2, dir: Math.random() < .5 ? 1 : -1, st: 'walk', t: 2 + Math.random() * 4, ph: Math.random() * 4, cur: -1, mate: null, talks: 0 });
   }));
   // 길 따라 걷는 주민: 두 명 중 한 명은 길(위아래)을 따라 돌아다님
   const RD = lanes.roads || [], rdTot = RD.reduce((a, r) => a + r.len, 0);
