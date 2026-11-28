@@ -2582,7 +2582,7 @@ html,body{margin:0;height:100%;background:transparent!important;overflow:hidden}
 .sh-c{display:flex;flex-direction:column;align-items:center;gap:3px;background:#fff;border:2px solid #f0d9c2;border-radius:16px;padding:10px 4px 8px;text-align:center;min-width:0}
 .sh-c .ic{width:56px;height:56px}.sh-c b{font-size:14.5px;font-weight:normal;line-height:1.2;word-break:keep-all}.sh-c .mc-sub{font-size:12px}
 .sh-c .mc-btn{margin-top:4px;padding:5px 10px;font-size:15px;display:inline-flex;align-items:center;gap:3px}.sh-c .mc-btn i{width:17px;height:17px}.sh-c .mc-btn.dn{background:#eee;color:#9a8478;box-shadow:none;font-size:12.5px}
-.mc-bot .mc-info .tx{align-self:flex-start;margin-top:-1px}.mc-bot .mc-info>.ii{width:auto!important;height:100%!important;max-height:calc(70px + var(--infoX,0px) * .4);align-self:center;aspect-ratio:1;flex-shrink:0}.mc-bot .mc-fab,.mc-bot .mc-cafeb{align-self:center}.mc-bot .mc-info .tx>b:first-child{font-size:calc(18px + var(--infoX,0px) / 8)}.mc-bot .mc-info .tx{align-self:center!important}.mc-bot .mc-info .mc-sub{font-size:calc(13px + var(--infoX,0px) / 12)!important;line-height:1.3!important}#mc.t1 .mc-bot .mc-info .tx>b:first-child{font-size:16px}#mc.t1 .mc-bot .mc-info .mc-sub,#mc.t3 .mc-bot .mc-info .mc-sub{font-size:13px!important}#mc.t3 .mc-bot .mc-info .tx>b:first-child{font-size:15px}.mc-bot .mc-info .tx>b:first-child{line-height:1.15;margin-bottom:2px}.mc-bot .mc-info .mc-sub{-webkit-line-clamp:4;font-size:13px;line-height:1.28}#mc.t1 .mc-bot .mc-info .mc-sub,#mc.t3 .mc-bot .mc-info .mc-sub{-webkit-line-clamp:2;font-size:12.5px;line-height:1.25}
+.mc-bot .mc-info .tx{align-self:flex-start;margin-top:-1px}.mc-bot .mc-info>.ii{width:auto!important;height:100%!important;max-height:calc(58px + var(--infoX,0px) * .3);align-self:center;aspect-ratio:1;flex-shrink:0}.mc-bot .mc-fab,.mc-bot .mc-cafeb{align-self:center}.mc-bot .mc-info .tx>b:first-child{font-size:calc(18px + var(--infoX,0px) / 8)}.mc-bot .mc-info .tx{align-self:center!important;max-height:100%;overflow:hidden}.mc-bot .mc-info .mc-sub{font-size:calc(13px + var(--infoX,0px) / 12)!important;line-height:1.3!important}#mc.t1 .mc-bot .mc-info .tx>b:first-child{font-size:16px}#mc.t1 .mc-bot .mc-info .mc-sub,#mc.t3 .mc-bot .mc-info .mc-sub{font-size:13px!important}#mc.t3 .mc-bot .mc-info .tx>b:first-child{font-size:15px}.mc-bot .mc-info .tx>b:first-child{line-height:1.15;margin-bottom:2px}.mc-bot .mc-info .mc-sub{-webkit-line-clamp:4;font-size:13px;line-height:1.28}#mc.t1 .mc-bot .mc-info .mc-sub,#mc.t3 .mc-bot .mc-info .mc-sub{-webkit-line-clamp:2;font-size:12.5px;line-height:1.25}
 
 /* village / chapter tabs (2 rows) */
 .tw-wrap .tw-ti{display:flex;flex-direction:column;align-items:center;gap:4px}
@@ -2734,7 +2734,7 @@ function layout() {
           mc.style.setProperty('--ordQ', q + 'px'); mc.style.setProperty('--infoX', ix + 'px');
           if (!fit()) { mc.style.setProperty('--ordQ', '0px'); mc.style.setProperty('--infoX', '0px'); }
         }
-        mc._sx = key;
+        mc._sx = key; fitInfo();
       }
       return;
     }
@@ -3108,8 +3108,23 @@ function runBoardFx() {
 }
 
 let lastInfoSel = -2;
+// 설명칸 글씨가 칸 밖으로 넘치지 않게 들어갈 줄 수만큼 자름
+function fitInfo() {
+  const box = $('.mc-info'), tx = box && box.querySelector('.tx'), sub = tx && tx.querySelector('.mc-sub');
+  if (!sub) return;
+  sub.style.webkitLineClamp = ''; sub.style.fontSize = '';
+  const cs = getComputedStyle(box), inner = box.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+  const t = tx.querySelector('b'), tH = t ? t.offsetHeight + 2 : 0;
+  for (let k = 0; k < 3; k++) {
+    const lh = parseFloat(getComputedStyle(sub).lineHeight) || 16;
+    const n = Math.max(1, Math.floor((inner - tH) / lh));
+    sub.style.webkitLineClamp = String(n);
+    if (n >= 3 || sub.scrollHeight <= sub.clientHeight + 1) break;
+    sub.style.fontSize = (parseFloat(getComputedStyle(sub).fontSize) - 1) + 'px';
+  }
+}
 function renderInfo() {
-  renderInfo0();
+  renderInfo0(); fitInfo();
   if (sel !== lastInfoSel) { lastInfoSel = sel; jelly($('.mc-info .ii'), .3, 320); }
 }
 function renderInfo0() {
