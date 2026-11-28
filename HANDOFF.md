@@ -1,4 +1,4 @@
-# 달콤 머지 카페 — 작업 인수인계 (v2.21.48, 2026-11-22)
+# 달콤 머지 카페 — 작업 인수인계 (v2.21.70, 2026-11-28)
 
 새 채팅에서는 **GitHub `shakeit08/cafe` 저장소의 `assets-src` 브랜치**를 받으면 바로 이어서 작업할 수 있습니다(웹앱 사이트는 main만 쓰므로 이 브랜치는 사이트에 영향 없음).
 
@@ -14,6 +14,10 @@ git clone --branch assets-src --single-branch https://github.com/shakeit08/cafe 
 |---|---|
 | `3_작업자료.zip` | ch4/, ch3b/, ch3_prompts/, prompts/, pipeline/, res/(아이콘 원본·자르기), intro/(소개글·제목 이미지) — 그림·소개글 작업할 때 |
 | `4_5장그림_1.zip`, `5_5장그림_2.zip` | ch5/ 확정 그림·레퍼런스·프롬프트 — 6장 이후 그림 작업할 때 |
+| `6_6장그림.zip` | ch6/got·refs (6장 하얀 항구 받은 그림 원본·레퍼런스). 문서·생성 스크립트(ch6_*.md, gen_ch6.py)는 브랜치에 있음 |
+| `7_7장그림.zip` | ch7/got + 고친 얼굴·걷기 시트 (7장 야자수 열대섬 원본). 문서(ch7_*.md, gen_ch7.py)는 브랜치에 있음 |
+
+크리스마스 옷(스킨)·옷장 아이콘 자료는 브랜치의 `xmas_skin/`에 다 있음(프롬프트, refs/, got/).
 
 `/home/claude/work/`에 풀면 `merge/`와 나란히 `ch5/` 등이 생깁니다. (브랜치를 못 쓸 때의 예비: `1_소스코드.zip` + `2_그림데이터.zip`(merge/ 안에 풀기))
 
@@ -34,14 +38,20 @@ git clone --branch assets-src --single-branch https://github.com/shakeit08/cafe 
 - 프롬프트는 복사해서 바로 쓸 수 있게 전체 블록으로 주기.
 - 스토리: 느릿 할머니의 정체(바다 할미 거북)는 10장에서만 밝히기.
 - 인수인계 문서는 사용자가 "채팅 옮긴다"고 할 때만 갱신.
+- 시즌 이벤트 일러스트(크리스마스 등)는 앨범에서 장(章)과 섞지 말고 따로 "시즌" 칸에 넣기(SEASON_SCENES).
+- 요청 안 한 장식(하트 등)을 프롬프트·그림에 넣지 않기("왜 자꾸 하트 같은 거 넣냐"고 혼남).
+- 이미지 화질 절대 떨어뜨리지 않기: 웹앱은 무손실, 플러그인은 q95, 크기 줄이기 금지.
+- 배경 지우기(누끼)는 내가 하지 말고 GPT 프롬프트에 투명 배경으로 요청. 새(鳥)는 프롬프트에 입 대신 "부리"를 명시.
+- 사용자가 보낸 그림을 짐작으로 말하지 말고 정확히 보고 말하기(자루/후드, 문어/소라 착각으로 혼남). 질문은 정확히 이해하고 답하기 — 엉뚱한 작업으로 할당량 낭비 금지.
+- "업데이트해"=배포(플러그인+웹앱+assets-src 커밋 셋 다). "로그 ㄴㄴ"=NOTES 안 넣음. 배포 전 GitHub에 다른 채팅(GPT 등) 커밋이 있는지 pull로 확인.
 
 ## 1. 배포 상태
 
 | 대상 | 버전 | 위치 |
 |---|---|---|
-| 리스 플러그인 | 2.21.48 | `shakeit08/risu-plugins` → `sweet_merge_cafe.js`(약 2.37MB) + `sweet_merge_cafe_img/f/*.webp|png`(그림 1,082장) + `sweet_merge_cafe_bgm/*.mp3` + `sweet_merge_cafe_mail.json`(개발자 편지) |
-| 웹앱(PWA) | 2.21.48 | `shakeit08/cafe` 루트 → https://shakeit08.github.io/cafe/ (`img/*.bin` 묶음, `story/`, `bgm/`) |
-| 디버그(다 깬 저장) | 2.21.48 + 미리보기용 | 아티팩트 slug `63799f4c-ab43-4ea3-a780-a83a1e334d3a` (https://claude.ai/artifact/DHT4HobawKcczwbRJdrPRj) |
+| 리스 플러그인 | 2.21.70 | `shakeit08/risu-plugins` → `sweet_merge_cafe.js`(약 2.37MB) + `sweet_merge_cafe_img/f/*.webp|png`(그림 1,082장) + `sweet_merge_cafe_bgm/*.mp3` + `sweet_merge_cafe_mail.json`(개발자 편지) |
+| 웹앱(PWA) | 2.21.70 | `shakeit08/cafe` 루트 → https://shakeit08.github.io/cafe/ (`img/*.bin` 묶음, `story/`, `bgm/`) |
+| 디버그(다 깬 저장, 7장까지) | 2.21.70 | 아티팩트 slug `63799f4c-ab43-4ea3-a780-a83a1e334d3a` (https://claude.ai/artifact/DHT4HobawKcczwbRJdrPRj) |
 
 - 두 저장소 모두 `add_repo`(access: push)로 붙여서 clone 후 push. 다른 채팅 커밋이 섞이므로 항상 `git pull --rebase` 후 push.
 - 커밋 메시지: `달콤 머지 카페 2.21.xx: <요약>` + Co-Authored-By/Claude-Session 줄.
@@ -68,10 +78,11 @@ merge/
   embed.py       그림 넣기. URL 모드에선 '~이름' 문자열 → art.js 머리의 __mcR()가 IMG_BASE 주소로 바꿈
   compress.py    빌드 때 그림 압축 → *_c.json, .cache_c.json (zip엔 빠져 있음: 첫 빌드가 오래 걸림)
   build_app.sh   웹앱 빌드 → /home/claude/webapp (MC_RAW=1 MC_EXT=1 MC_NO_STORY=1, img/*.bin 묶음 + story/ + bgm/)
-  build_debug.sh 디버그 빌드 → /home/claude/webapp_debug (build_app.sh 먼저! game1~3.txt로 나눔, bin은 .bin.webp 이름)
+  build_debug.sh 디버그 빌드 → /home/claude/webapp_debug (build_app.sh 먼저! game1~3.txt로 나눔, bin은 .bin.webp 이름). 다 깬 저장은 tools/ch7/max7.py 사용
+  tools/ch6/, tools/ch7/  6·7장 그림 자르기·가게 넣기·ovr 넣기·다 깬 저장(max6.py/max7.py) 스크립트
   app_index.html / app_debug.html / app_sw.js / app_manifest.webmanifest   웹앱 껍데기 (sw는 bgm·Range 요청은 안 건드림)
-  story/         이야기 일러스트 ev01~ev13.webp + 썸네일 t_ev*.webp + story_script.md
-  bgm/           cafe1.0c711031.mp3, cafe2.e5b77f07.mp3 (주방, 번갈아), town1.ee1e87ef.mp3 (마을). 이름의 해시는 sha1 앞 8자리
+  story/         이야기 일러스트 ev01~ev19.webp + 썸네일 t_ev*.webp + story_script.md
+  bgm/           cafe1.0c711031.mp3, cafe2.e5b77f07.mp3 (주방, 번갈아), town1.ee1e87ef.mp3 (마을), seaa/seab (바닷가 마을). 이름의 해시는 sha1 앞 8자리
   tests/         mksave.py, maxsave.py, srv.sh, Playwright 테스트들(아래 5절)
   tools/         ph2.html·blank.html(예전 하네스), cutsrv.py, snowfill.py 등
   sweet_merge_cafe_mail.json   개발자 편지 원본(저장소에 올라가는 것)
@@ -97,10 +108,25 @@ sh build_debug.sh           # 디버그 → /home/claude/webapp_debug (미리보
 배포(지시 있을 때만):
 - 플러그인: `cp sweet_merge_cafe.js` + `cp --update=none ext/f/* sweet_merge_cafe_img/f/` + (새 곡이면) `sweet_merge_cafe_bgm/` → commit/push.
 - 웹앱: webapp의 `game.js index.html sw.js` + `img/ story/ bgm/`(--update=none) → cafe 저장소 루트 → commit/push.
-- 디버그: `publish_files`로 index.html, game1~3.txt(+새 파일) 다시 올림. base_version은 get_artifact/list_files로 확인.
+- 디버그: `publish_files`로 index.html, game1~3.txt(+새 파일) 다시 올림. base_version은 get_artifact/list_files로 확인. 파일이 많으면 한 번에 55MB 이하로 나눠 올리고, 옛 그림은 `remove`로 정리. 마지막 버전 1795844030-486d.
 
-## 3. 게임 현재 내용 (2.21.48)
+## 3. 게임 현재 내용 (2.21.70)
 
+(2.21.48 이후 추가된 것 — 아래 옛 목록도 그대로 유효)
+- **6장 「하얀 항구」(2.21.56):** CH6_ON 블록(AREAS6·STREET6·STREET_TALK6), 이웃 32~37 몽돌·또박·뽀글·문문·훨훨·첨벙. 마지막 건물 ferry(하얀 여객선 부두) = 주문 경험치 +5%. ev14~16.
+- **7장 「야자수 열대섬」(2.21.63):** CH7_ON 블록(AREAS7: coconut·lei·mango·hammock·radio·raft, STREET7 소품 24개 `c7_*`, STREET_TALK7), CH_GATE[7]='ferry'. 이웃 38~43 대롱(원숭이)·재잘(앵무새)·통통(하마)·꾸벅(나무늘보)·쫑긋(큰부리새)·폴짝(청개구리). 마지막 건물 raft = 에너지 회복 5% 빠름(regenMs). ev17(시작)·ev18(radio)·ev19(raft). 7장이 열리면 메뉴 Lv12. 마을 지도 다음 탭 이름 "물빛 조개 동굴".
+- **주민 걷기:** 길(lanes.roads) 따라 위아래로도 돌아다님. 그림자는 캔버스에 구워 둠.
+- **발열 줄이기(2.21.6x):** 20초 입력 없으면 마을 걷기 갱신 100ms로 느리게(twInput), 반짝임 애니는 opacity만 쓰는 가상요소.
+- **크게 보기(2.21.6x):** 보드 위 돋보기 버튼(.mc-zb, S.settings.big). 크게 보면 창 너비 580, 보드 최대 444. 퍼즐판 뒤 베이지 공간(.mc-wrap)에 지금 마을 배경(MAP['top'+ch]·MAP['grass'+ch], 깃허브에서 불러옴)이 항상 깔림.
+- **크리스마스 시즌(2.21.59~):** 12월 1일~1월 7일(evOn). 설정 "미리 열기"(evPreview)로 날짜 전에도 볼 수 있음. 크리스마스 판·광장(plaza). 앨범은 시즌 칸 따로(SEASON_SCENES).
+- **시즌 패스(2.21.67):** PASS_LV 20단계, 한 단계 PASS_STEP 150점, 매일 미션 3개(PASS_MIS: 합치기·주문·만들기), 두 줄(기본 PASS_FREE / 황금 PASS_GOLDR, 500코인으로 열기). 보상은 기존 아이템만 + 옷: 기본 10단계 솜이 산타 옷, 황금 20단계 보리 트리 옷. 버튼: 주방 크리스마스 버튼 옆(.mc-passb, 크리스마스 판에선 숨김) + 마을 왼쪽 옷장 아래([data-tw=pass]).
+- **옷장/스킨(2.21.67):** SKINS {bear_tree: 얼굴 44, rabbit_santa: 얼굴 45}, 걷기 키 bear_tree/rabbit_santa(walkKey). 마을 왼쪽 뽑기 아래 옷장 버튼(WHEEL.ward 아이콘, 닫힌 옷장). 잠긴 옷은 얻는 방법 표시. 입으면 어느 마을이든 보리·솜이가 그 옷으로 걸어 다님. 설정에서 입기/벗기는 뺌. 저장 s.skin, s.pass.
+- **마을 왼쪽 버튼:** 뽑기·룰렛·옷장 모두 배경 없이 흰 테두리 아이콘.
+- **우편함 버튼:** 목록 열어도 안 밀려 올라감(--mailY), 목록이 위를 덮음.
+- **상점(2.21.70):** 하루 한 번 무료 Lv1 선물 상자(S.shop.free) + 설명 없이 3칸 격자(그림 위, 가격 아래).
+- **화면 맞춤(2.21.70):** layout()이 남는 세로 공간을 주문표(--ordQ)와 하단 설명판(--infoX)에 나눠 줌. 설명판 위로 올림. 보관함 숫자는 아이콘 오른쪽 위에 고정(아이콘 안 `<b class="n">`, font-style normal).
+
+### 2.21.48 시점 내용
 - **마을:** VILLAGES = 사계절 마을(1~4장: 구름언덕·강가 거리·가을 숲·눈꽃 언덕) / 반짝 바닷가 마을(5장 햇살 모래사장 완성). 앞 마을 거리 꾸미기까지 다 해야 다음 장·마을이 열림(chOpen, stFull). 완성한 마을은 앨범 카드 → 다시 둘러보기(pastView).
 - **메뉴:** 9계열 Lv1~10(Lv8~10은 3장 마지막 단풍 산장역 완성 = 4장 열릴 때, hiOpen). 생산기 Lv5 → 그 뒤 Lv8.
 - **주문(2.21.46~):** Lv.8 이상은 한 주문에 최대 1개, 18% 확률(ORD_HI=8, ORD_HI_P=.18). 높은 단계 2개 이상 든 옛 주문은 불러올 때 새로 뽑음.
@@ -117,7 +143,9 @@ sh build_debug.sh           # 디버그 → /home/claude/webapp_debug (미리보
 
 ## 4. 남은 일 / 아이디어
 
-- 반짝 바닷가 마을 6~10장(하얀 항구 → 야자수 열대섬 → 물빛 조개 동굴 → 노을 온천 → 별빛 등대섬). 기획은 예전 문서 그대로: 일반 가게는 1회 보상, 장 마지막 건물만 작은 영구 보너스. 이야기 단서 순서는 ch5/ch5_prompts.md 참고, 거북 정체는 10장.
+- 반짝 바닷가 마을 8~10장 남음(물빛 조개 동굴 → 노을 온천 → 별빛 등대섬). 6·7장은 끝남. 진행 방식은 7장처럼: 기획(chN_plan.md) → 프롬프트(chN_prompts.md, gen_chN.py) → 사용자가 GPT로 뽑아 옴 → tools/chN 스크립트로 자르기·넣기.
+- 7장 거리 소품 중 소라 나팔 받침·모래 화단은 1단계 그림이 예전 것 — 사용자가 다시 뽑아 오면 교체.
+- 2.21.70 이후 사용자 피드백 대기. 기획은 예전 문서 그대로: 일반 가게는 1회 보상, 장 마지막 건물만 작은 영구 보너스. 이야기 단서 순서는 ch5/ch5_prompts.md 참고, 거북 정체는 10장.
 - 메뉴 Lv11~15 이름 계획: prompts/prod_sheets.py NAMES.
 - 소개글: 아카 플러그인 소개글(intro/post/), 웹앱 소개글(intro/web/, 제목 0_제목_웹앱.png는 보석 십자수 부록 스티커). 사이트(라이믹스) HTML은 그라데이션·flex·transform·position·svg·details·class/style 태그가 지워짐 → 쓰지 말 것. 아카는 `white-space:nowrap`이 지워지고 U+2060 같은 보이지 않는 문자는 "금지된 문구"로 막힘 → 줄바꿈 막을 땐 `&nbsp;`만.
 
